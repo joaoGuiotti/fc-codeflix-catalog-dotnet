@@ -1,0 +1,61 @@
+# .gitignore for .NET projects
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Test results
+TestResults/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Others
+*.vspscc
+*.vssscc
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Local history
+.localhistory/
+
+# Backup & temp files
+*~
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# Publish
+publish/
