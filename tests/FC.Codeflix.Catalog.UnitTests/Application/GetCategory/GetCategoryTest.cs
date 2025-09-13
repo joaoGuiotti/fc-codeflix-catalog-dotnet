@@ -59,7 +59,7 @@ public class GetCategoryTest
         repoMock.Setup(x => x.Get(
             It.IsAny<Guid>(),
             It.IsAny<CancellationToken>()
-        )).ReturnsAsync((Category?)null);
+        )).ReturnsAsync((Category?)null!);
 
         Func<Task> action = async () => await useCase.Handle(input, CancellationToken.None);
 
