@@ -1,6 +1,3 @@
-using Bogus.Extensions.UnitedKingdom;
-using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
-
 namespace FC.Codeflix.Catalog.UnitTests.Application.UpdateCategory;
 
 public class UpdateCategoryTestDataGenerator
