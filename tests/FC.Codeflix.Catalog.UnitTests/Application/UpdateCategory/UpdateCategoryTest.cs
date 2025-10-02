@@ -105,7 +105,7 @@ public class UpdateCategoryTest
     {
         var repositoryMock = _fixture.GetRepositoryMock();
         var uowMock = _fixture.GetUowMock();
-        var validCategory = _fixture.GetValidCategory();
+        var validCategory = _fixture.GetExampleCategory();
         var input = new UpdateCategoryInput(
             validCategory.Id,
             _fixture.GetValidCategoryName(),
@@ -163,7 +163,7 @@ public class UpdateCategoryTest
     )
     {
         {
-            var exampleCategory = _fixture.GetValidCategory();
+            var exampleCategory = _fixture.GetExampleCategory();
             input.Id = exampleCategory.Id;
             var repositoryMock = _fixture.GetRepositoryMock();
             var unitOfWorkMock = _fixture.GetUowMock();

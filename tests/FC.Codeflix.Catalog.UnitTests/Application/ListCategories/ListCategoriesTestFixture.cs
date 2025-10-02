@@ -15,7 +15,7 @@ public class ListCategoriesTestFixture
 {
     public List<Category> GetCategories(int length = 0)
         => Enumerable.Range(1, length > 0 ? length : new Random().Next(10, 100))
-            .Select(_ => GetValidCategory())
+            .Select(_ => GetExampleCategory())
             .ToList();
 
     public ListCategoriesInput GetValidInput()

@@ -20,7 +20,7 @@ public class DeleteCategoryTest
     {
         var repositoryMock = _fixture.GetRepositoryMock();
         var uowMock = _fixture.GetUowMock();
-        var validCategory = _fixture.GetValidCategory();
+        var validCategory = _fixture.GetExampleCategory();
         var input = new DeleteCategoryInput(validCategory.Id);
 
         repositoryMock.Setup(x => x.Get(

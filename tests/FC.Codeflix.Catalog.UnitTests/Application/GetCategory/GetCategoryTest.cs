@@ -19,7 +19,7 @@ public class GetCategoryTest
     public async Task GetCategory()
     {
         var repoMock = _fixture.GetRepositoryMock();
-        var category = _fixture.GetValidCategory();
+        var category = _fixture.GetExampleCategory();
 
         repoMock.Setup(x => x.Get(
             It.IsAny<Guid>(),

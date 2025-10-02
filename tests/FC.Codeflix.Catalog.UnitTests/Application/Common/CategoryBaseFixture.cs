@@ -46,7 +46,7 @@ public abstract class CategoryBaseFixture : BaseFixture
         => new Faker().Random.Bool();
 
 
-    public Category GetValidCategory()
+    public Category GetExampleCategory()
         => new(
             GetValidCategoryName(),
             GetValidCategoryDescription(),
