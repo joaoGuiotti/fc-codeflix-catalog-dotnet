@@ -1,3 +1,4 @@
+using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
@@ -24,11 +25,12 @@ public class CategoryRepository
         throw new NotImplementedException();
     }
 
-    public Task<Category> Get(Guid id, CancellationToken cancellation)
+    public async Task<Category> Get(Guid id, CancellationToken cancellation)
     {
-        throw new NotImplementedException();
+        var result = await _categories.FindAsync(new object[] { id }, cancellationToken: cancellation);
+        NotFoundException.ThrowIfNull(result, $"Category '{id}' not found.");
+        return result!;
     }
-
 
     public Task<SearchOutput<Category>> Search(SearchInput input, CancellationToken cancellationToken)
     {
@@ -37,6 +39,6 @@ public class CategoryRepository
 
     public Task Update(Category aggregate, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(_categories.Update(aggregate));
     }
 }

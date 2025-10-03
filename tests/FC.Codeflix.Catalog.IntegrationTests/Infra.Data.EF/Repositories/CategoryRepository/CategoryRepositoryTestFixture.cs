@@ -63,4 +63,9 @@ public class CategoryRepositoryTestFixture
         => new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
             .UseInMemoryDatabase($"IntegrationTestsDb_{Guid.NewGuid()}")
             .Options;
+
+    public List<Category> GetExampleCategoryList(int length = 10)
+        => Enumerable.Range(1, length)
+            .Select(_ => GetExampleCategory())
+            .ToList();
 }
