@@ -24,7 +24,7 @@ public class ListCategoriesTestFixture
             perPage: Faker.Random.Int(15, 100),
             search: Faker.Lorem.Word(),
             sort: Faker.PickRandom(new List<string> { "name", "createdAt" }),
-            sortDir: Faker.PickRandom(new List<ESearchOrder> { ESearchOrder.ASC, ESearchOrder.DESC })
+            sortDir: Faker.PickRandom(new List<ESearchOrder> { ESearchOrder.Asc, ESearchOrder.Desc })
         );
 
 }

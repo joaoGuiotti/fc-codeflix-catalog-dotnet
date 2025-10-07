@@ -28,7 +28,7 @@ public class ListCategoriesTestDataGenerator
         yield return new object[] { new ListCategoriesInput(
             page: 1,
             perPage: 15,
-            sortDir: ESearchOrder.ASC
+            sortDir: ESearchOrder.Asc
         ) };
 
         // Input com search e sort vazios
@@ -40,7 +40,7 @@ public class ListCategoriesTestDataGenerator
         // Input com sort específico "name" e ordem descendente
         yield return new object[] { new ListCategoriesInput(
             sort: "name",
-            sortDir: ESearchOrder.DESC
+            sortDir: ESearchOrder.Desc
         ) };
 
         // Input com sort específico "createdAt" e ordem ascendente
@@ -48,7 +48,7 @@ public class ListCategoriesTestDataGenerator
             page: 2,
             perPage: 30,
             sort: "createdAt",
-            sortDir: ESearchOrder.ASC
+            sortDir: ESearchOrder.Asc
         ) };
 
         // Input com valores altos para página e perPage
@@ -57,7 +57,7 @@ public class ListCategoriesTestDataGenerator
             perPage: 100,
             search: "categoria",
             sort: "name",
-            sortDir: ESearchOrder.ASC
+            sortDir: ESearchOrder.Asc
         ) };
 
         // Input com busca específica e sem ordenação
@@ -65,7 +65,7 @@ public class ListCategoriesTestDataGenerator
             page: 1,
             perPage: 25,
             search: "documentário",
-            sortDir: ESearchOrder.DESC
+            sortDir: ESearchOrder.Desc
         ) };
 
         // Input sem parâmetros (todos default)

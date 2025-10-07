@@ -45,12 +45,17 @@ public class CategoryRepositoryTestFixture
         => Faker.Random.Bool();
 
 
-    public Category GetExampleCategory()
+    public Category GetExampleCategory(string? name = null, string? description = null, bool? isActive = null)
         => new(
-            GetValidCategoryName(),
-            GetValidCategoryDescription(),
-            GetRandomBoolean()
+            name ?? GetValidCategoryName(),
+            description ?? GetValidCategoryDescription(),
+            isActive ?? GetRandomBoolean()
         );
+
+    public List<Category> GetCategoriesListWithNames(List<string> names)
+        => names
+            .Select(name => GetExampleCategory(name))
+            .ToList();
 
     public CodeflixCatalogDbContext CreateDbContext()
     {

@@ -12,7 +12,7 @@ public class ListCategoriesInput
         int perPage = 15,
         string search = "",
         string sort = "",
-        ESearchOrder sortDir = ESearchOrder.ASC
+        ESearchOrder sortDir = ESearchOrder.Asc
     ) : base(page, perPage, search, sort, sortDir)
     { }
 }
