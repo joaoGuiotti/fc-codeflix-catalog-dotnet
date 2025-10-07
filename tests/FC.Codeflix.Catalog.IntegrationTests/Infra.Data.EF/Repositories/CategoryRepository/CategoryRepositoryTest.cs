@@ -7,7 +7,7 @@ using Repository = FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository;
 
-[Collection(nameof(CategoryRepositoryTestFixture))]
+[Collection(nameof(CategoryRepositoryTestFixtureCollection))]
 public class CategoryRepositoryTest
 {
     private readonly CategoryRepositoryTestFixture _fixture;

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository;
 
-[CollectionDefinition(nameof(CategoryRepositoryTestFixture))]
+[CollectionDefinition(nameof(CategoryRepositoryTestFixtureCollection))]
 public class CategoryRepositoryTestFixtureCollection
     : ICollectionFixture<CategoryRepositoryTestFixture>
 {
@@ -40,10 +40,8 @@ public class CategoryRepositoryTestFixture
     public string GetInvalidCategoryDescriptionTooLong()
         => Faker.Lorem.Letter(1001);
 
-
     public bool GetRandomBoolean()
         => Faker.Random.Bool();
-
 
     public Category GetExampleCategory(string? name = null, string? description = null, bool? isActive = null)
         => new(
@@ -52,25 +50,13 @@ public class CategoryRepositoryTestFixture
             isActive ?? GetRandomBoolean()
         );
 
-    public List<Category> GetCategoriesListWithNames(List<string> names)
-        => names
-            .Select(name => GetExampleCategory(name))
-            .ToList();
-
-    public CodeflixCatalogDbContext CreateDbContext()
-    {
-        var dbContext = new CodeflixCatalogDbContext(CreateDbContextOptions());
-        dbContext.Database.EnsureCreated();
-        return dbContext;
-    }
-
-    private DbContextOptions<CodeflixCatalogDbContext> CreateDbContextOptions()
-        => new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
-            .UseInMemoryDatabase($"IntegrationTestsDb_{Guid.NewGuid()}")
-            .Options;
-
     public List<Category> GetExampleCategoryList(int length = 10)
         => Enumerable.Range(1, length)
             .Select(_ => GetExampleCategory())
+            .ToList();
+
+    public List<Category> GetCategoriesListWithNames(List<string> names)
+        => names
+            .Select(name => GetExampleCategory(name))
             .ToList();
 }
