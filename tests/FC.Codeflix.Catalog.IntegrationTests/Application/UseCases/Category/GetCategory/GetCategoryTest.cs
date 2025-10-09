@@ -59,6 +59,6 @@ public class GetCategoryTest
         await action
             .Should()
             .ThrowAsync<NotFoundException>()
-            .WithMessage($"Category with ID {input.Id} not found.");
+            .WithMessage($"Category '{input.Id}' not found.");
     }
 }
