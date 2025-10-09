@@ -3,15 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FC.Codeflix.Catalog.Infra.Data.EF;
 
-public class CodeflixCatalogDbContext
-    : DbContext
+public class CodeflixCatalogDbContext : DbContext
 {
     public DbSet<Domain.Entity.Category> Categories { get; set; } = null!;
 
-    public CodeflixCatalogDbContext(DbContextOptions<CodeflixCatalogDbContext> options)
-        : base(options)
-    { }
-
+    public CodeflixCatalogDbContext(
+        DbContextOptions<CodeflixCatalogDbContext> options
+    )
+        : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

@@ -24,7 +24,11 @@ public class CreateCategory : ICreateCategory
         CancellationToken token = default
     )
     {
-        var category = new DomainEntity.Category(input.Name, input.Description!, input.IsActive);
+        var category = new DomainEntity.Category(
+            input.Name,
+            input.Description!,
+            input.IsActive
+        );
 
         await _categoryReposioty.Insert(category, token);
         await _unitOfWork.Commit(token);

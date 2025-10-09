@@ -6,11 +6,9 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Common;
 
 public class BaseFixture
 {
-
     protected Faker Faker { get; set; }
 
-    public BaseFixture()
-        => Faker = new Faker("pt_BR");
+    public BaseFixture() => Faker = new Faker("pt_BR");
 
     public CodeflixCatalogDbContext CreateDbContext(bool preserveData = false)
     {
@@ -22,12 +20,15 @@ public class BaseFixture
         return dbContext;
     }
 
-    private DbContextOptions<CodeflixCatalogDbContext> CreateDbContextOptions(bool preserveData = false)
+    private DbContextOptions<CodeflixCatalogDbContext> CreateDbContextOptions(
+        bool preserveData = false
+    )
     {
-        var dbName = preserveData ? "IntegrationTestsDb-UnitOfWork" : $"IntegrationTestsDb-UnitOfWork_{Guid.NewGuid()}";
+        var dbName = preserveData
+            ? "IntegrationTestsDb-UnitOfWork"
+            : $"IntegrationTestsDb-UnitOfWork_{Guid.NewGuid()}";
         return new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
             .UseInMemoryDatabase(dbName)
             .Options;
     }
-
 }

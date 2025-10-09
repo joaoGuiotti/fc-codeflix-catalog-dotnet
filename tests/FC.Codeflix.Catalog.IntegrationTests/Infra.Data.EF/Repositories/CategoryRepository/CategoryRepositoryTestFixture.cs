@@ -1,19 +1,13 @@
 using FC.Codeflix.Catalog.Domain.Entity;
-using FC.Codeflix.Catalog.Infra.Data.EF;
 using FC.Codeflix.Catalog.IntegrationTests.Common;
-using Microsoft.EntityFrameworkCore;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository;
 
 [CollectionDefinition(nameof(CategoryRepositoryTestFixtureCollection))]
 public class CategoryRepositoryTestFixtureCollection
-    : ICollectionFixture<CategoryRepositoryTestFixture>
-{
+    : ICollectionFixture<CategoryRepositoryTestFixture> { }
 
-}
-
-public class CategoryRepositoryTestFixture
-    : BaseFixture
+public class CategoryRepositoryTestFixture : BaseFixture
 {
     public string GetValidCategoryName()
     {
@@ -25,8 +19,7 @@ public class CategoryRepositoryTestFixture
         return categoryName;
     }
 
-    public string GetInvalidCategoryNameTooShort()
-        => Faker.Lorem.Letter(2);
+    public string GetInvalidCategoryNameTooShort() => Faker.Lorem.Letter(2);
 
     // Description
     public string GetValidCategoryDescription()
@@ -37,26 +30,25 @@ public class CategoryRepositoryTestFixture
         return description;
     }
 
-    public string GetInvalidCategoryDescriptionTooLong()
-        => Faker.Lorem.Letter(1001);
+    public string GetInvalidCategoryDescriptionTooLong() =>
+        Faker.Lorem.Letter(1001);
 
-    public bool GetRandomBoolean()
-        => Faker.Random.Bool();
+    public bool GetRandomBoolean() => Faker.Random.Bool();
 
-    public Category GetExampleCategory(string? name = null, string? description = null, bool? isActive = null)
-        => new(
+    public Category GetExampleCategory(
+        string? name = null,
+        string? description = null,
+        bool? isActive = null
+    ) =>
+        new(
             name ?? GetValidCategoryName(),
             description ?? GetValidCategoryDescription(),
             isActive ?? GetRandomBoolean()
         );
 
-    public List<Category> GetExampleCategoryList(int length = 10)
-        => Enumerable.Range(1, length)
-            .Select(_ => GetExampleCategory())
-            .ToList();
+    public List<Category> GetExampleCategoryList(int length = 10) =>
+        Enumerable.Range(1, length).Select(_ => GetExampleCategory()).ToList();
 
-    public List<Category> GetCategoriesListWithNames(List<string> names)
-        => names
-            .Select(name => GetExampleCategory(name))
-            .ToList();
+    public List<Category> GetCategoriesListWithNames(List<string> names) =>
+        names.Select(name => GetExampleCategory(name)).ToList();
 }

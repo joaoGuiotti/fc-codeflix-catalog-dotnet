@@ -8,8 +8,6 @@ public class UpdateCategoryInputValidator
 {
     public UpdateCategoryInputValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty()
-            .WithMessage("Category ID is required.");
+        RuleFor(x => x.Id).NotEmpty().WithMessage("Category ID is required.");
     }
 }

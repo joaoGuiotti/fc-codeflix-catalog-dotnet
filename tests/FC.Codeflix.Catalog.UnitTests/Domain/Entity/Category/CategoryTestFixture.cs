@@ -6,7 +6,7 @@ using DomainEntity = Catalog.Domain.Entity;
 public class CategoryTestFixture : BaseFixture
 {
     public CategoryTestFixture()
-     : base() { }
+        : base() { }
 
     public string GetValidCategoryName()
     {
@@ -26,14 +26,10 @@ public class CategoryTestFixture : BaseFixture
         return description;
     }
 
-    public DomainEntity.Category GetValidCategory()
-            => new(
-                GetValidCategoryName(),
-                GetValidCategoryDescription()
-            );
+    public DomainEntity.Category GetValidCategory() =>
+        new(GetValidCategoryName(), GetValidCategoryDescription());
 }
 
 [CollectionDefinition(nameof(CategoryTestFixture))]
 public class CategoryTestFixtureCollection
-    : ICollectionFixture<CategoryTestFixture>
-{ }
+    : ICollectionFixture<CategoryTestFixture> { }

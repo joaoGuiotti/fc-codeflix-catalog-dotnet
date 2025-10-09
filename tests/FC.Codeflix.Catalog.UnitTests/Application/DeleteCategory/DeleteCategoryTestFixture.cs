@@ -4,9 +4,6 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.DeleteCategory;
 
 [CollectionDefinition(nameof(DeleteCategoryTestFixture))]
 public class DeleteCategoryTestFixtureCollection
-    : ICollectionFixture<DeleteCategoryTestFixture>
-{
-}
+    : ICollectionFixture<DeleteCategoryTestFixture> { }
 
-public class DeleteCategoryTestFixture : CategoryBaseFixture
-{ }
+public class DeleteCategoryTestFixture : CategoryBaseFixture { }

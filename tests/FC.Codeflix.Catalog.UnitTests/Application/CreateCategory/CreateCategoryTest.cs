@@ -22,15 +22,19 @@ public class CreateCategoryTest
     {
         var repoMock = _fixture.GetRepositoryMock();
         var uowMock = _fixture.GetUowMock();
-        var useCase = new UseCase.CreateCategory(repoMock.Object, uowMock.Object);
+        var useCase = new UseCase.CreateCategory(
+            repoMock.Object,
+            uowMock.Object
+        );
         var input = _fixture.GetInput();
         var output = await useCase.Handle(input, CancellationToken.None);
 
         repoMock.Verify(
-            repository => repository.Insert(
-                It.IsAny<Category>(),
-                It.IsAny<CancellationToken>()
-            ),
+            repository =>
+                repository.Insert(
+                    It.IsAny<Category>(),
+                    It.IsAny<CancellationToken>()
+                ),
             Times.Once
         );
 
@@ -58,10 +62,15 @@ public class CreateCategoryTest
     {
         var repoMock = _fixture.GetRepositoryMock();
         var uowMock = _fixture.GetUowMock();
-        var useCase = new UseCase.CreateCategory(repoMock.Object, uowMock.Object);
-        Func<Task> action = async () => await useCase.Handle(input, CancellationToken.None);
+        var useCase = new UseCase.CreateCategory(
+            repoMock.Object,
+            uowMock.Object
+        );
+        Func<Task> action = async () =>
+            await useCase.Handle(input, CancellationToken.None);
 
-        await action.Should()
+        await action
+            .Should()
             .ThrowAsync<EntityValidationException>()
             .WithMessage(exceptionMessage);
     }
@@ -74,24 +83,33 @@ public class CreateCategoryTest
         // Nome não pode ser menor que 3 caracteres
         var invalidInputShortName = fixture.GetInput();
         invalidInputShortName.Name = "ab";
-        invalidInputList.Add(new object[] {
-            invalidInputShortName,
-            $"{nameof(invalidInputShortName.Name)} must be at least 3 characters long."
-        });
+        invalidInputList.Add(
+            new object[]
+            {
+                invalidInputShortName,
+                $"{nameof(invalidInputShortName.Name)} must be at least 3 characters long.",
+            }
+        );
         // Nome não pode ser maior que 255 caracteres
         var invalidInputLongName = fixture.GetInput();
         invalidInputLongName.Name = new string('a', 256);
-        invalidInputList.Add(new object[] {
-            invalidInputLongName,
-            $"{nameof(invalidInputLongName.Name)} must be less or equal 255 characters."
-        });
+        invalidInputList.Add(
+            new object[]
+            {
+                invalidInputLongName,
+                $"{nameof(invalidInputLongName.Name)} must be less or equal 255 characters.",
+            }
+        );
         // Nome não pode ser nullo
         var invalidInputNullName = fixture.GetInput();
         invalidInputNullName.Name = null!;
-        invalidInputList.Add(new object[] {
-            invalidInputNullName,
-            $"{nameof(invalidInputNullName.Name)} cannot be null or empty."
-        });
+        invalidInputList.Add(
+            new object[]
+            {
+                invalidInputNullName,
+                $"{nameof(invalidInputNullName.Name)} cannot be null or empty.",
+            }
+        );
 
         return invalidInputList;
     }

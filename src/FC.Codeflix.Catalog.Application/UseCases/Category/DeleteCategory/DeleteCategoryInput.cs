@@ -6,6 +6,5 @@ public class DeleteCategoryInput : IRequest
 {
     public Guid Id { get; private set; }
 
-    public DeleteCategoryInput(Guid id)
-        => Id = id;
+    public DeleteCategoryInput(Guid id) => Id = id;
 }

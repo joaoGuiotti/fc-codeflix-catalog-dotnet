@@ -1,8 +1,8 @@
-using FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
-using UseCase = FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
-using Moq;
 using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
 using FluentAssertions;
+using Moq;
+using UseCase = FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
 
 namespace FC.Codeflix.Catalog.UnitTests.Application.DeleteCategory;
 
@@ -11,8 +11,8 @@ public class DeleteCategoryTest
 {
     private readonly DeleteCategoryTestFixture _fixture;
 
-    public DeleteCategoryTest(DeleteCategoryTestFixture fixture)
-        => _fixture = fixture;
+    public DeleteCategoryTest(DeleteCategoryTestFixture fixture) =>
+        _fixture = fixture;
 
     [Fact(DisplayName = nameof(DeleteCategory))]
     [Trait("Application", "DeleteCategory - Use Cases")]
@@ -23,11 +23,9 @@ public class DeleteCategoryTest
         var validCategory = _fixture.GetExampleCategory();
         var input = new DeleteCategoryInput(validCategory.Id);
 
-        repositoryMock.Setup(x => x.Get(
-            validCategory.Id,
-            It.IsAny<CancellationToken>()
-        )).ReturnsAsync(validCategory);
-
+        repositoryMock
+            .Setup(x => x.Get(validCategory.Id, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validCategory);
 
         var useCase = new UseCase.DeleteCategory(
             repositoryMock.Object,
@@ -36,19 +34,20 @@ public class DeleteCategoryTest
 
         await useCase.Handle(input, CancellationToken.None);
 
-        repositoryMock.Verify(x => x.Get(
-            validCategory.Id,
-            It.IsAny<CancellationToken>()
-        ), Times.Once);
+        repositoryMock.Verify(
+            x => x.Get(validCategory.Id, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
 
-        repositoryMock.Verify(x => x.Delete(
-            validCategory,
-            It.IsAny<CancellationToken>()
-        ), Times.Once);
+        repositoryMock.Verify(
+            x => x.Delete(validCategory, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
 
-        uowMock.Verify(x => x.Commit(
-            It.IsAny<CancellationToken>()
-        ), Times.Once);
+        uowMock.Verify(
+            x => x.Commit(It.IsAny<CancellationToken>()),
+            Times.Once
+        );
     }
 
     [Fact(DisplayName = nameof(ThrowNotFoundExceptionWhenCategoryDoesNotExist))]
@@ -60,25 +59,25 @@ public class DeleteCategoryTest
         var categoryGuid = Guid.NewGuid();
         var input = new DeleteCategoryInput(categoryGuid);
 
-        repositoryMock.Setup(x => x.Get(
-            categoryGuid,
-            It.IsAny<CancellationToken>()
-        )).ThrowsAsync(new NotFoundException($"Category '{categoryGuid}' not found."));
-
+        repositoryMock
+            .Setup(x => x.Get(categoryGuid, It.IsAny<CancellationToken>()))
+            .ThrowsAsync(
+                new NotFoundException($"Category '{categoryGuid}' not found.")
+            );
 
         var useCase = new UseCase.DeleteCategory(
             repositoryMock.Object,
             uowMock.Object
         );
 
-        var task = async () => await useCase.Handle(input, CancellationToken.None);
+        var task = async () =>
+            await useCase.Handle(input, CancellationToken.None);
 
         await task.Should().ThrowAsync<NotFoundException>();
 
-        repositoryMock.Verify(x => x.Get(
-            categoryGuid,
-            It.IsAny<CancellationToken>()
-        ), Times.Once);
+        repositoryMock.Verify(
+            x => x.Get(categoryGuid, It.IsAny<CancellationToken>()),
+            Times.Once
+        );
     }
-
 }

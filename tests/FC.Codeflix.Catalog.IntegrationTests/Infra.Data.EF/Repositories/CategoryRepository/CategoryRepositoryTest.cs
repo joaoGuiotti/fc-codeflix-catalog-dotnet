@@ -12,8 +12,8 @@ public class CategoryRepositoryTest
 {
     private readonly CategoryRepositoryTestFixture _fixture;
 
-    public CategoryRepositoryTest(CategoryRepositoryTestFixture fixture)
-        => _fixture = fixture;
+    public CategoryRepositoryTest(CategoryRepositoryTestFixture fixture) =>
+        _fixture = fixture;
 
     [Fact(DisplayName = nameof(Insert))]
     [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
@@ -22,10 +22,15 @@ public class CategoryRepositoryTest
         CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
         var exampleCategory = _fixture.GetExampleCategory();
         var categoryRepository = new Repository.CategoryRepository(dbContext);
-        await categoryRepository.Insert(exampleCategory, CancellationToken.None);
+        await categoryRepository.Insert(
+            exampleCategory,
+            CancellationToken.None
+        );
         await dbContext.SaveChangesAsync(CancellationToken.None);
 
-        var dbCategory = await dbContext.Categories.FindAsync(exampleCategory.Id);
+        var dbCategory = await dbContext.Categories.FindAsync(
+            exampleCategory.Id
+        );
 
         dbCategory.Should().NotBeNull();
         dbCategory.Name.Should().Be(exampleCategory.Name);
@@ -46,7 +51,10 @@ public class CategoryRepositoryTest
         await dbContext.SaveChangesAsync(CancellationToken.None);
 
         var categoryRepository = new Repository.CategoryRepository(dbContext);
-        var dbCategory = await categoryRepository.Get(exampleCategory.Id, CancellationToken.None);
+        var dbCategory = await categoryRepository.Get(
+            exampleCategory.Id,
+            CancellationToken.None
+        );
 
         dbCategory.Should().NotBeNull();
         dbCategory.Id.Should().Be(exampleCategory.Id);
@@ -67,12 +75,13 @@ public class CategoryRepositoryTest
 
         var categoryRepository = new Repository.CategoryRepository(dbContext);
         var randomGuid = Guid.NewGuid();
-        var task = async () => await categoryRepository.Get(randomGuid, CancellationToken.None);
+        var task = async () =>
+            await categoryRepository.Get(randomGuid, CancellationToken.None);
 
-        await task.Should().ThrowAsync<NotFoundException>()
+        await task.Should()
+            .ThrowAsync<NotFoundException>()
             .WithMessage($"Category '{randomGuid}' not found.");
     }
-
 
     [Fact(DisplayName = nameof(Update))]
     [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
@@ -87,13 +96,19 @@ public class CategoryRepositoryTest
 
         var categoryRepository = new Repository.CategoryRepository(dbContext);
 
-        exampleCategory.Update(_fixture.GetValidCategoryName(), _fixture.GetValidCategoryDescription());
+        exampleCategory.Update(
+            _fixture.GetValidCategoryName(),
+            _fixture.GetValidCategoryDescription()
+        );
 
-        await categoryRepository.Update(exampleCategory, CancellationToken.None);
+        await categoryRepository.Update(
+            exampleCategory,
+            CancellationToken.None
+        );
         await dbContext.SaveChangesAsync(CancellationToken.None);
 
-        var dbCategory = await dbContext.Categories
-            .AsNoTracking()
+        var dbCategory = await dbContext
+            .Categories.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == exampleCategory.Id);
 
         dbCategory.Should().NotBeNull();
@@ -116,11 +131,15 @@ public class CategoryRepositoryTest
 
         var categoryRepository = new Repository.CategoryRepository(dbContext);
 
-        await categoryRepository.Delete(exampleCategory, CancellationToken.None);
+        await categoryRepository.Delete(
+            exampleCategory,
+            CancellationToken.None
+        );
         await dbContext.SaveChangesAsync(CancellationToken.None);
 
-        var dbCategory = await _fixture.CreateDbContext().Categories
-            .AsNoTracking()
+        var dbCategory = await _fixture
+            .CreateDbContext()
+            .Categories.AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == exampleCategory.Id);
 
         dbCategory.Should().BeNull();
@@ -137,7 +156,10 @@ public class CategoryRepositoryTest
         var categoryRepository = new Repository.CategoryRepository(dbContext);
 
         var searchInput = new SearchInput(1, 30, "", "", ESearchOrder.Asc);
-        var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+        var output = await categoryRepository.Search(
+            searchInput,
+            CancellationToken.None
+        );
 
         output.Should().NotBeNull();
         output.CurrentPage.Should().Be(searchInput.Page);
@@ -146,15 +168,19 @@ public class CategoryRepositoryTest
         output.Items.Should().HaveCount(exampleCategoryList.Count);
         output.Items.Should().OnlyHaveUniqueItems();
 
-        output.Items.ToList().ForEach(outputItem =>
-        {
-            var exampleItem = exampleCategoryList.Find(x => x.Id == outputItem.Id);
-            exampleItem.Should().NotBeNull();
-            outputItem.Name.Should().Be(exampleItem.Name);
-            outputItem.Description.Should().Be(exampleItem.Description);
-            outputItem.IsActive.Should().Be(exampleItem.IsActive);
-            outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
-        });
+        output
+            .Items.ToList()
+            .ForEach(outputItem =>
+            {
+                var exampleItem = exampleCategoryList.Find(x =>
+                    x.Id == outputItem.Id
+                );
+                exampleItem.Should().NotBeNull();
+                outputItem.Name.Should().Be(exampleItem.Name);
+                outputItem.Description.Should().Be(exampleItem.Description);
+                outputItem.IsActive.Should().Be(exampleItem.IsActive);
+                outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            });
     }
 
     [Fact(DisplayName = nameof(SearchReturnEmptyWhenPersistenceIsEmpty))]
@@ -165,7 +191,10 @@ public class CategoryRepositoryTest
         var categoryRepository = new Repository.CategoryRepository(dbContext);
 
         var searchInput = new SearchInput(1, 30, "", "", ESearchOrder.Asc);
-        var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+        var output = await categoryRepository.Search(
+            searchInput,
+            CancellationToken.None
+        );
 
         output.Should().NotBeNull();
         output.CurrentPage.Should().Be(searchInput.Page);
@@ -185,7 +214,10 @@ public class CategoryRepositoryTest
         var categoryRepository = new Repository.CategoryRepository(dbContext);
 
         var searchInput = new SearchInput(2, 10, "", "name", ESearchOrder.Asc);
-        var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+        var output = await categoryRepository.Search(
+            searchInput,
+            CancellationToken.None
+        );
 
         output.Should().NotBeNull();
         output.CurrentPage.Should().Be(searchInput.Page);
@@ -194,20 +226,30 @@ public class CategoryRepositoryTest
         output.Items.Should().HaveCount(searchInput.PerPage);
         output.Items.Should().OnlyHaveUniqueItems();
 
-        output.Items.ToList().ForEach(outputItem =>
-        {
-            var exampleItem = exampleCategoryList.Find(x => x.Id == outputItem.Id);
-            exampleItem.Should().NotBeNull();
-            outputItem.Name.Should().Be(exampleItem.Name);
-            outputItem.Description.Should().Be(exampleItem.Description);
-            outputItem.IsActive.Should().Be(exampleItem.IsActive);
-            outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
-        });
+        output
+            .Items.ToList()
+            .ForEach(outputItem =>
+            {
+                var exampleItem = exampleCategoryList.Find(x =>
+                    x.Id == outputItem.Id
+                );
+                exampleItem.Should().NotBeNull();
+                outputItem.Name.Should().Be(exampleItem.Name);
+                outputItem.Description.Should().Be(exampleItem.Description);
+                outputItem.IsActive.Should().Be(exampleItem.IsActive);
+                outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            });
 
-        var expectedOrderedList = exampleCategoryList.OrderBy(x => x.Name).Skip(10).Take(10).ToList();
+        var expectedOrderedList = exampleCategoryList
+            .OrderBy(x => x.Name)
+            .Skip(10)
+            .Take(10)
+            .ToList();
         for (int i = 0; i < output.Items.Count; i++)
         {
-            (output.Items.ToList()[i].Id == expectedOrderedList[i].Id).Should().BeTrue();
+            (output.Items.ToList()[i].Id == expectedOrderedList[i].Id)
+                .Should()
+                .BeTrue();
         }
     }
 
@@ -232,23 +274,34 @@ public class CategoryRepositoryTest
     )
     {
         CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
-        var exampleCategoryList = _fixture.GetCategoriesListWithNames(new List<string>()
-        {
-            "Action",
-            "Horror",
-            "Horror - Action",
-            "Drama",
-            "Action Comedy",
-            "Comedy",
-            "Sci-fi",
-            "Romance",
-        });
+        var exampleCategoryList = _fixture.GetCategoriesListWithNames(
+            new List<string>()
+            {
+                "Action",
+                "Horror",
+                "Horror - Action",
+                "Drama",
+                "Action Comedy",
+                "Comedy",
+                "Sci-fi",
+                "Romance",
+            }
+        );
         await dbContext.AddRangeAsync(exampleCategoryList);
         await dbContext.SaveChangesAsync(CancellationToken.None);
         var categoryRepository = new Repository.CategoryRepository(dbContext);
 
-        var searchInput = new SearchInput(page, perPage, searchTerm, "", sortOrder);
-        var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+        var searchInput = new SearchInput(
+            page,
+            perPage,
+            searchTerm,
+            "",
+            sortOrder
+        );
+        var output = await categoryRepository.Search(
+            searchInput,
+            CancellationToken.None
+        );
 
         output.Should().NotBeNull();
         output.CurrentPage.Should().Be(searchInput.Page);
@@ -257,15 +310,19 @@ public class CategoryRepositoryTest
         output.Items.Should().HaveCount(expectedQuantityItemsReturned);
         output.Items.Should().OnlyHaveUniqueItems();
 
-        output.Items.ToList().ForEach(outputItem =>
-        {
-            var exampleItem = exampleCategoryList.Find(x => x.Id == outputItem.Id);
-            exampleItem.Should().NotBeNull();
-            outputItem.Name.Should().Be(exampleItem.Name);
-            outputItem.Description.Should().Be(exampleItem.Description);
-            outputItem.IsActive.Should().Be(exampleItem.IsActive);
-            outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
-        });
+        output
+            .Items.ToList()
+            .ForEach(outputItem =>
+            {
+                var exampleItem = exampleCategoryList.Find(x =>
+                    x.Id == outputItem.Id
+                );
+                exampleItem.Should().NotBeNull();
+                outputItem.Name.Should().Be(exampleItem.Name);
+                outputItem.Description.Should().Be(exampleItem.Description);
+                outputItem.IsActive.Should().Be(exampleItem.IsActive);
+                outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            });
     }
 
     [Fact(DisplayName = nameof(SearchWithOrderByAndOrder))]
@@ -273,21 +330,26 @@ public class CategoryRepositoryTest
     public async Task SearchWithOrderByAndOrder()
     {
         CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
-        var exampleCategoryList = _fixture.GetCategoriesListWithNames(new List<string>()
-        {
-            "Action",
-            "Horror",
-            "Horror - Action",
-            "Drama",
-            "Action Comedy",
-            "Comedy",
-        });
+        var exampleCategoryList = _fixture.GetCategoriesListWithNames(
+            new List<string>()
+            {
+                "Action",
+                "Horror",
+                "Horror - Action",
+                "Drama",
+                "Action Comedy",
+                "Comedy",
+            }
+        );
         await dbContext.AddRangeAsync(exampleCategoryList);
         await dbContext.SaveChangesAsync(CancellationToken.None);
         var categoryRepository = new Repository.CategoryRepository(dbContext);
 
         var searchInput = new SearchInput(1, 10, "", "name", ESearchOrder.Desc);
-        var output = await categoryRepository.Search(searchInput, CancellationToken.None);
+        var output = await categoryRepository.Search(
+            searchInput,
+            CancellationToken.None
+        );
 
         output.Should().NotBeNull();
         output.CurrentPage.Should().Be(searchInput.Page);
@@ -296,20 +358,28 @@ public class CategoryRepositoryTest
         output.Items.Should().HaveCount(exampleCategoryList.Count);
         output.Items.Should().OnlyHaveUniqueItems();
 
-        output.Items.ToList().ForEach(outputItem =>
-        {
-            var exampleItem = exampleCategoryList.Find(x => x.Id == outputItem.Id);
-            exampleItem.Should().NotBeNull();
-            outputItem.Name.Should().Be(exampleItem.Name);
-            outputItem.Description.Should().Be(exampleItem.Description);
-            outputItem.IsActive.Should().Be(exampleItem.IsActive);
-            outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
-        });
+        output
+            .Items.ToList()
+            .ForEach(outputItem =>
+            {
+                var exampleItem = exampleCategoryList.Find(x =>
+                    x.Id == outputItem.Id
+                );
+                exampleItem.Should().NotBeNull();
+                outputItem.Name.Should().Be(exampleItem.Name);
+                outputItem.Description.Should().Be(exampleItem.Description);
+                outputItem.IsActive.Should().Be(exampleItem.IsActive);
+                outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            });
 
-        var expectedOrderedList = exampleCategoryList.OrderByDescending(x => x.Name).ToList();
+        var expectedOrderedList = exampleCategoryList
+            .OrderByDescending(x => x.Name)
+            .ToList();
         for (int i = 0; i < output.Items.Count; i++)
         {
-            (output.Items.ToList()[i].Id == expectedOrderedList[i].Id).Should().BeTrue();
+            (output.Items.ToList()[i].Id == expectedOrderedList[i].Id)
+                .Should()
+                .BeTrue();
         }
     }
 }

@@ -6,7 +6,6 @@ namespace FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 
 public class ListCategories : IListCategories
 {
-
     private readonly ICategoryRepository _repo;
 
     public ListCategories(ICategoryRepository repo)

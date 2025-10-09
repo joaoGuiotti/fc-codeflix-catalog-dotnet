@@ -20,7 +20,11 @@ public class Category : AggregateRoot
         Validate();
     }
 
-    public static Category Create(string name, string description, bool isActive = true)
+    public static Category Create(
+        string name,
+        string description,
+        bool isActive = true
+    )
     {
         return new Category(name, description, isActive);
     }
@@ -41,21 +45,31 @@ public class Category : AggregateRoot
     {
         Name = name;
         Description = description ?? Description;
-        
+
         Validate();
     }
 
     private void Validate()
     {
         if (string.IsNullOrWhiteSpace(Name))
-            throw new EntityValidationException($"{nameof(Name)} cannot be null or empty.");
+            throw new EntityValidationException(
+                $"{nameof(Name)} cannot be null or empty."
+            );
         if (string.IsNullOrWhiteSpace(Description))
-            throw new EntityValidationException($"{nameof(Description)} cannot be null or empty.");
+            throw new EntityValidationException(
+                $"{nameof(Description)} cannot be null or empty."
+            );
         if (Name.Length < 3)
-            throw new EntityValidationException($"{nameof(Name)} must be at least 3 characters long.");
+            throw new EntityValidationException(
+                $"{nameof(Name)} must be at least 3 characters long."
+            );
         if (Name.Length > 255)
-            throw new EntityValidationException($"{nameof(Name)} must be less or equal 255 characters.");
+            throw new EntityValidationException(
+                $"{nameof(Name)} must be less or equal 255 characters."
+            );
         if (Description.Length > 10_000)
-            throw new EntityValidationException($"{nameof(Description)} must be less or equal 10.000 caracteres.");
+            throw new EntityValidationException(
+                $"{nameof(Description)} must be less or equal 10.000 caracteres."
+            );
     }
 }

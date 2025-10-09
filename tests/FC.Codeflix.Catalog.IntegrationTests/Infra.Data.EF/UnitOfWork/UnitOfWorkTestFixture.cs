@@ -1,15 +1,13 @@
-using FC.Codeflix.Catalog.Domain.Entity; 
-using FC.Codeflix.Catalog.IntegrationTests.Common; 
+using FC.Codeflix.Catalog.Domain.Entity;
+using FC.Codeflix.Catalog.IntegrationTests.Common;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.UnitOfWork;
 
 [CollectionDefinition(nameof(UnitOfWorkTestFixtureCollection))]
 public class UnitOfWorkTestFixtureCollection
-    : ICollectionFixture<UnitOfWorkTestFixture>
-{ }
+    : ICollectionFixture<UnitOfWorkTestFixture> { }
 
-public class UnitOfWorkTestFixture
-    : BaseFixture 
+public class UnitOfWorkTestFixture : BaseFixture
 {
     public string GetValidCategoryName()
     {
@@ -29,23 +27,22 @@ public class UnitOfWorkTestFixture
         return description;
     }
 
-    public bool GetRandomBoolean()
-        => Faker.Random.Bool();
+    public bool GetRandomBoolean() => Faker.Random.Bool();
 
-    public Category GetExampleCategory(string? name = null, string? description = null, bool? isActive = null)
-        => new(
+    public Category GetExampleCategory(
+        string? name = null,
+        string? description = null,
+        bool? isActive = null
+    ) =>
+        new(
             name ?? GetValidCategoryName(),
             description ?? GetValidCategoryDescription(),
             isActive ?? GetRandomBoolean()
         );
 
-    public List<Category> GetExampleCategoryList(int length = 10)
-        => Enumerable.Range(1, length)
-            .Select(_ => GetExampleCategory())
-            .ToList();
+    public List<Category> GetExampleCategoryList(int length = 10) =>
+        Enumerable.Range(1, length).Select(_ => GetExampleCategory()).ToList();
 
-    public List<Category> GetCategoriesListWithNames(List<string> names)
-        => names
-            .Select(name => GetExampleCategory(name))
-            .ToList();
+    public List<Category> GetCategoriesListWithNames(List<string> names) =>
+        names.Select(name => GetExampleCategory(name)).ToList();
 }

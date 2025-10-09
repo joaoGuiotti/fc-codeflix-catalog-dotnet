@@ -9,11 +9,9 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.Common;
 
 public abstract class CategoryBaseFixture : BaseFixture
 {
-    public Mock<ICategoryRepository> GetRepositoryMock()
-        => new();
+    public Mock<ICategoryRepository> GetRepositoryMock() => new();
 
-    public Mock<IUnitOfWork> GetUowMock()
-        => new();
+    public Mock<IUnitOfWork> GetUowMock() => new();
 
     // Name
     public string GetValidCategoryName()
@@ -26,8 +24,7 @@ public abstract class CategoryBaseFixture : BaseFixture
         return categoryName;
     }
 
-    public string GetInvalidCategoryNameTooShort()
-        => Faker.Lorem.Letter(2);
+    public string GetInvalidCategoryNameTooShort() => Faker.Lorem.Letter(2);
 
     // Description
     public string GetValidCategoryDescription()
@@ -38,19 +35,15 @@ public abstract class CategoryBaseFixture : BaseFixture
         return description;
     }
 
-    public string GetInvalidCategoryDescriptionTooLong()
-        => Faker.Lorem.Letter(1001);
+    public string GetInvalidCategoryDescriptionTooLong() =>
+        Faker.Lorem.Letter(1001);
 
+    public bool GetRandomBoolean() => new Faker().Random.Bool();
 
-    public bool GetRandomBoolean()
-        => new Faker().Random.Bool();
-
-
-    public Category GetExampleCategory()
-        => new(
+    public Category GetExampleCategory() =>
+        new(
             GetValidCategoryName(),
             GetValidCategoryDescription(),
             GetRandomBoolean()
         );
-
 }

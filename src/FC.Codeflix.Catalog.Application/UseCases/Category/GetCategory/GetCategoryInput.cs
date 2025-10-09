@@ -7,6 +7,5 @@ public class GetCategoryInput : IRequest<CategoryModelOutput>
 {
     public Guid Id { get; }
 
-    public GetCategoryInput(Guid id)
-        => Id = id;
+    public GetCategoryInput(Guid id) => Id = id;
 }

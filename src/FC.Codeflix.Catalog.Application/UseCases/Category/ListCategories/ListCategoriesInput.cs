@@ -5,7 +5,8 @@ using MediatR;
 namespace FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 
 public class ListCategoriesInput
-    : PaginatedListInput, IRequest<ListCategoriesOutput>
+    : PaginatedListInput,
+        IRequest<ListCategoriesOutput>
 {
     public ListCategoriesInput(
         int page = 1,
@@ -13,6 +14,6 @@ public class ListCategoriesInput
         string search = "",
         string sort = "",
         ESearchOrder sortDir = ESearchOrder.Asc
-    ) : base(page, perPage, search, sort, sortDir)
-    { }
+    )
+        : base(page, perPage, search, sort, sortDir) { }
 }

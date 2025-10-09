@@ -26,21 +26,18 @@ public class CreateCategoryTestFixture : BaseFixture
         return description;
     }
 
-    public CreateCategoryInput GetInput()
-        => new(
+    public CreateCategoryInput GetInput() =>
+        new(
             GetValidCategoryName(),
             GetValidCategoryDescription(),
             Faker.Random.Bool()
         );
 
-    public Mock<ICategoryRepository> GetRepositoryMock()
-        => new();
+    public Mock<ICategoryRepository> GetRepositoryMock() => new();
 
-    public Mock<IUnitOfWork> GetUowMock()
-        => new();
+    public Mock<IUnitOfWork> GetUowMock() => new();
 }
 
 [CollectionDefinition(nameof(CreateCategoryTestFixture))]
 public class CreateCategoryTestFixtureCollection
-    : ICollectionFixture<CreateCategoryTestFixture>
-{ }
+    : ICollectionFixture<CreateCategoryTestFixture> { }
