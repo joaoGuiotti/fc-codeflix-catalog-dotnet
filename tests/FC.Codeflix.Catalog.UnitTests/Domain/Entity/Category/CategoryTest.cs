@@ -81,21 +81,6 @@ public class CategoryTest
             .WithMessage("Name cannot be null or empty.");
     }
 
-    [Theory(DisplayName = nameof(ThrowWhenDescriptionIsEmptyOrNull))]
-    [Trait("Domain", "Category - Aggregates")]
-    [InlineData("")]
-    [InlineData("  ")]
-    [InlineData(null)]
-    public void ThrowWhenDescriptionIsEmptyOrNull(string description)
-    {
-        Action action = () =>
-            DomainEntity.Category.Create("Category Name", description!);
-        action
-            .Should()
-            .Throw<EntityValidationException>()
-            .WithMessage("Description cannot be null or empty.");
-    }
-
     [Theory(DisplayName = nameof(ThrowWhenNameIsLessThanThreeCharacters))]
     [Trait("Domain", "Category - Aggregates")]
     [InlineData("ab")]

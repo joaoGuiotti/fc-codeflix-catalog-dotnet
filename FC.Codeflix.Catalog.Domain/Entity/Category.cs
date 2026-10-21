@@ -6,11 +6,11 @@ namespace FC.Codeflix.Catalog.Domain.Entity;
 public class Category : AggregateRoot
 {
     public string Name { get; private set; }
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public Category(string name, string description, bool isActive = true)
+    public Category(string name, string? description = null, bool isActive = true)
         : base()
     {
         Name = name;
@@ -54,10 +54,6 @@ public class Category : AggregateRoot
         if (string.IsNullOrWhiteSpace(Name))
             throw new EntityValidationException(
                 $"{nameof(Name)} cannot be null or empty."
-            );
-        if (string.IsNullOrWhiteSpace(Description))
-            throw new EntityValidationException(
-                $"{nameof(Description)} cannot be null or empty."
             );
         if (Name.Length < 3)
             throw new EntityValidationException(

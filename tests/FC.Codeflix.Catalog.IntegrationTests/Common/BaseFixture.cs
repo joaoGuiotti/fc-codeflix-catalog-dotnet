@@ -1,4 +1,4 @@
-using Bogus;
+﻿using Bogus;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,23 +12,13 @@ public class BaseFixture
 
     public CodeflixCatalogDbContext CreateDbContext(bool preserveData = false)
     {
-        var dbContext = new CodeflixCatalogDbContext(CreateDbContextOptions());
-        if (!preserveData)
-        {
-            dbContext.Database.EnsureCreated();
-        }
-        return dbContext;
-    }
-
-    private DbContextOptions<CodeflixCatalogDbContext> CreateDbContextOptions(
-        bool preserveData = false
-    )
-    {
-        var dbName = preserveData
-            ? "IntegrationTestsDb-UnitOfWork"
-            : $"IntegrationTestsDb-UnitOfWork_{Guid.NewGuid()}";
-        return new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
-            .UseInMemoryDatabase(dbName)
-            .Options;
+        var context = new CodeflixCatalogDbContext(
+            new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
+            .UseInMemoryDatabase("integration-tests-db")
+            .Options
+        );
+        if (preserveData == false)
+            context.Database.EnsureDeleted();
+        return context;
     }
 }
