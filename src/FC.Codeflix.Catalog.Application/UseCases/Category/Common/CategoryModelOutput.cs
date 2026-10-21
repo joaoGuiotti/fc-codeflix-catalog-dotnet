@@ -29,7 +29,7 @@ public class CategoryModelOutput
         new(
             category.Id,
             category.Name,
-            category.Description,
+            category.Description!,
             category.IsActive,
             category.CreatedAt
         );

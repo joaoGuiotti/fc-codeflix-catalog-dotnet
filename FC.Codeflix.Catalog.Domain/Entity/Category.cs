@@ -10,7 +10,11 @@ public class Category : AggregateRoot
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public Category(string name, string? description = null, bool isActive = true)
+    public Category(
+        string name,
+        string? description = null,
+        bool isActive = true
+    )
         : base()
     {
         Name = name;
@@ -63,7 +67,7 @@ public class Category : AggregateRoot
             throw new EntityValidationException(
                 $"{nameof(Name)} must be less or equal 255 characters."
             );
-        if (Description.Length > 10_000)
+        if (Description!.Length > 10_000)
             throw new EntityValidationException(
                 $"{nameof(Description)} must be less or equal 10.000 caracteres."
             );
