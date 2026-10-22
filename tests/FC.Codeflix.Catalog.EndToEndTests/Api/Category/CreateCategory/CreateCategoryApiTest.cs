@@ -1,6 +1,8 @@
 ﻿using Bogus.DataSets;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
+using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory;
@@ -44,4 +46,26 @@ public class CreateCategoryApiTest
         dbCategory.CreatedAt.Should().Be(output.CreatedAt);
     }
 
+    [Theory(DisplayName = nameof(ThrowWhenCantCreateCategory))]
+    [Trait("EndToEnd/API", "Category/Create - Endpoints")]
+    [MemberData(
+        nameof(CreateCategoryApiTestDataGenerator.GetInvalidInputs),
+        MemberType = typeof(CreateCategoryApiTestDataGenerator)
+    )]
+    public async Task ThrowWhenCantCreateCategory(
+        CreateCategoryInput input,
+        string expectedMessage
+    )
+    {
+        var (response, output) = await _fixture.ApiClient
+            .Post<ProblemDetails>("/categories", input);
+
+        response.Should().NotBeNull();
+        response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        output.Should().NotBeNull();
+        output.Title.Should().Be("One or more validation errors occurred.");
+        output.Status.Should().Be((int)HttpStatusCode.UnprocessableEntity);
+        output.Detail.Should().Be(expectedMessage);
+    }
 }
+

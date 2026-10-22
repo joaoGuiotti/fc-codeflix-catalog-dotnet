@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Common;
 

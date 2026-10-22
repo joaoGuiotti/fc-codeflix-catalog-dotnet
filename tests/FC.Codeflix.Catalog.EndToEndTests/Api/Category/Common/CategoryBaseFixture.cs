@@ -40,4 +40,8 @@ public class CategoryBaseFixture
         Faker.Lorem.Letter(1001);
 
     public bool GetRandomBoolean() => Faker.Random.Bool();
+
+    public string GetInvalidNameTooLong() => Faker.Lorem.Letter(256);
+    public string GetInvalidNameTooShort() => Faker.Lorem.Letter(2);
+    public string GetInvalidDescriptionTooLong() => Faker.Lorem.Letter(10_001);
 }
