@@ -20,5 +20,9 @@ public class CategoryPersistence
            .FirstOrDefaultAsync(x => x.Id == id);
 
     }
-
+    public async Task BulkInsert(List<DomainEntity.Category> categories)
+    {
+        await _context.AddRangeAsync(categories);
+        await _context.SaveChangesAsync();
+    }
 }

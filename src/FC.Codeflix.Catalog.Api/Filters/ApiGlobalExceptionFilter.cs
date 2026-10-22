@@ -1,4 +1,5 @@
-﻿using FC.Codeflix.Catalog.Domain.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -20,19 +21,27 @@ public class ApiGlobalExceptionFilter : IExceptionFilter
         if (_env.IsDevelopment())
             details.Extensions.Add("StackTrace", execption.StackTrace);
 
-        if (execption is EntityValidationException)
+        switch (execption)
         {
-            details.Title = "One or more validation errors occurred.";
-            details.Status = StatusCodes.Status422UnprocessableEntity;
-            details.Type = "UnprocessableEntity";
-            details.Detail = execption.Message;
-        }
-        else
-        {
-            details.Title = "An unexpected error ocurred";
-            details.Status = StatusCodes.Status422UnprocessableEntity;
-            details.Type = "UnexpectedError";
-            details.Detail = execption.Message;
+            case EntityValidationException:
+                details.Title = "One or more validation errors occurred.";
+                details.Type = "UnprocessableEntity";
+                details.Status = StatusCodes.Status422UnprocessableEntity;
+                details.Detail = execption.Message;
+                break;
+            case NotFoundException:
+                details.Title = "Not Found";
+                details.Type = "NotFound";
+                details.Status = StatusCodes.Status404NotFound;
+                details.Detail = execption.Message;
+                break;
+            default:
+                details.Title = "An unexpected error ocurred";
+                details.Type = "UnexpectedError";
+                details.Status = StatusCodes.Status422UnprocessableEntity;
+                details.Detail = execption.Message;
+                break;
+
         }
 
         context.HttpContext.Response.StatusCode = (int)details.Status;

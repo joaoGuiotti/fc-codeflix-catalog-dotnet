@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+﻿using Microsoft.VisualStudio.TestPlatform.Utilities;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
@@ -27,6 +28,28 @@ public class ApiClient
         var response = await _httpClient.PostAsync(uri, stringContent);
         var output = await response.Content
             .ReadFromJsonAsync<TOutput>(_jsonSerializerOptions);
+
+        return (response, output);
+    }
+
+    public async Task<(HttpResponseMessage?, TOutput?)> Get<TOutput>(string url)
+    {
+        var response = await _httpClient.GetAsync(url);
+        var output = await response.Content
+                   .ReadFromJsonAsync<TOutput>(_jsonSerializerOptions);
+        return (response, output);
+    }
+
+    public async Task<(HttpResponseMessage?, TOutput?)> Delete<TOutput>(string url)
+            where TOutput : class
+    {
+        var response = await _httpClient.DeleteAsync(url);
+        var outputString = await response.Content
+                   .ReadAsStringAsync();
+
+        TOutput? output = string.IsNullOrWhiteSpace(outputString)
+            ? null
+            : JsonSerializer.Deserialize<TOutput>(outputString, _jsonSerializerOptions);
 
         return (response, output);
     }

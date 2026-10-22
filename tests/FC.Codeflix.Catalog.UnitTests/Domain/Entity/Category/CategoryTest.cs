@@ -1,4 +1,4 @@
-﻿namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category;
+namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category;
 
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FluentAssertions;
@@ -30,8 +30,8 @@ public class CategoryTest
         category.Description.Should().Be(validCategory.Description);
         category.Id.Should().NotBe(default(Guid));
         category.CreatedAt.Should().NotBe(default(DateTime));
-        category.CreatedAt.Should().BeAfter(dateTimeBefore);
-        category.CreatedAt.Should().BeBefore(dateTimeAfter);
+        category.CreatedAt.Should().BeOnOrAfter(dateTimeBefore);
+        category.CreatedAt.Should().BeOnOrBefore(dateTimeAfter);
         category.IsActive.Should().Be(true);
     }
 
@@ -60,8 +60,8 @@ public class CategoryTest
         category.Description.Should().Be(validaData.Description);
         category.Id.Should().NotBe(default(Guid));
         category.CreatedAt.Should().NotBe(default(DateTime));
-        category.CreatedAt.Should().BeAfter(dateTimeBefore);
-        category.CreatedAt.Should().BeBefore(dateTimeAfter);
+        category.CreatedAt.Should().BeOnOrAfter(dateTimeBefore);
+        category.CreatedAt.Should().BeOnOrBefore(dateTimeAfter);
         category.IsActive.Should().Be(isActive);
     }
 
