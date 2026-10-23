@@ -1,5 +1,7 @@
 ﻿
+using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.EndToEndTests.Common;
+using FluentAssertions;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common;
@@ -45,4 +47,14 @@ public class CategoryBaseFixture
     public IEnumerable<DomainEntity.Category> GetExampleCategoryList(int length = 22)
         => Enumerable.Range(1, length)
             .Select(_ => GetExampleCategory()).ToList();
+
+    public void CompareEntityOutput(DomainEntity.Category a, CategoryModelOutput b)
+    {
+        a.Should().NotBeNull();
+        b.Should().NotBeNull();
+        a.Name.Should().Be(b.Name);
+        a.Description.Should().Be(b.Description);
+        a.IsActive.Should().Be(b.IsActive);
+        a.CreatedAt.Should().Be(b.CreatedAt);
+    }
 }

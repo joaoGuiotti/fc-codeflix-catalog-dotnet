@@ -1,4 +1,4 @@
-﻿using Bogus;
+using Bogus;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,8 +19,6 @@ public class BaseFixture
         httpClient = webAppFactory.CreateClient();
         ApiClient = new ApiClient(httpClient);
     }
-
-
     public CodeflixCatalogDbContext CreateDbContext()
     {
         var context = new CodeflixCatalogDbContext(
@@ -30,4 +28,12 @@ public class BaseFixture
         );
         return context;
     }
+
+    public void DisposePersistence()
+    {
+        var context = CreateDbContext();
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
+    }
 }
+

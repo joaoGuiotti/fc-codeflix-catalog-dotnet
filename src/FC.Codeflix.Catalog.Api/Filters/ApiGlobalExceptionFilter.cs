@@ -2,6 +2,7 @@
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Collections;
 
 namespace FC.Codeflix.Catalog.Api.Filters;
 

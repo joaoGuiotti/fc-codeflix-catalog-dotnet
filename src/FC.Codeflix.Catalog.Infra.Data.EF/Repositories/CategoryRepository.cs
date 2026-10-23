@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
@@ -83,11 +83,11 @@ public class CategoryRepository : ICategoryRepository
 
     private IQueryable<Category> ApplyOrder(
         IQueryable<Category> query,
-        string orderBy,
+        string? orderBy,
         ESearchOrder? order
     )
     {
-        return (orderBy.ToLower(), order) switch
+        return (orderBy?.ToLower(), order) switch
         {
             ("id", ESearchOrder.Asc) => query.OrderBy(x => x.Id),
             ("id", ESearchOrder.Desc) => query.OrderByDescending(x => x.Id),

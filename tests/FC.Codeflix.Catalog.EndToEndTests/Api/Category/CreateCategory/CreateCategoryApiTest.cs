@@ -7,7 +7,7 @@ using System.Net;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory;
 
 [Collection(nameof(CreateCategoryApiTestFixtureCollection))]
-public class CreateCategoryApiTest
+public class CreateCategoryApiTest : IDisposable
 {
     private readonly CreateCategoryApiTestFixture _fixture;
 
@@ -36,13 +36,7 @@ public class CreateCategoryApiTest
         output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
 
         var dbCategory = await _fixture.Persistence.GetById(output.Id);
-        dbCategory.Should().NotBeNull();
-        dbCategory.Id.Should().Be(output.Id);
-        dbCategory.Name.Should().Be(output.Name);
-        dbCategory.Description.Should().Be(output.Description);
-        dbCategory.IsActive.Should().Be(output.IsActive);
-        dbCategory.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
-        dbCategory.CreatedAt.Should().Be(output.CreatedAt);
+        _fixture.CompareEntityOutput(dbCategory!, output);
     }
 
     [Theory(DisplayName = nameof(ThrowWhenCantCreateCategory))]
@@ -66,5 +60,8 @@ public class CreateCategoryApiTest
         output.Status.Should().Be((int)HttpStatusCode.UnprocessableEntity);
         output.Detail.Should().Be(expectedMessage);
     }
+
+    void IDisposable.Dispose()
+        => _fixture.DisposePersistence();
 }
 

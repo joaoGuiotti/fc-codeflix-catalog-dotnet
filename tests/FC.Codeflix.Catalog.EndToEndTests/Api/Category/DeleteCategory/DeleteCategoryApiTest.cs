@@ -1,4 +1,4 @@
-﻿
+
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +7,7 @@ using System.Net;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.DeleteCategory;
 
 [Collection(nameof(DeleteCategoryApiTestFixtureCollection))]
-public class DeleteCategoryApiTest
+public class DeleteCategoryApiTest : IDisposable
 {
     private readonly DeleteCategoryApiTestFixture _fixture;
 
@@ -18,7 +18,7 @@ public class DeleteCategoryApiTest
 
     [Fact(DisplayName = nameof(DeleteCategory))]
     [Trait("EndToEnd/API", "Category/Delete - Endpoints")]
-    public async void DeleteCategory()
+    public async Task DeleteCategory()
     {
         // Arrange
         var exampleCategories = _fixture.GetExampleCategoryList();
@@ -64,4 +64,6 @@ public class DeleteCategoryApiTest
         output.Type.Should().Be("NotFound");
         output.Detail.Should().Be($"Category '{newGuid}' not found.");
     }
+    void IDisposable.Dispose()
+        => _fixture.DisposePersistence();
 }

@@ -8,12 +8,16 @@ public class ListCategoriesInput
     : PaginatedListInput,
         IRequest<ListCategoriesOutput>
 {
+    public ListCategoriesInput()
+        : base(1, 15, "", "", ESearchOrder.Asc) { }
+
     public ListCategoriesInput(
         int page = 1,
         int perPage = 15,
-        string search = "",
-        string sort = "",
+        string? search = "",
+        string? sort = "",
         ESearchOrder sortDir = ESearchOrder.Asc
     )
         : base(page, perPage, search, sort, sortDir) { }
 }
+

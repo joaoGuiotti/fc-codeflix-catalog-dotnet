@@ -1,10 +1,12 @@
-using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
+﻿using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
 using FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
+using FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace FC.Codeflix.Catalog.Api.Controllers;
 
@@ -28,13 +30,13 @@ public class CategoriesController : ControllerBase
     )
     {
         var output = await _mediator.Send(input, cancellationToken);
-        return CreatedAtAction(nameof(Get), new { id = output.Id }, output);
+        return CreatedAtAction(nameof(GetById), new { id = output.Id }, output);
     }
 
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(CategoryModelOutput), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Get(
+    public async Task<IActionResult> GetById(
         [FromRoute] Guid id,
         CancellationToken cancellationToken
     )
@@ -73,4 +75,16 @@ public class CategoriesController : ControllerBase
         );
         return Ok(output);
     }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(CategoryModelOutput), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Get(
+        [FromQuery] ListCategoriesInput input,
+        CancellationToken cancellationToken
+    )
+    {
+        var output = await this._mediator.Send(input, cancellationToken);
+        return Ok(output);
+    }
+
 }

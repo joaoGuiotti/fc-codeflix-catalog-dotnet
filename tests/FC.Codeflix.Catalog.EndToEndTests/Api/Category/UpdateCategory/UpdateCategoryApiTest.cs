@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
+using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory;
@@ -13,7 +13,7 @@ using System.Text;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.UpdateCategory;
 
 [Collection(nameof(UpdateCategoryApiTestFixtureColletion))]
-public class UpdateCategoryApiTest
+public class UpdateCategoryApiTest : IDisposable
 {
     private readonly UpdateCategoryApiTestFixture _fixture;
 
@@ -24,7 +24,7 @@ public class UpdateCategoryApiTest
 
     [Fact(DisplayName = nameof(UpdateCategory))]
     [Trait("EndToEnd/API", "Category/Update - Endpoints")]
-    public async void UpdateCategory()
+    public async Task UpdateCategory()
     {
         var category = _fixture.GetExampleCategory();
         await _fixture.Persistence.Add(category);
@@ -102,4 +102,7 @@ public class UpdateCategoryApiTest
         output.Status.Should().Be((int)HttpStatusCode.UnprocessableEntity);
         output.Detail.Should().Be(expectedMessage);
     }
+
+    void IDisposable.Dispose()
+        => _fixture.DisposePersistence();
 }

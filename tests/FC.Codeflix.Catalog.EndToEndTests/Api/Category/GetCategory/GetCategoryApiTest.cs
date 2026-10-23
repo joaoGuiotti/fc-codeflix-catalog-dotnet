@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.GetCategory;
 
 [Collection(nameof(GetCategoryApiTestFixtureColletion))]
-public class GetCategoryApiTest
+public class GetCategoryApiTest : IDisposable
 {
 
     private readonly GetCategoryApiTestFixture _fixture;
@@ -18,7 +18,7 @@ public class GetCategoryApiTest
     }
 
     [Fact(DisplayName = nameof(GetCategory))]
-    [Trait("EndToEnd/API", "Category/Get - Endpoints")]
+    [Trait("EndToEnd/API", "Category/GetById - Endpoints")]
     public async Task GetCategory()
     {
         // Arrange
@@ -34,17 +34,12 @@ public class GetCategoryApiTest
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
-        output.Should().NotBeNull();
-        output.Id.Should().Be(category.Id);
-        output.Name.Should().Be(category.Name);
-        output.Description.Should().Be(category.Description);
-        output.IsActive.Should().Be(category.IsActive);
-        output.CreatedAt.Should().Be(category.CreatedAt);
+        _fixture.CompareEntityOutput(category, output!);
     }
 
 
     [Fact(DisplayName = nameof(GetCategoryReturnStatusNotFound))]
-    [Trait("EndToEnd/API", "Category/Get - Endpoints")]
+    [Trait("EndToEnd/API", "Category/GetById - Endpoints")]
     public async Task GetCategoryReturnStatusNotFound()
     {
         // Arrange
@@ -66,5 +61,6 @@ public class GetCategoryApiTest
         output.Type.Should().Be("NotFound");
         output.Detail.Should().Be($"Category '{newGuid}' not found.");
     }
-
+    void IDisposable.Dispose()
+       => _fixture.DisposePersistence();
 }

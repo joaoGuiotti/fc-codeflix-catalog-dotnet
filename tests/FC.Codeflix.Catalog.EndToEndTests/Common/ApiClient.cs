@@ -1,8 +1,6 @@
-﻿using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Common;
 
@@ -33,12 +31,32 @@ public class ApiClient
         return (response, output);
     }
 
-    public async Task<(HttpResponseMessage?, TOutput?)> Get<TOutput>(string url)
-            where TOutput : class
+    public async Task<(HttpResponseMessage?, TOutput?)> Get<TOutput>(
+        string url,
+        object? queryStringParametersObject = null
+    )
+        where TOutput : class
     {
-        var response = await _httpClient.GetAsync(url);
+        var finalUrl = PrepareGetRoute(url, queryStringParametersObject);
+        var response = await _httpClient.GetAsync(finalUrl);
         var output = await GetOutput<TOutput>(response);
         return (response, output);
+    }
+
+    private string PrepareGetRoute(
+        string url,
+        object? queryStringParametersObject
+    )
+    {
+        if (queryStringParametersObject is null)
+            return url;
+        var parametersJson = JsonSerializer.Serialize(
+            queryStringParametersObject,
+            _jsonSerializerOptions
+        );
+        var parametersDictionary = Newtonsoft.Json.JsonConvert
+            .DeserializeObject<Dictionary<string, string>>(parametersJson);
+        return QueryHelpers.AddQueryString(url, parametersDictionary!);
     }
 
     public async Task<(HttpResponseMessage?, TOutput?)> Delete<TOutput>(string url)
@@ -75,3 +93,4 @@ public class ApiClient
            : JsonSerializer.Deserialize<TOutput>(outputString, _jsonSerializerOptions);
     }
 }
+
