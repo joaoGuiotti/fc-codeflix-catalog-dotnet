@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System.Net;
+using FC.Codeflix.Catalog.Api.Contracts.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -29,12 +30,14 @@ public class GetCategoryApiTest : IDisposable
 
         // act
         var (response, output) = await _fixture.ApiClient
-            .Get<CategoryModelOutput>($"/categories/{category.Id}");
+            .Get<ApiResponse<CategoryModelOutput>>($"/categories/{category.Id}");
 
         // Assert
         response.Should().NotBeNull();
         response.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
-        _fixture.CompareEntityOutput(category, output!);
+        output.Should().NotBeNull();
+        output.Data.Should().NotBeNull();
+        _fixture.CompareEntityOutput(category, output.Data);
     }
 
 
@@ -64,3 +67,4 @@ public class GetCategoryApiTest : IDisposable
     void IDisposable.Dispose()
        => _fixture.DisposePersistence();
 }
+

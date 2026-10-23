@@ -1,3 +1,4 @@
+using FC.Codeflix.Catalog.Api.Contracts.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 using FC.Codeflix.Catalog.Domain.Entity;
@@ -31,25 +32,26 @@ public class UpdateCategoryApiTest : IDisposable
 
         var input = _fixture.GetExampleInput(category.Id);
         var (response, output) = await _fixture.ApiClient
-            .Put<CategoryModelOutput>($"/categories/{category.Id}", input);
+            .Put<ApiResponse<CategoryModelOutput>>($"/categories/{category.Id}", input);
 
         response.Should().NotBeNull();
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
         output.Should().NotBeNull();
-        output.Id.Should().NotBeEmpty();
-        output.Name.Should().Be(input.Name);
-        output.Description.Should().Be(input.Description);
-        output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
+        output.Data.Should().NotBeNull();
+        output.Data.Id.Should().NotBeEmpty();
+        output.Data.Name.Should().Be(input.Name);
+        output.Data.Description.Should().Be(input.Description);
+        output.Data.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
 
-        var dbCategory = await _fixture.Persistence.GetById(output.Id);
+        var dbCategory = await _fixture.Persistence.GetById(output.Data.Id);
         dbCategory.Should().NotBeNull();
-        dbCategory.Id.Should().Be(output.Id);
-        dbCategory.Name.Should().Be(output.Name);
-        dbCategory.Description.Should().Be(output.Description);
-        dbCategory.IsActive.Should().Be(output.IsActive);
+        dbCategory.Id.Should().Be(output.Data.Id);
+        dbCategory.Name.Should().Be(output.Data.Name);
+        dbCategory.Description.Should().Be(output.Data.Description);
+        dbCategory.IsActive.Should().Be(output.Data.IsActive);
         dbCategory.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
-        dbCategory.CreatedAt.Should().BeSameDateAs(output.CreatedAt);
+        dbCategory.CreatedAt.Should().BeSameDateAs(output.Data.CreatedAt);
     }
 
     [Fact(DisplayName = nameof(UpdateCategoryReturnStatusNotFound))]
