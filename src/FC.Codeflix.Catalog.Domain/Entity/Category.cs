@@ -29,9 +29,8 @@ public class Category : AggregateRoot
         string description,
         bool isActive = true
     )
-    {
-        return new Category(name, description, isActive);
-    }
+    => new(name, description, isActive);
+
 
     public void Activate()
     {
