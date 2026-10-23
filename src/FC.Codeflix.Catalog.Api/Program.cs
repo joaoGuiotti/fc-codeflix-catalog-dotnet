@@ -1,9 +1,9 @@
-﻿using FC.Codeflix.Catalog.Api.Configurations;
+using FC.Codeflix.Catalog.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
-    .AddApiConnections()
+    .AddApiConnections(builder.Configuration)
     .AddUseCases()
     .AddControllersAndConfigure();
 

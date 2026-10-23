@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
+﻿using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
@@ -14,6 +14,7 @@ public class ListCategoryApiTestFixture : CategoryBaseFixture
     public List<DomainEntity.Category> GetExampleCategoriesListWithNames(List<string> names)
         => names.Select(name =>
         {
+            Thread.Sleep(1);
             var category = GetExampleCategory();
             category.Update(name);
             return category;

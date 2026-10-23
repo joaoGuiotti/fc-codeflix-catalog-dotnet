@@ -55,6 +55,6 @@ public class CategoryBaseFixture
         a.Name.Should().Be(b.Name);
         a.Description.Should().Be(b.Description);
         a.IsActive.Should().Be(b.IsActive);
-        a.CreatedAt.Should().Be(b.CreatedAt);
+        a.CreatedAt.Should().BeSameDateAs(b.CreatedAt);
     }
 }

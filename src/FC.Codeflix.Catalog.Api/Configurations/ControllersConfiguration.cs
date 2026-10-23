@@ -25,7 +25,6 @@ public static class ControllersConfiguration
     {
         if (!app.Environment.IsProduction())
         {
-
             app.MapOpenApi();
             app.UseSwaggerUI(options
                 => options.SwaggerEndpoint("/openapi/v1.json", "Codeflix Catalog API"));

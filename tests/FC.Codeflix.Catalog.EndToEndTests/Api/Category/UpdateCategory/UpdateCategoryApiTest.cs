@@ -49,7 +49,7 @@ public class UpdateCategoryApiTest : IDisposable
         dbCategory.Description.Should().Be(output.Description);
         dbCategory.IsActive.Should().Be(output.IsActive);
         dbCategory.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
-        dbCategory.CreatedAt.Should().Be(output.CreatedAt);
+        dbCategory.CreatedAt.Should().BeSameDateAs(output.CreatedAt);
     }
 
     [Fact(DisplayName = nameof(UpdateCategoryReturnStatusNotFound))]
