@@ -1,12 +1,10 @@
-﻿using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
+﻿using FC.Codeflix.Catalog.Api.Contracts.Categories;
+using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
 using FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
-using FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
-using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 
 namespace FC.Codeflix.Catalog.Api.Controllers;
 
@@ -63,14 +61,13 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Edit(
-        [FromBody] UpdateCategoryInput input,
         [FromRoute] Guid id,
+        [FromBody] UpdateCategoryRequest request,
         CancellationToken cancellationToken
     )
     {
-        input.Id = id;
         var output = await _mediator.Send(
-            input,
+            request.ToInput(id),
             cancellationToken
         );
         return Ok(output);
@@ -79,11 +76,11 @@ public class CategoriesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(CategoryModelOutput), StatusCodes.Status200OK)]
     public async Task<IActionResult> Get(
-        [FromQuery] ListCategoriesInput input,
+        [FromQuery] ListCategoriesRequest request,
         CancellationToken cancellationToken
     )
     {
-        var output = await this._mediator.Send(input, cancellationToken);
+        var output = await this._mediator.Send(request.ToInput(), cancellationToken);
         return Ok(output);
     }
 

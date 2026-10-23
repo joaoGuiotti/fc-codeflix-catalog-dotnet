@@ -9,6 +9,8 @@ builder.Services
 
 var app = builder.Build();
 
+await app.StartWebApplicationsMigrations();
+
 app.useDocumentation();
 
 app.UseHttpsRedirection();

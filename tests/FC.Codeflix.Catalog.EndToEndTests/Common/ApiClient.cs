@@ -1,26 +1,38 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
+using FC.Codeflix.Catalog.EndToEndTests.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Common;
+
+class SnakeCaseNamingPolicy : JsonNamingPolicy
+{
+    public override string ConvertName(string name)
+        => name.ToSnakeCase();
+}
+
 
 public class ApiClient
 {
     private readonly HttpClient _httpClient;
 
-    private readonly JsonSerializerOptions _jsonSerializerOptions = new()
-    {
-        PropertyNameCaseInsensitive = true
-    };
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
 
     public ApiClient(HttpClient httpClient)
-        => _httpClient = httpClient;
+    {
+        _httpClient = httpClient;
+        _jsonSerializerOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = new SnakeCaseNamingPolicy(),
+            PropertyNameCaseInsensitive = true
+        };
+    }
 
     public async Task<(HttpResponseMessage?, TOutput?)> Post<TOutput>(string uri, object payload)
         where TOutput : class
     {
         var stringContent = new StringContent(
-            JsonSerializer.Serialize(payload),
+            JsonSerializer.Serialize(payload, _jsonSerializerOptions),
             Encoding.UTF8,
             "application/json"
         );
@@ -72,7 +84,7 @@ public class ApiClient
            where TOutput : class
     {
         var stringContent = new StringContent(
-           JsonSerializer.Serialize(payload),
+           JsonSerializer.Serialize(payload, _jsonSerializerOptions),
            Encoding.UTF8,
            "application/json"
        );

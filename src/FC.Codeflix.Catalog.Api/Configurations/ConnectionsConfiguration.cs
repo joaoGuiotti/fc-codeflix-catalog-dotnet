@@ -1,3 +1,4 @@
+﻿using System.Runtime.CompilerServices;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,4 +29,16 @@ public static class ConnectionsConfiguration
             ));
         return services;
     }
+
+    public static async Task<WebApplication> StartWebApplicationsMigrations(this WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            using var scope = app.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<CodeflixCatalogDbContext>();
+            await db.Database.MigrateAsync();
+        }
+        return app;
+    }
+
 }
