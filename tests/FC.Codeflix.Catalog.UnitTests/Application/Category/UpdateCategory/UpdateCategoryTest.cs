@@ -1,12 +1,12 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
-using FC.Codeflix.Catalog.Domain.Entity;
+using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FluentAssertions;
 using Moq;
 using UseCase = FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.UpdateCategory;
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.UpdateCategory;
 
 [Collection(nameof(UpdateCategoryTestFixture))]
 public class UpdateCategoryTest
@@ -24,7 +24,7 @@ public class UpdateCategoryTest
         MemberType = typeof(UpdateCategoryTestDataGenerator)
     )]
     public async Task UpdateSuccess(
-        Category category,
+        DomainEntity.Category category,
         UpdateCategoryInput input
     )
     {
@@ -59,7 +59,7 @@ public class UpdateCategoryTest
         repositoryMock.Verify(
             x =>
                 x.Update(
-                    It.Is<Category>(category =>
+                    It.Is<DomainEntity.Category>(category =>
                         category.Id == input.Id
                         && category.Name == input.Name
                         && category.Description == input.Description
@@ -143,7 +143,7 @@ public class UpdateCategoryTest
         repositoryMock.Verify(
             x =>
                 x.Update(
-                    It.Is<Category>(category =>
+                    It.Is<DomainEntity.Category>(category =>
                         category.Id == input.Id
                         && category.Name == input.Name
                         && category.Description == input.Description

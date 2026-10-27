@@ -1,10 +1,10 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
-using FC.Codeflix.Catalog.Domain.Entity;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 using FluentAssertions;
 using Moq;
 using UseCase = FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.GetCategory;
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.GetCategory;
 
 [Collection(nameof(GetCategoryTestFixture))]
 public class GetCategoryTest
@@ -58,7 +58,7 @@ public class GetCategoryTest
 
         repoMock
             .Setup(x => x.Get(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Category?)null!);
+            .ReturnsAsync((DomainEntity.Category ?)null!);
 
         Func<Task> action = async () =>
             await useCase.Handle(input, CancellationToken.None);

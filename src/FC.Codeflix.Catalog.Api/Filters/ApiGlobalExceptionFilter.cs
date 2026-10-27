@@ -41,7 +41,6 @@ public class ApiGlobalExceptionFilter : IExceptionFilter
                 details.Status = StatusCodes.Status422UnprocessableEntity;
                 details.Detail = execption.Message;
                 break;
-
         }
 
         context.HttpContext.Response.StatusCode = (int)details.Status;

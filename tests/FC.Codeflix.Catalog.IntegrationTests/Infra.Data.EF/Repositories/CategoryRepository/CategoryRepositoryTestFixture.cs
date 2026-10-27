@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Domain.Entity;
+﻿using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.IntegrationTests.Common;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CategoryRepository;
@@ -32,8 +32,6 @@ public class CategoryRepositoryTestFixture : BaseFixture
 
     public string GetInvalidCategoryDescriptionTooLong() =>
         Faker.Lorem.Letter(1001);
-
-    public bool GetRandomBoolean() => Faker.Random.Bool();
 
     public Category GetExampleCategory(
         string? name = null,

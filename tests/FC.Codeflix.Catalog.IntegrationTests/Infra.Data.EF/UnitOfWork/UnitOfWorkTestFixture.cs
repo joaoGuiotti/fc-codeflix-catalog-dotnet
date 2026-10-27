@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Domain.Entity;
+﻿using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.IntegrationTests.Common;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.UnitOfWork;
@@ -26,8 +26,6 @@ public class UnitOfWorkTestFixture : BaseFixture
             description = description[..1000];
         return description;
     }
-
-    public bool GetRandomBoolean() => Faker.Random.Bool();
 
     public Category GetExampleCategory(
         string? name = null,

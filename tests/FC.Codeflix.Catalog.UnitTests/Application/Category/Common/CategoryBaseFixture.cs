@@ -1,13 +1,19 @@
+﻿using Bogus;
 using FC.Codeflix.Catalog.Application.Interfaces;
-using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.UnitTests.Common;
+using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 using Moq;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application;
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.Common;
 
-public class CreateCategoryTestFixture : BaseFixture
+public abstract class CategoryBaseFixture : BaseFixture
 {
+    public Mock<ICategoryRepository> GetRepositoryMock() => new();
+
+    public Mock<IUnitOfWork> GetUowMock() => new();
+
+    // Name
     public string GetValidCategoryName()
     {
         var categoryName = "";
@@ -18,6 +24,9 @@ public class CreateCategoryTestFixture : BaseFixture
         return categoryName;
     }
 
+    public string GetInvalidCategoryNameTooShort() => Faker.Lorem.Letter(2);
+
+    // Description
     public string GetValidCategoryDescription()
     {
         var description = Faker.Commerce.ProductDescription();
@@ -26,18 +35,15 @@ public class CreateCategoryTestFixture : BaseFixture
         return description;
     }
 
-    public CreateCategoryInput GetInput() =>
+    public string GetInvalidCategoryDescriptionTooLong() =>
+        Faker.Lorem.Letter(1001);
+
+    public bool GetRandomBoolean() => new Faker().Random.Bool();
+
+    public DomainEntity.Category GetExampleCategory() =>
         new(
             GetValidCategoryName(),
             GetValidCategoryDescription(),
-            Faker.Random.Bool()
+            GetRandomBoolean()
         );
-
-    public Mock<ICategoryRepository> GetRepositoryMock() => new();
-
-    public Mock<IUnitOfWork> GetUowMock() => new();
 }
-
-[CollectionDefinition(nameof(CreateCategoryTestFixture))]
-public class CreateCategoryTestFixtureCollection
-    : ICollectionFixture<CreateCategoryTestFixture> { }

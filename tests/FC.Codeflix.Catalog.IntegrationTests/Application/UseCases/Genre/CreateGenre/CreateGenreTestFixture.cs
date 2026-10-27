@@ -1,6 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Application.UseCases.Genre.CreateGenre;
 using FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.Common;
-using Moq;
 namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.CreateGenre;
 
 [CollectionDefinition(nameof(CreateGenreTestFixture))]

@@ -1,10 +1,10 @@
-using FC.Codeflix.Catalog.Domain.Entity;
+﻿using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FluentAssertions;
 using Moq;
 using UseCase = FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.ListCategories;
+namespace FC.Codeflix.Catalog.UnitTests.Application.Category.ListCategories;
 
 [Collection(nameof(ListCategoriesTestFixture))]
 public class ListCategoryTest
@@ -29,11 +29,11 @@ public class ListCategoryTest
                 x.Search(It.IsAny<SearchInput>(), It.IsAny<CancellationToken>())
             )
             .ReturnsAsync(
-                new SearchOutput<Category>(
+                new SearchOutput<DomainEntity.Category>(
                     currentPage: input.Page,
                     perPage: input.PerPage,
                     total: categories.Count,
-                    items: (IReadOnlyList<Category>)categories
+                    items: (IReadOnlyList<DomainEntity.Category>)categories
                 )
             );
 
@@ -85,10 +85,10 @@ public class ListCategoryTest
                 x.Search(It.IsAny<SearchInput>(), It.IsAny<CancellationToken>())
             )
             .ReturnsAsync(
-                new SearchOutput<Category>(
+                new SearchOutput<DomainEntity.Category>(
                     currentPage: input.Page,
                     perPage: input.PerPage,
-                    items: new List<Category>(0).AsReadOnly(),
+                    items: new List<DomainEntity.Category>(0).AsReadOnly(),
                     total: 0
                 )
             );
@@ -136,11 +136,11 @@ public class ListCategoryTest
                 x.Search(It.IsAny<SearchInput>(), It.IsAny<CancellationToken>())
             )
             .ReturnsAsync(
-                new SearchOutput<Category>(
+                new SearchOutput<DomainEntity.Category>(
                     currentPage: input.Page,
                     perPage: input.PerPage,
                     total: categories.Count,
-                    items: (IReadOnlyList<Category>)categories
+                    items: (IReadOnlyList<DomainEntity.Category>)categories
                 )
             );
 
