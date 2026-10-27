@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
@@ -111,10 +111,10 @@ public class CategoryRepository : ICategoryRepository
         => await _categories.AsNoTracking()
             .Where(c => categoriesIds.Contains(c.Id))
             .Select(c => c.Id)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
     public async Task<IReadOnlyList<Category>> GetListByIds(List<Guid> categoryIds, CancellationToken cancellationToken)
         => await _categories.AsNoTracking()
             .Where(c => categoryIds.Contains(c.Id))
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 }
