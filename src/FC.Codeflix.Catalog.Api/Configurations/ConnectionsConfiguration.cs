@@ -6,7 +6,6 @@ namespace FC.Codeflix.Catalog.Api.Configurations;
 
 public static class ConnectionsConfiguration
 {
-
     public static IServiceCollection AddApiConnections(
         this IServiceCollection services,
         IConfiguration configuration
@@ -30,15 +29,14 @@ public static class ConnectionsConfiguration
         return services;
     }
 
-    public static async Task<WebApplication> StartWebApplicationsMigrations(this WebApplication app)
+    public static WebApplication StartWebApplicationsMigrations(this WebApplication app)
     {
         if (app.Environment.IsDevelopment())
         {
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<CodeflixCatalogDbContext>();
-            await db.Database.MigrateAsync();
+            db.Database.Migrate();
         }
         return app;
     }
-
 }

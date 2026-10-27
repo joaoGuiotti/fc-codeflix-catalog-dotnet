@@ -9,7 +9,7 @@ builder.Services
 
 var app = builder.Build();
 
-await app.StartWebApplicationsMigrations();
+app.StartWebApplicationsMigrations();
 
 app.useDocumentation();
 

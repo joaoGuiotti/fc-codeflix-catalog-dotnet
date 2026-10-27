@@ -25,7 +25,7 @@
       },
       "publishAllPorts": false,
       "useSSL": true,
-      "DockerfileRunArguments":  "--network service_catalog"
+      "DockerfileRunArguments": "--network service_catalog"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

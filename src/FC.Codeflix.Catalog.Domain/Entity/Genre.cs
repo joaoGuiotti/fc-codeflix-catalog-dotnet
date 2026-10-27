@@ -12,7 +12,10 @@ public class Genre : AggregateRoot
         => _categories.AsReadOnly();
     private List<Guid> _categories;
 
-    public Genre(string name, bool isActive = true)
+    public Genre(
+        string name,
+        bool isActive = true
+    )
         : base()
     {
         Name = name;
@@ -67,13 +70,13 @@ public class Genre : AggregateRoot
         Validate();
     }
 
-    public void removeCategory(Guid categoryGuid)
+    public void RemoveCategory(Guid categoryGuid)
     {
         _categories.Remove(categoryGuid);
         Validate();
     }
 
-    public void removeAllCategories()
+    public void RemoveAllCategories()
     {
         _categories = new List<Guid>();
         Validate();

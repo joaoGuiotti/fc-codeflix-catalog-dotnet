@@ -135,7 +135,7 @@ public class GenreTest
         var genre = _fixture.GetValidGenreWithCategories(categoriesLength);
         var categoryToRemove = genre.Categories[10];
 
-        genre.removeCategory(categoryToRemove);
+        genre.RemoveCategory(categoryToRemove);
 
         genre.Categories.Should().HaveCount((categoriesLength - 1));
         genre.Categories.Should().NotContain(categoryToRemove);
@@ -149,7 +149,7 @@ public class GenreTest
         int categoriesLength = 15;
         var genre = _fixture.GetValidGenreWithCategories(categoriesLength);
 
-        genre.removeAllCategories();
+        genre.RemoveAllCategories();
 
         genre.Categories.Should().HaveCount(0);
     }

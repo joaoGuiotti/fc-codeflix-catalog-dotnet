@@ -29,8 +29,6 @@ public class CategoryUseCaseBaseFixture : BaseFixture
     public string GetInvalidCategoryDescriptionTooLong() =>
         Faker.Lorem.Letter(1001);
 
-    public bool GetRandomBoolean() => Faker.Random.Bool();
-
     public DomainEntity.Category GetExampleCategory(
         string? name = null,
         string? description = null,

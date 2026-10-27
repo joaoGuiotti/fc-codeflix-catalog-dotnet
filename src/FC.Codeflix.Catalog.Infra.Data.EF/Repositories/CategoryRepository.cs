@@ -106,4 +106,15 @@ public class CategoryRepository : ICategoryRepository
             _ => query.OrderByDescending(x => x.CreatedAt),
         };
     }
+
+    public async Task<IReadOnlyList<Guid>> GetIdsListById(List<Guid> categoriesIds, CancellationToken cancellationToken)
+        => await _categories.AsNoTracking()
+            .Where(c => categoriesIds.Contains(c.Id))
+            .Select(c => c.Id)
+            .ToListAsync();
+
+    public async Task<IReadOnlyList<Category>> GetListByIds(List<Guid> categoryIds, CancellationToken cancellationToken)
+        => await _categories.AsNoTracking()
+            .Where(c => categoryIds.Contains(c.Id))
+            .ToListAsync();
 }

@@ -14,11 +14,13 @@ public class BaseFixture
     {
         var context = new CodeflixCatalogDbContext(
             new DbContextOptionsBuilder<CodeflixCatalogDbContext>()
-            .UseInMemoryDatabase("integration-tests-db")
-            .Options
+                .UseInMemoryDatabase("integration-tests-db")
+                .Options
         );
         if (preserveData == false)
             context.Database.EnsureDeleted();
         return context;
     }
+
+    public bool GetRandomBoolean() => Faker.Random.Bool();
 }
