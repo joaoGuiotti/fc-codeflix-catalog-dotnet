@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Domain.Repository;
 
@@ -19,10 +19,7 @@ public class GetCategory : IGetCategory
     )
     {
         var category = await _repo.Get(request.Id, cancellationToken);
-        if (category == null)
-            throw new NotFoundException(
-                $"Category with ID {request.Id} not found."
-            );
+        NotFoundException.ThrowIfNull(category, request.Id);
         return CategoryModelOutput.FromCategory(category);
     }
 }

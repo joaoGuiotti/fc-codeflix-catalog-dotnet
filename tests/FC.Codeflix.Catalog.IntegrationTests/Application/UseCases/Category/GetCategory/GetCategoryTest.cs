@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Category.GetCategory;
 using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 using FluentAssertions;
@@ -59,6 +59,6 @@ public class GetCategoryTest
         await action
             .Should()
             .ThrowAsync<NotFoundException>()
-            .WithMessage($"Category '{input.Id}' not found.");
+            .WithMessage($"Category with ID {input.Id} not found.");
     }
 }

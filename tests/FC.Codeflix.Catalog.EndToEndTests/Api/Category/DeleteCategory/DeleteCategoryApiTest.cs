@@ -1,4 +1,4 @@
-
+﻿
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +62,7 @@ public class DeleteCategoryApiTest : IDisposable
         output.Status.Should().Be((int)StatusCodes.Status404NotFound);
         output.Title.Should().Be("Not Found");
         output.Type.Should().Be("NotFound");
-        output.Detail.Should().Be($"Category '{newGuid}' not found.");
+        output.Detail.Should().Be($"Category with ID {newGuid} not found.");
     }
     void IDisposable.Dispose()
         => _fixture.DisposePersistence();

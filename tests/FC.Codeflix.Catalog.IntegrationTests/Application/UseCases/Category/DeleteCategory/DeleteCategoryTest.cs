@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
 using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 using FC.Codeflix.Catalog.Infra.Data.EF.UnitOfWork;
@@ -55,6 +55,6 @@ public class DeleteCategoryTest
         var task = async () => await useCase.Handle(input, CancellationToken.None);
 
         await task.Should().ThrowAsync<NotFoundException>()
-            .WithMessage($"Category '{exampleCategory.Id}' not found.");
+            .WithMessage($"Category with ID {exampleCategory.Id} not found.");
     }
 }

@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using FC.Codeflix.Catalog.Api.Contracts.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FluentAssertions;
@@ -62,7 +62,7 @@ public class GetCategoryApiTest : IDisposable
         output.Status.Should().Be((int)StatusCodes.Status404NotFound);
         output.Title.Should().Be("Not Found");
         output.Type.Should().Be("NotFound");
-        output.Detail.Should().Be($"Category '{newGuid}' not found.");
+        output.Detail.Should().Be($"Category with ID {newGuid} not found.");
     }
     void IDisposable.Dispose()
        => _fixture.DisposePersistence();

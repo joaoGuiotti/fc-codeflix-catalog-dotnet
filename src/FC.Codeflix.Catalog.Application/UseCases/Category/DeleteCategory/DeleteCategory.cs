@@ -1,6 +1,5 @@
-using FC.Codeflix.Catalog.Application.Interfaces;
+﻿using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Domain.Repository;
-using MediatR;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;
 

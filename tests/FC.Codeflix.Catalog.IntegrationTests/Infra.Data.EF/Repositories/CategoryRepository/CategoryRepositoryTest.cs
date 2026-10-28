@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using FluentAssertions;
@@ -80,7 +80,7 @@ public class CategoryRepositoryTest
 
         await task.Should()
             .ThrowAsync<NotFoundException>()
-            .WithMessage($"Category '{randomGuid}' not found.");
+            .WithMessage($"Category with ID {randomGuid} not found.");
     }
 
     [Fact(DisplayName = nameof(Update))]

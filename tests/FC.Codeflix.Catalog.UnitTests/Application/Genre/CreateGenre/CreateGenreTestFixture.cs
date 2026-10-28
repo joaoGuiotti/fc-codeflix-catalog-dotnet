@@ -12,12 +12,6 @@ public class CreateGenreTestFixtureColleciton
 public class CreateGenreTestFixture
     : GenreUseCaseBaseFixture
 {
-    public string GetValidName()
-        => Faker.Commerce.Categories(1)[0];
-
-    public string GetInvalidNameTooLong()
-        => Faker.Lorem.Letter(1001);
-
     public string GetInvalidNameTooShort() =>
         Faker.Lorem.Letter(1001);
 

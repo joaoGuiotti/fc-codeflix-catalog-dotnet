@@ -1,15 +1,10 @@
-using FC.Codeflix.Catalog.Api.Contracts.Common;
+﻿using FC.Codeflix.Catalog.Api.Contracts.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
-using FC.Codeflix.Catalog.Domain.Entity;
-using FC.Codeflix.Catalog.EndToEndTests.Api.Category.CreateCategory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Category.UpdateCategory;
 
@@ -75,7 +70,7 @@ public class UpdateCategoryApiTest : IDisposable
         output.Status.Should().Be((int)StatusCodes.Status404NotFound);
         output.Title.Should().Be("Not Found");
         output.Type.Should().Be("NotFound");
-        output.Detail.Should().Be($"Category '{newGuid}' not found.");
+        output.Detail.Should().Be($"Category with ID {newGuid} not found.");
     }
 
     [Theory(DisplayName = nameof(ThrowAggregateUpdateError))]
