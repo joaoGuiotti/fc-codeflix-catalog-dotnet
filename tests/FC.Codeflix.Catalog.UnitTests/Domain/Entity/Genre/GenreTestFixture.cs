@@ -16,7 +16,7 @@ public class GenreTestFixture : BaseFixture
            => Faker.Random.Bool();
 
     public DomainEntity.Genre GetValidGenre()
-        => new(GetValidName(), GetRandomBool());
+        => DomainEntity.Genre.Create(GetValidName(), GetRandomBool());
 
     public DomainEntity.Genre GetValidGenreWithCategories(int categoriesLenght = 12)
     {

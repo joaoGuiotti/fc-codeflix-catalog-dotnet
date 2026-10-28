@@ -43,6 +43,7 @@ public static class ControllersConfiguration
     {
         options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
         options.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;
+        options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower));
     }
 }

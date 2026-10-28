@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Interfaces;
+﻿using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
@@ -24,7 +24,7 @@ public class CreateGenre : ICreateGenre
         CancellationToken cancellationToken
     )
     {
-        var genre = new DomainEntity.Genre(
+        var genre = DomainEntity.Genre.Create(
             request.Name,
             request.IsActive
         );

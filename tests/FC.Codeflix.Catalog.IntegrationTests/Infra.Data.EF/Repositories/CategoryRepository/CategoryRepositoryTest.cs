@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using FluentAssertions;
@@ -242,6 +242,7 @@ public class CategoryRepositoryTest
 
         var expectedOrderedList = exampleCategoryList
             .OrderBy(x => x.Name)
+            .ThenBy(x => x.Id)
             .Skip(10)
             .Take(10)
             .ToList();
@@ -374,6 +375,7 @@ public class CategoryRepositoryTest
 
         var expectedOrderedList = exampleCategoryList
             .OrderByDescending(x => x.Name)
+            .ThenBy(x => x.Id)
             .ToList();
         for (int i = 0; i < output.Items.Count; i++)
         {

@@ -22,5 +22,6 @@ public class BaseFixture
         return context;
     }
 
-    public bool GetRandomBoolean() => Faker.Random.Bool();
+    public bool GetRandomBoolean()
+        => Faker.Random.Bool();
 }

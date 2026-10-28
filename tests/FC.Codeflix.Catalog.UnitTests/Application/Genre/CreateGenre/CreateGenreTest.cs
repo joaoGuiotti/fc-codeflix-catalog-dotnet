@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.CreateGenre;
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FluentAssertions;
@@ -73,9 +73,9 @@ public class CreateGenreTest
         output.IsActive.Should().Be(input.IsActive);
         output.CreatedAt.Should().NotBeSameDateAs(default);
         output.Categories.Should().HaveCount(input.CategoriesIds!.Count());
-        input.CategoriesIds!.ForEach(categoryId =>
-            output.Categories.Contains(categoryId).Should().BeTrue()
-        );
+        input.CategoriesIds?.ForEach(id =>
+           output.Categories.Should().Contain(relation => relation.Id == id)
+       );
     }
 
 

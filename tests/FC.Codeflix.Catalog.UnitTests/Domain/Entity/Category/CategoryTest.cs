@@ -1,4 +1,4 @@
-namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category;
+﻿namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.Category;
 
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FluentAssertions;
@@ -21,7 +21,7 @@ public class CategoryTest
         var dateTimeBefore = DateTime.Now;
         var category = DomainEntity.Category.Create(
             validCategory.Name,
-            validCategory.Description
+            validCategory.Description!
         );
         var dateTimeAfter = DateTime.Now;
 

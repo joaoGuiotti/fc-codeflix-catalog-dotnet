@@ -1,4 +1,4 @@
-
+﻿
 using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.UpdateGenre;
 using FC.Codeflix.Catalog.Domain.Exceptions;
@@ -218,7 +218,7 @@ public class UpdateGenreTest
         output.CreatedAt.Should().BeSameDateAs(exampleGenre.CreatedAt);
         output.Categories.Should().HaveCount(newCategoriesIds.Count);
         newCategoriesIds.ForEach(categoryId =>
-            output.Categories.Should().Contain(categoryId)
+            output.Categories.Should().Contain(x => x.Id == categoryId)
         );
 
         repoMock.Verify(

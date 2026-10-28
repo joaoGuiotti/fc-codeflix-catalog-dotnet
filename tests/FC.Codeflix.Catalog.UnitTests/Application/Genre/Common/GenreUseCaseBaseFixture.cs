@@ -28,7 +28,7 @@ public class GenreUseCaseBaseFixture : BaseFixture
         List<Guid>? categoriesIds = null
     )
     {
-        var genre = new DomainEntity.Genre(
+        var genre = DomainEntity.Genre.Create(
             GetValidName(),
             isActive ?? GetRandomBoolean()
         );

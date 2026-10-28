@@ -49,8 +49,10 @@ public class CategoryRepository : ICategoryRepository
                 sort: input.Sort,
                 sortDir: input.SortDir,
                 defaultOrder: x => x.CreatedAt,
+                x => x.Id,
                 x => x.Name,
-                x => x.Description
+                x => x.Description,
+                x => x.CreatedAt
             );
 
         return await query.ToSearchOutputAsync(input, cancellationToken);

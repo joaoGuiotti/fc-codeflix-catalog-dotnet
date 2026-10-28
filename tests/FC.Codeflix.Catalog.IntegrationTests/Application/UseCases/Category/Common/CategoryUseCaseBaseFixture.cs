@@ -1,9 +1,9 @@
-using FC.Codeflix.Catalog.IntegrationTests.Common;
+﻿using FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.Common;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Category.Common;
 
-public class CategoryUseCaseBaseFixture : BaseFixture
+public class CategoryUseCaseBaseFixture : GenreUseCaseBaseFixture
 {
     public string GetValidCategoryName()
     {

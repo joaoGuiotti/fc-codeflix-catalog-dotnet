@@ -20,8 +20,9 @@ public class GetGenreTest
     public async void GetGenre()
     {
         var repoMock = _fixture.GetGenreRepositoryMock();
+        var categoryRepoMock = _fixture.GetCategoryrepositoryMock();
 
-        var useCase = new UseCase.GetGenre(repoMock.Object);
+        var useCase = new UseCase.GetGenre(repoMock.Object, categoryRepoMock.Object);
 
         var exampleGenre = _fixture.GetExampleGenre();
         var input = _fixture.GetValidInput(exampleGenre.Id);
@@ -44,8 +45,9 @@ public class GetGenreTest
     public async Task ThrowWhenCategoryNotFound()
     {
         var repoMock = _fixture.GetGenreRepositoryMock();
+        var categoryRepoMock = _fixture.GetCategoryrepositoryMock();
 
-        var useCase = new UseCase.GetGenre(repoMock.Object);
+        var useCase = new UseCase.GetGenre(repoMock.Object, categoryRepoMock.Object);
         var input = new UseCase.GetGenreInput(Guid.NewGuid());
 
         repoMock

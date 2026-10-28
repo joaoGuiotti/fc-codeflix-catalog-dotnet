@@ -85,6 +85,12 @@ public class CreateGenreTest
 
         var output = await useCase.Handle(input, CancellationToken.None);
 
+        output.Categories.Should().HaveCount(categories.Count);
+        foreach (var categoryOutput in output.Categories)
+        {
+            var expectedCategory = categories.Single(x => x.Id == categoryOutput.Id);
+        }
+
         dbContext.Genres.Count().Should().Be(1);
         var genre = await dbContext.Genres.FindAsync([output.Id]);
         genre.Should().NotBeNull();

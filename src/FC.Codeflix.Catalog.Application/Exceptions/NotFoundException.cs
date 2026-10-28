@@ -1,5 +1,4 @@
-﻿using FC.Codeflix.Catalog.Domain.SeedWork;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace FC.Codeflix.Catalog.Application.Exceptions;
 
@@ -8,13 +7,12 @@ public class NotFoundException : ApplicationException
     public NotFoundException(string message)
         : base(message) { }
 
-
-    public static void ThrowIfNull<TEntity>(
-        [NotNull] TEntity? entity,
+    public static void ThrowIfNull<T>(
+        [NotNull] T? @object,
         Guid Id
-    ) where TEntity : AggregateRoot
+    ) where T : class
     {
-        if (entity is null)
-            throw new NotFoundException($"{typeof(TEntity).Name} with ID {Id} not found.");
+        if (@object is null)
+            throw new NotFoundException($"{typeof(T).Name} with ID {Id} not found.");
     }
 }

@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
+using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
@@ -29,13 +29,14 @@ public class ListCategoryApiTestFixture : CategoryBaseFixture
         var listClone = new List<DomainEntity.Category>(categoriesList);
         var orderedEnumerable = (orderBy.ToLower(), order) switch
         {
-            ("name", ESearchOrder.Asc) => listClone.OrderBy(x => x.Name),
-            ("name", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.Name),
+            ("name", ESearchOrder.Asc) => listClone.OrderBy(x => x.Name).ThenBy(x => x.Id),
+            ("name", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.Name).ThenBy(x => x.Id),
             ("id", ESearchOrder.Asc) => listClone.OrderBy(x => x.Id),
             ("id", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.Id),
-            ("createdat", ESearchOrder.Asc) => listClone.OrderBy(x => x.CreatedAt),
-            ("createdat", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.CreatedAt),
-            _ => listClone.OrderByDescending(x => x.CreatedAt),
+            ("createdat", ESearchOrder.Asc) => listClone.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id),
+            ("createdat", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id),
+            (_, ESearchOrder.Asc) => listClone.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id),
+            _ => listClone.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id),
         };
         return orderedEnumerable.ToList();
     }

@@ -1,5 +1,4 @@
 ﻿using FC.Codeflix.Catalog.Application.Interfaces;
-using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.IntegrationTests.Common;
 using UseCase = FC.Codeflix.Catalog.Application.UseCases.Genre.CreateGenre;
 using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
@@ -10,7 +9,6 @@ namespace FC.Codeflix.Catalog.IntegrationTests.Application.UseCases.Genre.Common
 
 public class GenreUseCaseBaseFixture : BaseFixture
 {
-
     public UseCase.CreateGenre CreateGenreUseCase(CodeflixCatalogDbContext? dbContext = null)
     {
         if (dbContext is null)
@@ -20,4 +18,16 @@ public class GenreUseCaseBaseFixture : BaseFixture
         var uow = new UnitOfWork(dbContext);
         return new(genreRepo, uow, categoryRepo);
     }
+
+    public string GetValidName()
+       => Faker.Commerce.Categories(1)[0];
+
+    public string GetInvalidNameTooLong()
+        => Faker.Lorem.Letter(1001);
+
+    public string GetInvalidNameTooShort() =>
+        Faker.Lorem.Letter(1001);
+
+    public Domain.Entity.Genre GetExampleGenre()
+        => new(GetValidName());
 }

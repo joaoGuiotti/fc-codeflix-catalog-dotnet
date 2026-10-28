@@ -70,6 +70,16 @@ public class Genre : AggregateRoot
         Validate();
     }
 
+
+    public void AddRangeCategories(IReadOnlyList<Guid> categoriesIds)
+    {
+        foreach (var categoryId in categoriesIds)
+        {
+            AddCategory(categoryId);
+        }
+        Validate();
+    }
+
     public void RemoveCategory(Guid categoryGuid)
     {
         _categories.Remove(categoryGuid);
@@ -81,4 +91,6 @@ public class Genre : AggregateRoot
         _categories = new List<Guid>();
         Validate();
     }
+
+   
 }

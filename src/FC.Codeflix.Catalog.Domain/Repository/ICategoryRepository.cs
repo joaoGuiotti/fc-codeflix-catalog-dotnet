@@ -12,4 +12,9 @@ public interface ICategoryRepository
         List<Guid> categoriesIds,
         CancellationToken cancellationToken
     );
+
+    public Task<IReadOnlyList<Category>> GetListByIds(
+        List<Guid> categoryIds,
+        CancellationToken cancellationToken
+    );
 }

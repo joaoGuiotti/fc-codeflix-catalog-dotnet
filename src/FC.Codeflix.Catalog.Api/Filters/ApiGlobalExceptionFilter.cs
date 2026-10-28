@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -33,6 +33,12 @@ public class ApiGlobalExceptionFilter : IExceptionFilter
                 details.Title = "Not Found";
                 details.Type = "NotFound";
                 details.Status = StatusCodes.Status404NotFound;
+                details.Detail = execption.Message;
+                break;
+            case RelatedAggregateException:
+                details.Title = "Invalid Related Aggregate";
+                details.Type = "RelatedAggregate";
+                details.Status = StatusCodes.Status422UnprocessableEntity;
                 details.Detail = execption.Message;
                 break;
             default:
