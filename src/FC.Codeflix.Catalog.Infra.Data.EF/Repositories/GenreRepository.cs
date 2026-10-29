@@ -13,10 +13,8 @@ public class GenreRepository : IGenreRepository
     private readonly CodeflixCatalogDbContext _context;
     private DbSet<Genre> _genres
            => _context.Set<Genre>();
-
     private DbSet<GenresCategories> _genresCategories
         => _context.Set<GenresCategories>();
-
     public GenreRepository(CodeflixCatalogDbContext context)
     {
         _context = context;

@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
+﻿using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FC.Codeflix.Catalog.Api.Contracts.Categories;

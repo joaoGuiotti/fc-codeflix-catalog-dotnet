@@ -57,4 +57,5 @@ public class CategoryBaseFixture
         a.IsActive.Should().Be(b.IsActive);
         a.CreatedAt.Should().BeSameDateAs(b.CreatedAt);
     }
+
 }
