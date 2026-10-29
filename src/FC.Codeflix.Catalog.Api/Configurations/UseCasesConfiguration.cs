@@ -1,4 +1,4 @@
-
+﻿
 using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Domain.Repository;
@@ -23,6 +23,7 @@ public static class UseCasesConfiguration
         services.AddTransient<ICategoryRepository, CategoryRepository>();
         services.AddTransient<IGenreRepository, GenreRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
+        services.AddTransient<ICastMemberRepository, CastMemberRepository>();
         return services;
     }
 }

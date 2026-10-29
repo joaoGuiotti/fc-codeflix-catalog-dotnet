@@ -159,6 +159,20 @@ dotnet tool restore
 dotnet csharpier .
 ```
 
+### 5. Gerenciamento de Migrations (EF Core CLI)
+
+Para gerar uma nova migration no projeto `FC.Codeflix.Catalog.Infra.Data.EF` utilizando o ambiente `Migrations` (`appsettings.Migrations.json`):
+
+```bash
+dotnet ef migrations add <NomeDaMigration> --project src/FC.Codeflix.Catalog.Infra.Data.EF --startup-project src/FC.Codeflix.Catalog.Api --output-dir Migrations -- --environment Migrations
+```
+
+Para aplicar as migrations manualmente no banco de dados via CLI:
+
+```bash
+dotnet ef database update --project src/FC.Codeflix.Catalog.Infra.Data.EF --startup-project src/FC.Codeflix.Catalog.Api -- --environment Migrations
+```
+
 ---
 
 ## 📡 Principais Endpoints da API
