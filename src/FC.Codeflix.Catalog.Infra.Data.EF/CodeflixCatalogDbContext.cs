@@ -1,5 +1,4 @@
-﻿using FC.Codeflix.Catalog.Infra.Data.EF.Configurations;
-using FC.Codeflix.Catalog.Infra.Data.EF.Models;
+﻿using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FC.Codeflix.Catalog.Infra.Data.EF;
@@ -21,11 +20,7 @@ public class CodeflixCatalogDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfiguration(new CategoryConfiguration());
-        builder.ApplyConfiguration(new GenreConfiguration());
-
-        // Relations
-        builder.ApplyConfiguration(new GenresCategoriesConfiguration());
-
+        base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(typeof(CodeflixCatalogDbContext).Assembly);
     }
 }

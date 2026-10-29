@@ -19,7 +19,7 @@ public class GetGenreApiTest : IDisposable
 
 
     [Fact(DisplayName = nameof(GetGenre))]
-    [Trait("Genre", "Get/GetById - Endpoints")]
+    [Trait("EndToEnd/API", "Genre/GetById - Endpoints")]
     public async Task GetGenre()
     {
         // Arrange
@@ -50,7 +50,7 @@ public class GetGenreApiTest : IDisposable
 
 
     [Fact(DisplayName = nameof(GetGenreReturnStatus404NotFound))]
-    [Trait("Genre", "Get/GetById - Endpoints")]
+    [Trait("EndToEnd/API", "Genre/GetById - Endpoints")]
     public async Task GetGenreReturnStatus404NotFound()
     {
         // Arrange

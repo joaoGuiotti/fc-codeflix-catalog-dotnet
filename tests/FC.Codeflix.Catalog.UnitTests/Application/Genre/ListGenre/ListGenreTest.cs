@@ -20,6 +20,7 @@ public class ListGenreTest
     public async void ListGenreDefaultRequest()
     {
         var repoMock = _fixture.GetGenreRepositoryMock();
+        var categoryMock = _fixture.GetCategoryrepositoryMock();
         var genres = _fixture.GetGenres();
         var input = _fixture.GetValidInput();
 
@@ -33,7 +34,7 @@ public class ListGenreTest
                 )
             );
 
-        var useCase = new UseCase.ListGenre(repoMock.Object);
+        var useCase = new UseCase.ListGenre(repoMock.Object, categoryMock.Object);
         var output = await useCase.Handle(input, CancellationToken.None);
 
         output.Should().NotBeNull();

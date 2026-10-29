@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Infra.Data.EF;
+using FC.Codeflix.Catalog.Infra.Data.EF;
 using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,5 +42,13 @@ public class GenreApiPersistence
     {
         await _context.GenresCategories.AddRangeAsync(genreCategories);
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<GenresCategories>> GetGenresCategoriesRelationsByGenreId(Guid id)
+    {
+        return await _context.GenresCategories
+            .AsNoTracking()
+            .Where(x => x.GenreId == id)
+            .ToListAsync();
     }
 }
