@@ -2,6 +2,7 @@
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
+using FC.Codeflix.Catalog.Infra.Data.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
@@ -24,9 +25,9 @@ public class CastMemberRepository : ICastMemberRepository
     public async Task<CastMember> Get(Guid id, CancellationToken cancellation)
     {
         var result = await _castMembers.AsNoTracking().FirstOrDefaultAsync(
-           x => x.Id == id,
-           cancellation
-       );
+            x => x.Id == id,
+            cancellation
+        );
         NotFoundException.ThrowIfNull(result, id);
         return result!;
     }
@@ -34,9 +35,24 @@ public class CastMemberRepository : ICastMemberRepository
     public async Task Insert(CastMember aggregate, CancellationToken cancellation)
         => await _castMembers.AddAsync(aggregate, cancellation);
 
-    public Task<SearchOutput<CastMember>> Search(SearchInput input, CancellationToken cancellationToken)
+    public async Task<SearchOutput<CastMember>> Search(SearchInput input, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var query = _castMembers.AsNoTracking()
+            .ApplyFilter(
+                input.Search,
+                x => x.Name,
+                x => x.Type.ToString()
+            ).ApplyOrder(
+                sort: input.Sort,
+                sortDir: input.SortDir,
+                defaultOrder: x => x.CreatedAt,
+                x => x.Id,
+                x => x.Name,
+                x => x.Type.ToString(),
+                x => x.CreatedAt
+            );
+
+        return await query.ToSearchOutputAsync(input, cancellationToken);
     }
 
     public Task Update(CastMember aggregate, CancellationToken cancellationToken)

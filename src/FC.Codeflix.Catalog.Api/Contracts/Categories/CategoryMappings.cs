@@ -14,5 +14,5 @@ public static class CategoryMappings
         );
 
     public static ListCategoriesInput ToInput(this ListCategoriesRequest request) =>
-        new(request.Page, request.PerPage, request.Search, request.Sort, request.sortDir);
+        new(request.Page, request.PerPage, request.Search, request.Sort, request.SortDir);
 }
