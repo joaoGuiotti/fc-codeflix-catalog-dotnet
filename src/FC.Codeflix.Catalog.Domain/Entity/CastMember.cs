@@ -16,9 +16,9 @@ public class CastMember : AggregateRoot
         Validate();
     }
 
-    public string Name { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public ECastMemberType Type { get; set; }
+    public string Name { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public ECastMemberType Type { get; private set; }
 
     public static CastMember Create(string name, ECastMemberType type)
         => new(name, type);
@@ -43,5 +43,19 @@ public class CastMember : AggregateRoot
             throw new EntityValidationException(
                 $"{nameof(Name)} must be less or equal 255 characters."
             );
+        if (!System.Enum.IsDefined(typeof(ECastMemberType), Type))
+        {
+            throw new EntityValidationException(
+                $"{nameof(Type)} must be a valid {nameof(CastMember)} type."
+            );
+        }
+    }
+
+    public void Update(string name, ECastMemberType? type)
+    {
+        Name = name;
+        Type = type ?? ECastMemberType.Actor;
+
+        Validate();
     }
 }

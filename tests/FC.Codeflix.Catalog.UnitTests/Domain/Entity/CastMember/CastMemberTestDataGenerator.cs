@@ -2,32 +2,32 @@ namespace FC.Codeflix.Catalog.UnitTests.Domain.Entity.CastMember;
 
 public class CastMemberTestDataGenerator
 {
-    public static IEnumerable<object?[]> GetInvalidNames()
+    public static IEnumerable<object[]> GetInvalidNames()
     {
         var fixture = new CastMemberTestFixture();
-        var invalidInputsList = new List<object?[]>
+        var invalidInputsList = new List<object[]>
         {
-            new object?[]
+            new object[]
             {
-                null,
+                null!,
                 "Name cannot be null or empty."
             },
-            new object?[]
+            new object[]
             {
                 "",
                 "Name cannot be null or empty."
             },
-            new object?[]
+            new object[]
             {
                 "   ",
                 "Name cannot be null or empty."
             },
-            new object?[]
+            new object[]
             {
                 fixture.GetInvalidNameTooShort(),
                 "Name must be at least 3 characters long."
             },
-            new object?[]
+            new object[]
             {
                 fixture.GetInvalidNameTooLong(),
                 "Name must be less or equal 255 characters."
@@ -37,4 +37,3 @@ public class CastMemberTestDataGenerator
         return invalidInputsList;
     }
 }
-

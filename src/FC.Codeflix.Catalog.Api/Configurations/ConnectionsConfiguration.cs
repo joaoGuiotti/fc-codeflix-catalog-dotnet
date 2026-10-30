@@ -30,7 +30,7 @@ public static class ConnectionsConfiguration
 
     public static WebApplication StartWebApplicationsMigrations(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("DevLocal"))
         {
             using var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<CodeflixCatalogDbContext>();

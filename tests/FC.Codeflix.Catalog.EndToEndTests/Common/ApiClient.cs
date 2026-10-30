@@ -11,7 +11,6 @@ class SnakeCaseNamingPolicy : JsonNamingPolicy
         => name.ToSnakeCase();
 }
 
-
 public class ApiClient
 {
     private readonly HttpClient _httpClient;

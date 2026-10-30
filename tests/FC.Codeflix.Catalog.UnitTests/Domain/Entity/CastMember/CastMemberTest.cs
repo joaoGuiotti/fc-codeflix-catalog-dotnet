@@ -68,5 +68,27 @@ public class CastMemberTest
             .Throw<EntityValidationException>()
             .WithMessage(expectedErrorMessage);
     }
-}
 
+    [Fact(DisplayName = nameof(InstantiateThrowErrorWhenTypeIsInvalid))]
+    [Trait("Domain", "CastMember - Aggregate")]
+    public void InstantiateThrowErrorWhenTypeIsInvalid()
+    {
+        var instantiateAction = ()
+            => DomainEntity.CastMember.Create("CastMember", (ECastMemberType)99);
+        instantiateAction.Should()
+            .Throw<EntityValidationException>()
+            .WithMessage("Type must be a valid CastMember type.");
+    }
+
+    [Fact(DisplayName = nameof(UpdateThrowErrorWhenTypeIsInvalid))]
+    [Trait("Domain", "CastMember - Aggregate")]
+    public void UpdateThrowErrorWhenTypeIsInvalid()
+    {
+        var castMember = DomainEntity.CastMember.Create("CastMember", ECastMemberType.Actor);
+        var updateAction = ()
+            => castMember.Update("New Name", (ECastMemberType)99);
+        updateAction.Should()
+            .Throw<EntityValidationException>()
+            .WithMessage("Type must be a valid CastMember type.");
+    }
+}
