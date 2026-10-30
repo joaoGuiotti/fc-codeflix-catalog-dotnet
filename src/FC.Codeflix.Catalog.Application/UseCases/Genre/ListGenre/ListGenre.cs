@@ -1,5 +1,4 @@
 ﻿using FC.Codeflix.Catalog.Domain.Repository;
-using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Genre.ListGenre;
 

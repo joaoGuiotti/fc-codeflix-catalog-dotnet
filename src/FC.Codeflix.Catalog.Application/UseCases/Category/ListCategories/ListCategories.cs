@@ -17,16 +17,7 @@ public class ListCategories : IListCategories
         CancellationToken cancellationToken
     )
     {
-        var input = new SearchInput(
-            page: request.Page,
-            perPage: request.PerPage,
-            search: request.Search,
-            sort: request.Sort,
-            sortDir: request.SortDir
-        );
-
-        var searchOutput = await _repo.Search(input, cancellationToken);
-
+        var searchOutput = await _repo.Search(request.ToSearchInput(), cancellationToken);
         return ListCategoriesOutput.FromSearchOutput(searchOutput);
     }
 }

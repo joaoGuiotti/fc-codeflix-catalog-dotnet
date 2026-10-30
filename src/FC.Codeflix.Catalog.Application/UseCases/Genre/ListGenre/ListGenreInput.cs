@@ -20,7 +20,4 @@ public class ListGenreInput
         ESearchOrder sortDir = ESearchOrder.Asc
     )
         : base(page, perPage, search, sort, sortDir) { }
-
-    public SearchInput ToSearchInput()
-         => new(Page, PerPage, Search, Sort, SortDir);
 }

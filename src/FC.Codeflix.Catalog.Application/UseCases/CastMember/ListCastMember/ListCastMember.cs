@@ -12,15 +12,7 @@ public class ListCastMember(
         CancellationToken cancellationToken
     )
     {
-        var input = new SearchInput(
-            request.Page,
-            request.PerPage,
-            request.Search,
-            request.Sort,
-            request.SortDir
-        );
-        var searchOutput = await _repo.Search(input, cancellationToken);
-
+        var searchOutput = await _repo.Search(request.ToSearchInput(), cancellationToken);
         return ListCastMemberOutput.FromSearchOutput(searchOutput);
     }
 }
