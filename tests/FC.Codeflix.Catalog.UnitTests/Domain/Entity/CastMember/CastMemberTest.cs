@@ -22,6 +22,7 @@ public class CastMemberTest
         DomainEntity.CastMember castMember = DomainEntity.CastMember.Create("CastMember", ECastMemberType.Actor);
 
         castMember.Should().NotBeNull();
+        castMember.Id.Should().NotBeEmpty();
         castMember.Name.Should().Be("CastMember");
         castMember.Type.Should().Be(ECastMemberType.Actor);
         castMember.CreatedAt.Should().NotBeSameDateAs(default);
@@ -80,13 +81,68 @@ public class CastMemberTest
             .WithMessage("Type must be a valid CastMember type.");
     }
 
+    [Fact(DisplayName = nameof(Update))]
+    [Trait("Domain", "CastMember - Aggregate")]
+    public void Update()
+    {
+        var castMember = _fixture.GetExampleCastMember();
+        var originalId = castMember.Id;
+        var originalCreatedAt = castMember.CreatedAt;
+        var newName = _fixture.GetValidName();
+        var newType = _fixture.GetDifferentType(castMember.Type);
+
+        castMember.Update(newName, newType);
+
+        castMember.Id.Should().Be(originalId);
+        castMember.Name.Should().Be(newName);
+        castMember.Type.Should().Be(newType);
+        castMember.CreatedAt.Should().Be(originalCreatedAt);
+    }
+
+    [Theory(DisplayName = nameof(UpdateKeepsCurrentTypeWhenTypeIsNull))]
+    [Trait("Domain", "CastMember - Aggregate")]
+    [InlineData(ECastMemberType.Actor)]
+    [InlineData(ECastMemberType.Director)]
+    public void UpdateKeepsCurrentTypeWhenTypeIsNull(ECastMemberType currentType)
+    {
+        var castMember = _fixture.GetExampleCastMember(type: currentType);
+        var newName = _fixture.GetValidName();
+
+        castMember.Update(newName, null);
+
+        castMember.Name.Should().Be(newName);
+        castMember.Type.Should().Be(currentType);
+    }
+
+    [Theory(DisplayName = nameof(UpdateThrowError))]
+    [Trait("Domain", "CastMember - Aggregate")]
+    [MemberData(
+        nameof(CastMemberTestDataGenerator.GetInvalidNames),
+        MemberType = typeof(CastMemberTestDataGenerator)
+    )]
+    public void UpdateThrowError(
+        string? name,
+        string expectedErrorMessage
+    )
+    {
+        var castMember = _fixture.GetExampleCastMember();
+
+        var updateAction = () => castMember.Update(name!, castMember.Type);
+
+        updateAction.Should()
+            .Throw<EntityValidationException>()
+            .WithMessage(expectedErrorMessage);
+    }
+
     [Fact(DisplayName = nameof(UpdateThrowErrorWhenTypeIsInvalid))]
     [Trait("Domain", "CastMember - Aggregate")]
     public void UpdateThrowErrorWhenTypeIsInvalid()
     {
-        var castMember = DomainEntity.CastMember.Create("CastMember", ECastMemberType.Actor);
+        var castMember = _fixture.GetExampleCastMember();
+
         var updateAction = ()
-            => castMember.Update("New Name", (ECastMemberType)99);
+            => castMember.Update(_fixture.GetValidName(), (ECastMemberType)99);
+
         updateAction.Should()
             .Throw<EntityValidationException>()
             .WithMessage("Type must be a valid CastMember type.");

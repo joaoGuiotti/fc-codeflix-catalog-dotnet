@@ -48,7 +48,7 @@ public class CastMemberRepository : ICastMemberRepository
                 defaultOrder: x => x.CreatedAt,
                 x => x.Id,
                 x => x.Name,
-                x => x.Type.ToString(),
+                x => x.Type,
                 x => x.CreatedAt
             );
 

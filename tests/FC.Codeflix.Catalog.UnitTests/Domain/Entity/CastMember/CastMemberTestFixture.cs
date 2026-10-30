@@ -10,17 +10,25 @@ public class CastMemberTestFixtureCollection : ICollectionFixture<CastMemberTest
 
 public class CastMemberTestFixture : BaseFixture
 {
-    public DomainEntity.CastMember GetExampleCastMember()
-        => DomainEntity.CastMember.Create(
-            GetValidName(),
-            GetRandomCastMemberType()
-        );
+    public DomainEntity.CastMember GetExampleCastMember(
+        string? name = null,
+        ECastMemberType? type = null
+    ) => DomainEntity.CastMember.Create(
+        name ?? GetValidName(),
+        type ?? GetRandomCastMemberType()
+    );
 
     public string GetValidName()
         => Faker.Name.FullName();
 
+    // Random.Next(1, 2) sempre retornava 1 (Director); Actor nunca era gerado.
     public ECastMemberType GetRandomCastMemberType()
-        => (ECastMemberType)new Random().Next(1, 2);
+        => Faker.Random.Enum<ECastMemberType>();
+
+    public ECastMemberType GetDifferentType(ECastMemberType type)
+        => type == ECastMemberType.Actor
+            ? ECastMemberType.Director
+            : ECastMemberType.Actor;
 
     public string GetInvalidNameTooShort()
         => Faker.Lorem.Letter(2);

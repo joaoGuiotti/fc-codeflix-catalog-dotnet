@@ -1,9 +1,7 @@
-﻿using FC.Codeflix.Catalog.Application.Common;
-using FC.Codeflix.Catalog.Application.UseCases.CastMember.ListCastMember;
+﻿using FC.Codeflix.Catalog.Application.UseCases.CastMember.ListCastMember;
 using FC.Codeflix.Catalog.Application.UseCases.CastMember.UpdateCastMember;
 using FC.Codeflix.Catalog.Domain.Enum;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FC.Codeflix.Catalog.Api.Contracts.CastMembers;

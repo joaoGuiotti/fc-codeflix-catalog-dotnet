@@ -54,6 +54,7 @@ public class CastMemberController(IMediator _mediatoR) : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(ApiResponseList<CastMemberOutput>), StatusCodes.Status200OK)]
     public async Task<IActionResult> List(
         [FromQuery] ListCastMemberRequest request,
         CancellationToken cancellationToken

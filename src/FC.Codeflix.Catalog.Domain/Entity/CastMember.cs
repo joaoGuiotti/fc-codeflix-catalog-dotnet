@@ -54,7 +54,7 @@ public class CastMember : AggregateRoot
     public void Update(string name, ECastMemberType? type)
     {
         Name = name;
-        Type = type ?? ECastMemberType.Actor;
+        Type = type ?? Type;
 
         Validate();
     }
