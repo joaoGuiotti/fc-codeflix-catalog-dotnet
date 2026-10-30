@@ -12,7 +12,13 @@ public class ListCastMemberInput : PaginatedListInput
     {
     }
 
-    public ListCastMemberInput(int page, int perPage, string search, string sort, ESearchOrder dir)
+    public ListCastMemberInput(
+        int page = 1,
+        int perPage = 15,
+        string? search = "",
+        string? sort = "",
+        ESearchOrder dir = ESearchOrder.Asc
+    )
         : base(page, perPage, search, sort, dir)
     {
     }
