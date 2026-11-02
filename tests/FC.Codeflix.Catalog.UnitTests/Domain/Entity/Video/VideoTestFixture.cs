@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Domain.Enum;
+using FC.Codeflix.Catalog.Domain.ValueObject;
 using FC.Codeflix.Catalog.UnitTests.Common;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
@@ -18,7 +19,10 @@ public class VideoTestFixture : BaseFixture
         bool? published = null,
         int? yearLaunched = null,
         int? duration = null,
-        ERating? rating = null
+        ERating? rating = null,
+        Image? thumb = null,
+        Image? thumbHalf = null,
+        Image? banner = null
     ) => new(
         title ?? GetValidTitle(),
         description ?? GetValidDescription(),
@@ -26,8 +30,14 @@ public class VideoTestFixture : BaseFixture
         published ?? GetRandomBoolean(),
         yearLaunched ?? GetValidYearLaunched(),
         duration ?? GetValidDuration(),
-        rating ?? GetRandomRating()
+        rating ?? GetRandomRating(),
+        thumb,
+        thumbHalf,
+        banner
     );
+
+    public string GetValidImagePath()
+        => Faker.Image.PlaceImgUrl();
 
     public string GetValidTitle()
     {

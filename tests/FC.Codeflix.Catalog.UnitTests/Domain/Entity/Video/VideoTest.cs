@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Domain.Validation;
+using FC.Codeflix.Catalog.Domain.ValueObject;
 using FluentAssertions;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 
@@ -152,5 +153,47 @@ public class VideoTest
         video.Description.Should().Be(description);
         video.Published.Should().Be(published);
         video.Rating.Should().Be(rating);
+    }
+
+    [Fact(DisplayName = nameof(UpdateThumb))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateThumb()
+    {
+        var validVideo = _fixture.GetValidVideo();
+        var validImagePath = _fixture.GetValidImagePath();
+
+        validVideo.UpdateThumb(validImagePath);
+
+        validVideo.Thumb.Should().NotBeNull();
+        validVideo.Thumb!.Path.Should().Be(validImagePath);
+        validVideo.Thumb.Should().Be(new Image(validImagePath));
+    }
+
+    [Fact(DisplayName = nameof(UpdateThumbHalf))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateThumbHalf()
+    {
+        var validVideo = _fixture.GetValidVideo();
+        var validImagePath = _fixture.GetValidImagePath();
+
+        validVideo.UpdateThumbHalf(validImagePath);
+
+        validVideo.ThumbHalf.Should().NotBeNull();
+        validVideo.ThumbHalf!.Path.Should().Be(validImagePath);
+        validVideo.ThumbHalf.Should().Be(new Image(validImagePath));
+    }
+
+    [Fact(DisplayName = nameof(UpdateBanner))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateBanner()
+    {
+        var validVideo = _fixture.GetValidVideo();
+        var validImagePath = _fixture.GetValidImagePath();
+
+        validVideo.UpdateBanner(validImagePath);
+
+        validVideo.Banner.Should().NotBeNull();
+        validVideo.Banner!.Path.Should().Be(validImagePath);
+        validVideo.Banner.Should().Be(new Image(validImagePath));
     }
 }
