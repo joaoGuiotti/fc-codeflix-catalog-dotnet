@@ -1,12 +1,13 @@
 ﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.CreateGenre;
 using FC.Codeflix.Catalog.Domain.Exceptions;
+using FC.Codeflix.Catalog.UnitTests.Application.UseCases.Genre.CreateGenre;
 using FluentAssertions;
 using Moq;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
 using UseCase = FC.Codeflix.Catalog.Application.UseCases.Genre.CreateGenre;
 
-namespace FC.Codeflix.Catalog.UnitTests.Application.UseCases.Genre.CreateGenre;
+namespace FC.Codeflix.Catalog.UnitTests.Application.Genre.CreateGenre;
 
 [Collection(nameof(CreateGenreTestFixture))]
 public class CreateGenreTest

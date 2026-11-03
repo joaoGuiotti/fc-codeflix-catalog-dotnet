@@ -2,12 +2,16 @@
 
 public class Notification : INotification
 {
-    private readonly List<ValidationError> _errors = [];
+    private readonly Dictionary<(string? Property, string Message), ValidationError> _errors = new();
 
-    public bool HasErrors => _errors.Count > 0;
-    public IReadOnlyCollection<ValidationError> Errors => _errors.AsReadOnly();
+    public IReadOnlyList<ValidationError> Errors => _errors.Values.ToList().AsReadOnly();
 
-    public void Append(ValidationError error) => _errors.Add(error);
-    public void Append(IEnumerable<ValidationError> errors) => _errors.AddRange(errors);
+    public void AddError(string errorMessage, string? propertyName = null)
+    {
+        _errors.TryAdd((propertyName, errorMessage), new ValidationError(errorMessage, propertyName));
+    }
+
+    public bool HasErrors() => _errors.Count > 0;
+
     public void Clear() => _errors.Clear();
 }

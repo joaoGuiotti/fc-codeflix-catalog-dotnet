@@ -8,8 +8,6 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.UseCases.Genre.Common;
 
 public class GenreUseCaseBaseFixture : BaseFixture
 {
-    public Mock<IUnitOfWork> GetUnitOfWorkMock()
-        => new();
 
     public Mock<IGenreRepository> GetGenreRepositoryMock()
         => new();

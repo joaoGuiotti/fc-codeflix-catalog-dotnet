@@ -10,6 +10,6 @@ public class VideoValidator(Video video, INotification notification) : Validatio
         var result = new VideoFluentValidator().Validate(video);
 
         foreach (var error in result.Errors)
-            Notification.Append(new ValidationError(error.ErrorMessage));
+            Notification.AddError(error.ErrorMessage, error.PropertyName);
     }
 }

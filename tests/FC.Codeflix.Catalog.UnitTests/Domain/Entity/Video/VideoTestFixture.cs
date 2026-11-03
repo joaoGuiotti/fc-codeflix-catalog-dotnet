@@ -85,4 +85,20 @@ public class VideoTestFixture : BaseFixture
 
     public string GetTooLongDescription()
         => Faker.Lorem.Letter(256);
+
+    public string GetValidMediaPath()
+    {
+        var exampleMedias = new string[]
+        {
+            "https://www.googlestorage.com/file-example.mp4",
+            "https://www.storage.com/file.mp4",
+            "https://www.s3.com.br/file-example.mp4",
+            "https://www.globlstorage.com/file.mp4"
+        };
+        var random = new Random();
+        return exampleMedias[random.Next(exampleMedias.Length)];
+    }
+
+    public DomainEntity.Media GetValidMedia()
+        => new(GetValidMediaPath());
 }

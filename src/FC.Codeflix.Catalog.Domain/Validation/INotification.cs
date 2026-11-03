@@ -2,8 +2,8 @@
 
 public interface INotification
 {
-    IReadOnlyCollection<ValidationError> Errors { get; }
-    void Append(ValidationError error);
-    void Append(IEnumerable<ValidationError> errors);
-    public bool HasErrors => Errors.Count > 0;
+    IReadOnlyList<ValidationError> Errors { get; }
+    void AddError(string errorMessage, string? propertyName = null);
+    public bool HasErrors();
+    public void Clear();
 }
