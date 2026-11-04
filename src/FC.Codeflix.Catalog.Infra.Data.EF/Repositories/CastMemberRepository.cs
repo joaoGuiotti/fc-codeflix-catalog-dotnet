@@ -55,6 +55,14 @@ public class CastMemberRepository : ICastMemberRepository
         return await query.ToSearchOutputAsync(input, cancellationToken);
     }
 
+
     public Task Update(CastMember aggregate, CancellationToken cancellationToken)
         => Task.FromResult(_castMembers.Update(aggregate));
+
+    public async Task<IEnumerable<Guid>> GetIdsListById(List<Guid> requestCastMembersIds,
+        CancellationToken cancellationToken)
+        => await _castMembers.AsNoTracking()
+            .Where(x => requestCastMembersIds.Contains(x.Id))
+            .Select(x => x.Id)
+            .ToListAsync(cancellationToken);
 }

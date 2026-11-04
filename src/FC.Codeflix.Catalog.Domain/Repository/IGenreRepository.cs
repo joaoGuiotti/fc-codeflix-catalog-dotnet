@@ -7,4 +7,5 @@ namespace FC.Codeflix.Catalog.Domain.Repository;
 public interface IGenreRepository
         : IGenericRepository<Genre>, ISearchableRepository<Genre>
 {
+    Task<IEnumerable<Guid>> GetIdsListById(List<Guid> genresIds, CancellationToken cancellationToken);
 }

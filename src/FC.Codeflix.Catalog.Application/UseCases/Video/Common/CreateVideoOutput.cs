@@ -11,7 +11,10 @@ public record CreateVideoOutput(
     int YearLaunched,
     int Duration,
     ERating Rating,
-    DateTime CreatedAt
+    DateTime CreatedAt,
+    IReadOnlyCollection<Guid> CategoriesIds,
+    IReadOnlyCollection<Guid> GenresIds,
+    IReadOnlyCollection<Guid> CastMembersIds
 )
 {
     public static CreateVideoOutput FromEntity(Domain.Entity.Video entity)
@@ -24,6 +27,9 @@ public record CreateVideoOutput(
             entity.YearLaunched,
             entity.Duration,
             entity.Rating,
-            entity.CreatedAt
+            entity.CreatedAt,
+            entity.Categories,
+            entity.Genres,
+            entity.CastMembers
         );
 }

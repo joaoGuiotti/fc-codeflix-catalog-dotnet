@@ -11,10 +11,13 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 public class GenreRepository : IGenreRepository
 {
     private readonly CodeflixCatalogDbContext _context;
+
     private DbSet<Genre> _genres
-           => _context.Set<Genre>();
+        => _context.Set<Genre>();
+
     private DbSet<GenresCategories> _genresCategories
         => _context.Set<GenresCategories>();
+
     public GenreRepository(CodeflixCatalogDbContext context)
     {
         _context = context;
@@ -107,4 +110,10 @@ public class GenreRepository : IGenreRepository
 
         return output;
     }
+
+    public async Task<IEnumerable<Guid>> GetIdsListById(List<Guid> genresIds, CancellationToken cancellationToken)
+        => await _genres.AsNoTracking()
+            .Where(c => genresIds.Contains(c.Id))
+            .Select(c => c.Id)
+            .ToListAsync(cancellationToken);
 }

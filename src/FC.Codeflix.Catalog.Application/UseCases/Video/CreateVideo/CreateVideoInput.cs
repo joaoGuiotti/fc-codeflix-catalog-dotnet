@@ -10,7 +10,9 @@ public record CreateVideoInput(
     bool Published,
     int YearLaunched,
     int Duration,
-    ERating Rating
-) : IRequest<CreateVideoOutput>
-{
-}
+    ERating Rating,
+    List<Guid>? CategoriesIds = null,
+    List<Guid>? GenresIds = null,
+    List<Guid>? CastMembersIds = null
+
+) : IRequest<CreateVideoOutput>;

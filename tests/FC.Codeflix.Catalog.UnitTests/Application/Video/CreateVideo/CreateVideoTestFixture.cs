@@ -15,14 +15,32 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
     public Mock<IVideoRepository> GetRepoMock()
         => new();
 
-    public CreateVideoInput CreateVideInput(string? title = null,  string? description = null)
+    public Mock<ICategoryRepository> GetCategoryRepoMock()
+        => new();
+
+    public Mock<IGenreRepository> GetGenreRepoMock()
+        => new();
+
+    public Mock<ICastMemberRepository> GetCastMemberRepoMock()
+        => new();
+
+    public CreateVideoInput CreateVideoInput(
+        string? title = null,
+        string? description = null,
+        List<Guid>? categoriesIds = null,
+        List<Guid>? genresIds = null,
+        List<Guid>? castMembersIds = null
+    )
         => new(
             title ?? GetValidTitle(),
-            description ??  GetValidDescription(),
+            description ?? GetValidDescription(),
             GetRandomBoolean(),
             GetRandomBoolean(),
             GetValidYearLaunched(),
             GetValidDuration(),
-            GetRandomRating()
+            GetRandomRating(),
+            CategoriesIds: categoriesIds ?? [],
+            GenresIds: genresIds ?? [],
+            CastMembersIds: castMembersIds ?? []
         );
 }

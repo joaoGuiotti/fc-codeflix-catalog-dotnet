@@ -96,4 +96,7 @@ public class VideoTestFixtureBase : BaseFixture
 
     public DomainEntity.Media GetValidMedia()
         => new(GetValidMediaPath());
+
+    public List<Guid> GetListGuids(int length = 12)
+        => Enumerable.Range(1, length).Select(_ => Guid.NewGuid()).ToList();
 }
