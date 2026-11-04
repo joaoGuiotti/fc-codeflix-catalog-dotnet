@@ -1,5 +1,7 @@
-﻿using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using System.Text;
+using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Exceptions;
+using FC.Codeflix.Catalog.Domain.ValueObject;
 using FluentAssertions;
 using Moq;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
@@ -30,6 +32,7 @@ public class CreateVideoTest
             categoryRepoMock.Object,
             _fixture.GetGenreRepoMock().Object,
             _fixture.GetCastMemberRepoMock().Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
         var input = _fixture.CreateVideoInput();
@@ -80,6 +83,7 @@ public class CreateVideoTest
             categoryRepoMock.Object,
             _fixture.GetGenreRepoMock().Object,
             _fixture.GetCastMemberRepoMock().Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
         var input = _fixture.CreateVideoInput(categoriesIds: categoriesIds);
@@ -133,6 +137,7 @@ public class CreateVideoTest
             categoryRepoMock.Object,
             _fixture.GetGenreRepoMock().Object,
             _fixture.GetCastMemberRepoMock().Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
         var exampleInvalidCategoryId = Guid.NewGuid();
@@ -169,6 +174,7 @@ public class CreateVideoTest
             _fixture.GetCategoryRepoMock().Object,
             _fixture.GetGenreRepoMock().Object,
             _fixture.GetCastMemberRepoMock().Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
 
@@ -208,6 +214,7 @@ public class CreateVideoTest
             _fixture.GetCategoryRepoMock().Object,
             genreRepoMock.Object,
             _fixture.GetCastMemberRepoMock().Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
         var input = _fixture.CreateVideoInput(genresIds: genresIds);
@@ -263,6 +270,7 @@ public class CreateVideoTest
             categoryRepoMock.Object,
             genreRepoMock.Object,
             _fixture.GetCastMemberRepoMock().Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
         var exampleInvalidGenreId = Guid.NewGuid();
@@ -298,6 +306,7 @@ public class CreateVideoTest
             _fixture.GetCategoryRepoMock().Object,
             genreRepoMock.Object,
             castMemberRepoMock.Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
         var input = _fixture.CreateVideoInput(castMembersIds: castMembersIds);
@@ -355,6 +364,7 @@ public class CreateVideoTest
             categoryRepoMock.Object,
             genreRepoMock.Object,
             castMemberRepoMock.Object,
+            _fixture.GetStorageServiceMock().Object,
             uowMock.Object
         );
         var exampleInvalidCastMemberId = Guid.NewGuid();
@@ -369,5 +379,330 @@ public class CreateVideoTest
             .WithMessage($"Related castMember id (or ids) not found: {exampleInvalidCastMemberId}.");
 
         categoryRepoMock.VerifyAll();
+    }
+
+    [Fact(DisplayName = nameof(CreateVideoWithThumb))]
+    [Trait("Video", "Create Video - Use Cases")]
+    public async Task CreateVideoWithThumb()
+    {
+        var repoMock = _fixture.GetRepoMock();
+        var uowMock = _fixture.GetUnitOfWorkMock();
+        var genreRepoMock = _fixture.GetGenreRepoMock();
+        var castMemberRepoMock = _fixture.GetCastMemberRepoMock();
+        var storageServiceMock = _fixture.GetStorageServiceMock();
+
+        var thumbFile = _fixture.GetValidImageFileInput();
+        var expectedThumbName = $"thumb.{thumbFile.Extension}";
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.IsAny<string>(),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedThumbName);
+
+        var useCase = new UseCase.CreateVideo(
+            repoMock.Object,
+            _fixture.GetCategoryRepoMock().Object,
+            genreRepoMock.Object,
+            castMemberRepoMock.Object,
+            storageServiceMock.Object,
+            uowMock.Object
+        );
+        var input = _fixture.CreateVideoInput(thumb: thumbFile);
+
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBe(default(DateTime));
+        output.Title.Should().Be(input.Title);
+        output.Published.Should().Be(input.Published);
+        output.Description.Should().Be(input.Description);
+        output.Duration.Should().Be(input.Duration);
+        output.Rating.Should().Be(input.Rating);
+        output.YearLaunched.Should().Be(input.YearLaunched);
+        output.Opened.Should().Be(input.Opened);
+        output.CategoriesIds.Should().BeEmpty();
+        output.GenresIds.Should().BeEmpty();
+        output.CastMembersIds.Should().BeEmpty();
+        output.Thumb.Should().Be(expectedThumbName);
+
+        repoMock.Verify(x => x.Insert(
+            It.Is<DomainEntity.Video>(video =>
+                video.Title == input.Title &&
+                video.Published == input.Published &&
+                video.Description == input.Description &&
+                video.Duration == input.Duration &&
+                video.Rating == input.Rating &&
+                video.Id != Guid.Empty &&
+                video.YearLaunched == input.YearLaunched &&
+                video.Opened == input.Opened
+            ),
+            It.IsAny<CancellationToken>()
+        ));
+        uowMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()));
+    }
+
+    [Fact(DisplayName = nameof(CreateVideoWithBanner))]
+    [Trait("Video", "Create Video - Use Cases")]
+    public async Task CreateVideoWithBanner()
+    {
+        var repoMock = _fixture.GetRepoMock();
+        var uowMock = _fixture.GetUnitOfWorkMock();
+        var genreRepoMock = _fixture.GetGenreRepoMock();
+        var castMemberRepoMock = _fixture.GetCastMemberRepoMock();
+        var storageServiceMock = _fixture.GetStorageServiceMock();
+
+        var bannerFile = _fixture.GetValidImageFileInput();
+
+        var expectedBannerName = $"thumb.{bannerFile.Extension}";
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.IsAny<string>(),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedBannerName);
+
+        var useCase = new UseCase.CreateVideo(
+            repoMock.Object,
+            _fixture.GetCategoryRepoMock().Object,
+            genreRepoMock.Object,
+            castMemberRepoMock.Object,
+            storageServiceMock.Object,
+            uowMock.Object
+        );
+        var input = _fixture.CreateVideoInput(banner: bannerFile);
+
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBe(default(DateTime));
+        output.Title.Should().Be(input.Title);
+        output.Published.Should().Be(input.Published);
+        output.Description.Should().Be(input.Description);
+        output.Duration.Should().Be(input.Duration);
+        output.Rating.Should().Be(input.Rating);
+        output.YearLaunched.Should().Be(input.YearLaunched);
+        output.Opened.Should().Be(input.Opened);
+        output.CategoriesIds.Should().BeEmpty();
+        output.GenresIds.Should().BeEmpty();
+        output.CastMembersIds.Should().BeEmpty();
+        output.Banner.Should().Be(expectedBannerName);
+
+        repoMock.Verify(x => x.Insert(
+            It.Is<DomainEntity.Video>(video =>
+                video.Title == input.Title &&
+                video.Published == input.Published &&
+                video.Description == input.Description &&
+                video.Duration == input.Duration &&
+                video.Rating == input.Rating &&
+                video.Id != Guid.Empty &&
+                video.YearLaunched == input.YearLaunched &&
+                video.Opened == input.Opened
+            ),
+            It.IsAny<CancellationToken>()
+        ));
+        uowMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()));
+    }
+
+    [Fact(DisplayName = nameof(CreateVideoWithThumbHalf))]
+    [Trait("Video", "Create Video - Use Cases")]
+    public async Task CreateVideoWithThumbHalf()
+    {
+        var repoMock = _fixture.GetRepoMock();
+        var uowMock = _fixture.GetUnitOfWorkMock();
+        var genreRepoMock = _fixture.GetGenreRepoMock();
+        var castMemberRepoMock = _fixture.GetCastMemberRepoMock();
+        var storageServiceMock = _fixture.GetStorageServiceMock();
+
+        var thumbHalfFile = _fixture.GetValidImageFileInput();
+
+        var expectedThumbHalfName = $"thumb.{thumbHalfFile.Extension}";
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.IsAny<string>(),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedThumbHalfName);
+
+        var useCase = new UseCase.CreateVideo(
+            repoMock.Object,
+            _fixture.GetCategoryRepoMock().Object,
+            genreRepoMock.Object,
+            castMemberRepoMock.Object,
+            storageServiceMock.Object,
+            uowMock.Object
+        );
+        var input = _fixture.CreateVideoInput(thumbHalf: thumbHalfFile);
+
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBe(default(DateTime));
+        output.ThumbHalf.Should().Be(expectedThumbHalfName);
+    }
+
+    [Fact(DisplayName = nameof(CreateVideoThrowsWhenAnErrorOccursOnUploadMedias))]
+    [Trait("Video", "Create Video - Use Cases")]
+    public async Task CreateVideoThrowsWhenAnErrorOccursOnUploadMedias()
+    {
+        var repoMock = _fixture.GetRepoMock();
+        var uowMock = _fixture.GetUnitOfWorkMock();
+        var genreRepoMock = _fixture.GetGenreRepoMock();
+        var castMemberRepoMock = _fixture.GetCastMemberRepoMock();
+        var storageServiceMock = _fixture.GetStorageServiceMock();
+
+        var thumbFile = _fixture.GetValidImageFileInput();
+        var bannerFile = _fixture.GetValidImageFileInput();
+        var thumbHalfFile = _fixture.GetValidImageFileInput();
+
+        var expectedThumbName = $"thumb.{thumbFile.Extension}";
+        var expectedBannerName = $"banner.{bannerFile.Extension}";
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-thumb.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedThumbName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-banner.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedBannerName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-thumb-half.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ThrowsAsync(new Exception("Error uploading thumb-half"));
+
+        var useCase = new UseCase.CreateVideo(
+            repoMock.Object,
+            _fixture.GetCategoryRepoMock().Object,
+            genreRepoMock.Object,
+            castMemberRepoMock.Object,
+            storageServiceMock.Object,
+            uowMock.Object
+        );
+        var input = _fixture.CreateVideoInput(
+            thumb: thumbFile,
+            banner: bannerFile,
+            thumbHalf: thumbHalfFile
+        );
+
+        var action = () => useCase.Handle(input, CancellationToken.None);
+
+        await action.Should().ThrowAsync<Exception>()
+            .WithMessage("Error uploading thumb-half");
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.Is<Image>(img => img.Path == expectedThumbName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.Is<Image>(img => img.Path == expectedBannerName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.IsAny<Image>(),
+            It.IsAny<CancellationToken>()
+        ), Times.Exactly(2));
+
+        repoMock.Verify(x => x.Insert(
+            It.IsAny<DomainEntity.Video>(),
+            It.IsAny<CancellationToken>()
+        ), Times.Never);
+
+        uowMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact(DisplayName = nameof(CreateVideoThrowsWhenAnErrorOccursOnCommitAndClearsUploadedMedias))]
+    [Trait("Video", "Create Video - Use Cases")]
+    public async Task CreateVideoThrowsWhenAnErrorOccursOnCommitAndClearsUploadedMedias()
+    {
+        var repoMock = _fixture.GetRepoMock();
+        var uowMock = _fixture.GetUnitOfWorkMock();
+        var genreRepoMock = _fixture.GetGenreRepoMock();
+        var castMemberRepoMock = _fixture.GetCastMemberRepoMock();
+        var storageServiceMock = _fixture.GetStorageServiceMock();
+
+        var thumbFile = _fixture.GetValidImageFileInput();
+        var bannerFile = _fixture.GetValidImageFileInput();
+        var thumbHalfFile = _fixture.GetValidImageFileInput();
+
+        var expectedThumbName = $"thumb.{thumbFile.Extension}";
+        var expectedBannerName = $"banner.{bannerFile.Extension}";
+        var expectedThumbHalfName = $"thumb-half.{thumbHalfFile.Extension}";
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-thumb.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedThumbName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-banner.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedBannerName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-thumb-half.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedThumbHalfName);
+
+        uowMock.Setup(x => x.Commit(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new Exception("Commit error"));
+
+        var useCase = new UseCase.CreateVideo(
+            repoMock.Object,
+            _fixture.GetCategoryRepoMock().Object,
+            genreRepoMock.Object,
+            castMemberRepoMock.Object,
+            storageServiceMock.Object,
+            uowMock.Object
+        );
+        var input = _fixture.CreateVideoInput(
+            thumb: thumbFile,
+            banner: bannerFile,
+            thumbHalf: thumbHalfFile
+        );
+
+        var action = () => useCase.Handle(input, CancellationToken.None);
+
+        await action.Should().ThrowAsync<Exception>()
+            .WithMessage("Commit error");
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.Is<Image>(img => img.Path == expectedThumbName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.Is<Image>(img => img.Path == expectedBannerName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.Is<Image>(img => img.Path == expectedThumbHalfName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.IsAny<Image>(),
+            It.IsAny<CancellationToken>()
+        ), Times.Exactly(3));
     }
 }

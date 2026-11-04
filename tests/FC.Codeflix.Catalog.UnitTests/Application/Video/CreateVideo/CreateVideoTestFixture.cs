@@ -1,4 +1,7 @@
-﻿using FC.Codeflix.Catalog.Application.UseCases.Video.CreateVideo;
+﻿using System.Text;
+using FC.Codeflix.Catalog.Application.Interfaces;
+using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
+using FC.Codeflix.Catalog.Application.UseCases.Video.CreateVideo;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.UnitTests.Application.Video.Common;
 using Moq;
@@ -24,12 +27,18 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
     public Mock<ICastMemberRepository> GetCastMemberRepoMock()
         => new();
 
+    public Mock<IStorageService> GetStorageServiceMock()
+        => new();
+
     public CreateVideoInput CreateVideoInput(
         string? title = null,
         string? description = null,
         List<Guid>? categoriesIds = null,
         List<Guid>? genresIds = null,
-        List<Guid>? castMembersIds = null
+        List<Guid>? castMembersIds = null,
+        FileInput? thumb = null,
+        FileInput? banner = null,
+        FileInput? thumbHalf = null
     )
         => new(
             title ?? GetValidTitle(),
@@ -41,6 +50,12 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
             GetRandomRating(),
             CategoriesIds: categoriesIds ?? [],
             GenresIds: genresIds ?? [],
-            CastMembersIds: castMembersIds ?? []
+            CastMembersIds: castMembersIds ?? [],
+            Thumb: thumb,
+            Banner: banner,
+            ThumbHalf: thumbHalf
         );
+
+    public FileInput GetValidImageFileInput()
+        => new("jpg", new MemoryStream(Encoding.ASCII.GetBytes("Test")));
 }

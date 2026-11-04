@@ -1,5 +1,6 @@
 ﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.Interfaces;
+using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FC.Codeflix.Catalog.Domain.Repository;
 
@@ -10,6 +11,7 @@ public class CreateVideo(
     ICategoryRepository categoryRepo,
     IGenreRepository genreRepo,
     ICastMemberRepository castMemberRepo,
+    IStorageService storageService,
     IUnitOfWork uow
 ) : ICreateVideo
 {
@@ -33,7 +35,88 @@ public class CreateVideo(
         if (notification.HasErrors())
             throw new EntityValidationException("There are validation errors.", notification.Errors);
 
+        await ValidateAndAddRelations(request, video, cancellationToken);
 
+        await TryUploadMedias(request, video, cancellationToken);
+
+        return CreateVideoOutput.FromEntity(video);
+    }
+
+    private async Task TryUploadMedias(
+        CreateVideoInput request,
+        Domain.Entity.Video video,
+        CancellationToken cancellationToken
+    )
+    {
+        try
+        {
+            await UploadMedias(request, video, cancellationToken);
+            await repo.Insert(video, cancellationToken);
+            await uow.Commit(cancellationToken);
+        }
+        catch (Exception)
+        {
+            await ClearStorageMedias(cancellationToken, video);
+            throw;
+        }
+    }
+
+    private async Task ClearStorageMedias(CancellationToken cancellationToken, Domain.Entity.Video video)
+    {
+        if (video.Thumb is not null)
+            await storageService.Delete(video.Thumb, cancellationToken);
+        if (video.ThumbHalf is not null)
+            await storageService.Delete(video.ThumbHalf, cancellationToken);
+        if (video.Banner is not null)
+            await storageService.Delete(video.Banner, cancellationToken);
+    }
+
+    private async Task UploadMedias(
+        CreateVideoInput request,
+        Domain.Entity.Video video,
+        CancellationToken cancellationToken
+    )
+    {
+        if (request.Thumb is not null)
+        {
+            var thumbUrl = await storageService.Upload(
+                $"{video.Id}-thumb.{request.Thumb.Extension}",
+                request.Thumb.FileStream,
+                cancellationToken
+            );
+
+            video.UpdateThumb(thumbUrl);
+        }
+
+        if (request.Banner is not null)
+        {
+            var bannerUrl = await storageService.Upload(
+                $"{video.Id}-banner.{request.Banner.Extension}",
+                request.Banner.FileStream,
+                cancellationToken
+            );
+
+            video.UpdateBanner(bannerUrl);
+        }
+
+        if (request.ThumbHalf is not null)
+        {
+            var thumbHalfUrl = await storageService.Upload(
+                $"{video.Id}-thumb-half.{request.ThumbHalf.Extension}",
+                request.ThumbHalf.FileStream,
+                cancellationToken
+            );
+
+            video.UpdateThumbHalf(thumbHalfUrl);
+        }
+    }
+
+    private async Task ValidateAndAddRelations(
+        CreateVideoInput request,
+        Domain.Entity.Video video,
+        CancellationToken cancellationToken
+    )
+    {
         if (request.CategoriesIds?.Count > 0)
         {
             await ValidateCategoriesIds(request.CategoriesIds, cancellationToken);
@@ -51,11 +134,6 @@ public class CreateVideo(
             await ValidateCastMembersIds(request.CastMembersIds, cancellationToken);
             request.CastMembersIds.ToList().ForEach(video.AddCastMember);
         }
-
-        await repo.Insert(video, cancellationToken);
-        await uow.Commit(cancellationToken);
-
-        return CreateVideoOutput.FromEntity(video);
     }
 
     private async Task ValidateCastMembersIds(
