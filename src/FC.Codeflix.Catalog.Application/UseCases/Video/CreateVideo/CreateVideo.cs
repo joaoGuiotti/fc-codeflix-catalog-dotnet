@@ -15,7 +15,7 @@ public class CreateVideo(
     IUnitOfWork uow
 ) : ICreateVideo
 {
-    public async Task<CreateVideoOutput> Handle(
+    public async Task<VideoModelOutput> Handle(
         CreateVideoInput request,
         CancellationToken cancellationToken
     )
@@ -39,7 +39,7 @@ public class CreateVideo(
 
         await TryUploadMedias(request, video, cancellationToken);
 
-        return CreateVideoOutput.FromEntity(video);
+        return VideoModelOutput.FromEntity(video);
     }
 
     private async Task TryUploadMedias(

@@ -33,6 +33,32 @@ public class VideoTestFixtureBase : BaseFixture
         banner
     );
 
+    public DomainEntity.Video GetValidVideoWithAllProperties()
+    {
+        var video = new DomainEntity.Video(
+            GetValidTitle(),
+            GetValidDescription(),
+            GetRandomBoolean(),
+            GetRandomBoolean(),
+            GetValidYearLaunched(),
+            GetValidDuration(),
+            GetRandomRating()
+        );
+
+        video.UpdateBanner(GetValidImagePath());
+        video.UpdateThumb(GetValidImagePath());
+        video.UpdateThumbHalf(GetValidImagePath());
+
+        video.UpdateMedia(GetValidMediaPath());
+        video.UpdateTrailer(GetValidMediaPath());
+
+        GetListGuids(Random.Shared.Next(2, 5)).ForEach(video.AddCategory);
+        GetListGuids(Random.Shared.Next(2, 5)).ForEach(video.AddGenre);
+        GetListGuids(Random.Shared.Next(2, 5)).ForEach(video.AddCastMember);
+
+        return video;
+    }
+
     public string GetValidImagePath()
         => Faker.Image.PlaceImgUrl();
 

@@ -1,5 +1,6 @@
 using System.Text;
 using FC.Codeflix.Catalog.Application.Exceptions;
+using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FC.Codeflix.Catalog.Domain.ValueObject;
 using FluentAssertions;
@@ -99,7 +100,8 @@ public class CreateVideoTest
         output.Rating.Should().Be(input.Rating);
         output.YearLaunched.Should().Be(input.YearLaunched);
         output.Opened.Should().Be(input.Opened);
-        output.CategoriesIds.Should().BeEquivalentTo(categoriesIds);
+        var outputItemCategoriesIds = output.Categories.Select(dto => dto.Id).ToList();
+        outputItemCategoriesIds.Should().BeEquivalentTo(categoriesIds);
 
         repoMock.Verify(x => x.Insert(
             It.Is<DomainEntity.Video>(video =>
@@ -230,8 +232,9 @@ public class CreateVideoTest
         output.Rating.Should().Be(input.Rating);
         output.YearLaunched.Should().Be(input.YearLaunched);
         output.Opened.Should().Be(input.Opened);
-        output.CategoriesIds.Should().BeEmpty();
-        output.GenresIds.Should().BeEquivalentTo(genresIds);
+        output.Categories.Should().BeEmpty();
+        var outputItemGenresIds = output.Genres.Select(dto => dto.Id).ToList();
+        outputItemGenresIds.Should().BeEquivalentTo(genresIds);
 
         repoMock.Verify(x => x.Insert(
             It.Is<DomainEntity.Video>(video =>
@@ -322,9 +325,10 @@ public class CreateVideoTest
         output.Rating.Should().Be(input.Rating);
         output.YearLaunched.Should().Be(input.YearLaunched);
         output.Opened.Should().Be(input.Opened);
-        output.CategoriesIds.Should().BeEmpty();
-        output.GenresIds.Should().BeEmpty();
-        output.CastMembersIds.Should().BeEquivalentTo(castMembersIds);
+        output.Categories.Should().BeEmpty();
+        output.Genres.Should().BeEmpty();
+        var outputItemCastMembersIds = output.CastMembers.Select(dto => dto.Id).ToList();
+        outputItemCastMembersIds.Should().BeEquivalentTo(castMembersIds);
 
         repoMock.Verify(x => x.Insert(
             It.Is<DomainEntity.Video>(video =>
@@ -422,9 +426,9 @@ public class CreateVideoTest
         output.Rating.Should().Be(input.Rating);
         output.YearLaunched.Should().Be(input.YearLaunched);
         output.Opened.Should().Be(input.Opened);
-        output.CategoriesIds.Should().BeEmpty();
-        output.GenresIds.Should().BeEmpty();
-        output.CastMembersIds.Should().BeEmpty();
+        output.Categories.Should().BeEmpty();
+        output.Genres.Should().BeEmpty();
+        output.CastMembers.Should().BeEmpty();
         output.Thumb.Should().Be(expectedThumbName);
 
         repoMock.Verify(x => x.Insert(
@@ -485,9 +489,9 @@ public class CreateVideoTest
         output.Rating.Should().Be(input.Rating);
         output.YearLaunched.Should().Be(input.YearLaunched);
         output.Opened.Should().Be(input.Opened);
-        output.CategoriesIds.Should().BeEmpty();
-        output.GenresIds.Should().BeEmpty();
-        output.CastMembersIds.Should().BeEmpty();
+        output.Categories.Should().BeEmpty();
+        output.Genres.Should().BeEmpty();
+        output.CastMembers.Should().BeEmpty();
         output.Banner.Should().Be(expectedBannerName);
 
         repoMock.Verify(x => x.Insert(
