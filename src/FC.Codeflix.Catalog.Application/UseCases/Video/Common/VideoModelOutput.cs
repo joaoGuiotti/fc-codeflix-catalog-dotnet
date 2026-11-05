@@ -58,10 +58,14 @@ public record VideoModelOutput(
             entity.Duration,
             entity.Rating,
             entity.CreatedAt,
-            categories?.Select(x => new VideoModelOutputRelatedAggregate(x.Id, x.Name)).ToList()
-                ?? entity.Categories.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList(),
-            genres?.Select(x => new VideoModelOutputRelatedAggregate(x.Id, x.Name)).ToList()
-                ?? entity.Genres.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList(),
+            entity.Categories.Select(id => new VideoModelOutputRelatedAggregate(
+                id,
+                categories?.FirstOrDefault(x => x.Id == id)?.Name
+            )).ToList(),
+            entity.Genres.Select(id => new VideoModelOutputRelatedAggregate(
+                id,
+                genres?.FirstOrDefault(x => x.Id == id)?.Name
+            )).ToList(),
             entity.CastMembers.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList(),
             entity.Thumb?.Path,
             entity.Banner?.Path,

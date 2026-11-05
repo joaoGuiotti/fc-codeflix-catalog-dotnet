@@ -20,11 +20,17 @@ public class GetVideoTest
     {
         var exampleVideo = _fixture.GetValidVideo();
         var repositoryMock = new Mock<IVideoRepository>();
+        var categoryRepositoryMock = new Mock<ICategoryRepository>();
+        var genreRepositoryMock = new Mock<IGenreRepository>();
         repositoryMock.Setup(x => x.Get(
             It.Is<Guid>(id => id == exampleVideo.Id),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(exampleVideo);
-        var useCase = new UseCase.GetVideo(repositoryMock.Object);
+        var useCase = new UseCase.GetVideo(
+            repositoryMock.Object,
+            categoryRepositoryMock.Object,
+            genreRepositoryMock.Object
+        );
         var input = new UseCase.GetVideoInput(exampleVideo.Id);
 
         var output = await useCase.Handle(input, CancellationToken.None);
@@ -56,11 +62,17 @@ public class GetVideoTest
     {
         var exampleVideo = _fixture.GetValidVideoWithAllProperties();
         var repositoryMock = new Mock<IVideoRepository>();
+        var categoryRepositoryMock = new Mock<ICategoryRepository>();
+        var genreRepositoryMock = new Mock<IGenreRepository>();
         repositoryMock.Setup(x => x.Get(
             It.Is<Guid>(id => id == exampleVideo.Id),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(exampleVideo);
-        var useCase = new UseCase.GetVideo(repositoryMock.Object);
+        var useCase = new UseCase.GetVideo(
+            repositoryMock.Object,
+            categoryRepositoryMock.Object,
+            genreRepositoryMock.Object
+        );
         var input = new UseCase.GetVideoInput(exampleVideo.Id);
 
         var output = await useCase.Handle(input, CancellationToken.None);
@@ -94,11 +106,17 @@ public class GetVideoTest
     public async Task ThrowsExceptionWhenNotFound()
     {
         var repositoryMock = new Mock<IVideoRepository>();
+        var categoryRepositoryMock = new Mock<ICategoryRepository>();
+        var genreRepositoryMock = new Mock<IGenreRepository>();
         repositoryMock.Setup(x => x.Get(
             It.IsAny<Guid>(),
             It.IsAny<CancellationToken>()
         )).ThrowsAsync(new NotFoundException("Video not found"));
-        var useCase = new UseCase.GetVideo(repositoryMock.Object);
+        var useCase = new UseCase.GetVideo(
+            repositoryMock.Object,
+            categoryRepositoryMock.Object,
+            genreRepositoryMock.Object
+        );
         var input = new UseCase.GetVideoInput(Guid.NewGuid());
 
         var action = () => useCase.Handle(input, CancellationToken.None);
