@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FC.Codeflix.Catalog.Domain.ValueObject;
@@ -544,6 +544,110 @@ public class CreateVideoTest
         output.ThumbHalf.Should().Be(expectedThumbHalfName);
     }
 
+    [Fact(DisplayName = nameof(CreateVideoWithMedia))]
+    [Trait("Video", "Create Video - Use Cases")]
+    public async Task CreateVideoWithMedia()
+    {
+        var repoMock = _fixture.GetRepoMock();
+        var uowMock = _fixture.GetUnitOfWorkMock();
+        var genreRepoMock = _fixture.GetGenreRepoMock();
+        var castMemberRepoMock = _fixture.GetCastMemberRepoMock();
+        var storageServiceMock = _fixture.GetStorageServiceMock();
+
+        var mediaFile = _fixture.GetValidMediaFileInput();
+        var expectedMediaName = $"media.{mediaFile.Extension}";
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains($"-media.{mediaFile.Extension}")),
+                It.Is<Stream>(s => s == mediaFile.FileStream),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedMediaName);
+
+        var useCase = new UseCase.CreateVideo(
+            repoMock.Object,
+            _fixture.GetCategoryRepoMock().Object,
+            genreRepoMock.Object,
+            castMemberRepoMock.Object,
+            storageServiceMock.Object,
+            uowMock.Object
+        );
+        var input = _fixture.CreateVideoInput(media: mediaFile);
+
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBe(default(DateTime));
+        output.Media.Should().Be(expectedMediaName);
+
+        storageServiceMock.Verify(x => x.Upload(
+            It.Is<string>(s => s == $"{output.Id}-media.{mediaFile.Extension}"),
+            It.Is<Stream>(s => s == mediaFile.FileStream),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        repoMock.Verify(x => x.Insert(
+            It.Is<DomainEntity.Video>(video =>
+                video.Media != null &&
+                video.Media.FilePath == expectedMediaName
+            ),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+        uowMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact(DisplayName = nameof(CreateVideoWithTrailer))]
+    [Trait("Video", "Create Video - Use Cases")]
+    public async Task CreateVideoWithTrailer()
+    {
+        var repoMock = _fixture.GetRepoMock();
+        var uowMock = _fixture.GetUnitOfWorkMock();
+        var genreRepoMock = _fixture.GetGenreRepoMock();
+        var castMemberRepoMock = _fixture.GetCastMemberRepoMock();
+        var storageServiceMock = _fixture.GetStorageServiceMock();
+
+        var trailerFile = _fixture.GetValidMediaFileInput();
+        var expectedTrailerName = $"trailer.{trailerFile.Extension}";
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains($"-trailer.{trailerFile.Extension}")),
+                It.Is<Stream>(s => s == trailerFile.FileStream),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedTrailerName);
+
+        var useCase = new UseCase.CreateVideo(
+            repoMock.Object,
+            _fixture.GetCategoryRepoMock().Object,
+            genreRepoMock.Object,
+            castMemberRepoMock.Object,
+            storageServiceMock.Object,
+            uowMock.Object
+        );
+        var input = _fixture.CreateVideoInput(trailer: trailerFile);
+
+        var output = await useCase.Handle(input, CancellationToken.None);
+
+        output.Id.Should().NotBeEmpty();
+        output.CreatedAt.Should().NotBe(default(DateTime));
+        output.Trailer.Should().Be(expectedTrailerName);
+
+        storageServiceMock.Verify(x => x.Upload(
+            It.Is<string>(s => s == $"{output.Id}-trailer.{trailerFile.Extension}"),
+            It.Is<Stream>(s => s == trailerFile.FileStream),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        repoMock.Verify(x => x.Insert(
+            It.Is<DomainEntity.Video>(video =>
+                video.Trailer != null &&
+                video.Trailer.FilePath == expectedTrailerName
+            ),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+        uowMock.Verify(x => x.Commit(It.IsAny<CancellationToken>()), Times.Once);
+    }
+
     [Fact(DisplayName = nameof(CreateVideoThrowsWhenAnErrorOccursOnUploadMedias))]
     [Trait("Video", "Create Video - Use Cases")]
     public async Task CreateVideoThrowsWhenAnErrorOccursOnUploadMedias()
@@ -557,9 +661,13 @@ public class CreateVideoTest
         var thumbFile = _fixture.GetValidImageFileInput();
         var bannerFile = _fixture.GetValidImageFileInput();
         var thumbHalfFile = _fixture.GetValidImageFileInput();
+        var mediaFile = _fixture.GetValidMediaFileInput();
+        var trailerFile = _fixture.GetValidMediaFileInput();
 
         var expectedThumbName = $"thumb.{thumbFile.Extension}";
         var expectedBannerName = $"banner.{bannerFile.Extension}";
+        var expectedThumbHalfName = $"thumbhalf.{thumbHalfFile.Extension}";
+        var expectedMediaName = $"media.{mediaFile.Extension}";
 
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-thumb.")),
@@ -576,11 +684,25 @@ public class CreateVideoTest
         ).ReturnsAsync(expectedBannerName);
 
         storageServiceMock.Setup(x => x.Upload(
-                It.Is<string>(s => s.Contains("-thumb-half.")),
+                It.Is<string>(s => s.Contains("-thumbhalf.")),
                 It.IsAny<Stream>(),
                 It.IsAny<CancellationToken>()
             )
-        ).ThrowsAsync(new Exception("Error uploading thumb-half"));
+        ).ReturnsAsync(expectedThumbHalfName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-media.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedMediaName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-trailer.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ThrowsAsync(new Exception("Error uploading trailer"));
 
         var useCase = new UseCase.CreateVideo(
             repoMock.Object,
@@ -593,13 +715,15 @@ public class CreateVideoTest
         var input = _fixture.CreateVideoInput(
             thumb: thumbFile,
             banner: bannerFile,
-            thumbHalf: thumbHalfFile
+            thumbHalf: thumbHalfFile,
+            media: mediaFile,
+            trailer: trailerFile
         );
 
         var action = () => useCase.Handle(input, CancellationToken.None);
 
         await action.Should().ThrowAsync<Exception>()
-            .WithMessage("Error uploading thumb-half");
+            .WithMessage("Error uploading trailer");
 
         storageServiceMock.Verify(x => x.Delete(
             It.Is<string>(name => name == expectedThumbName),
@@ -612,9 +736,19 @@ public class CreateVideoTest
         ), Times.Once);
 
         storageServiceMock.Verify(x => x.Delete(
+            It.Is<string>(name => name == expectedThumbHalfName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.Is<string>(name => name == expectedMediaName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()
-        ), Times.Exactly(2));
+        ), Times.Exactly(4));
 
         repoMock.Verify(x => x.Insert(
             It.IsAny<DomainEntity.Video>(),
@@ -637,10 +771,14 @@ public class CreateVideoTest
         var thumbFile = _fixture.GetValidImageFileInput();
         var bannerFile = _fixture.GetValidImageFileInput();
         var thumbHalfFile = _fixture.GetValidImageFileInput();
+        var mediaFile = _fixture.GetValidMediaFileInput();
+        var trailerFile = _fixture.GetValidMediaFileInput();
 
         var expectedThumbName = $"thumb.{thumbFile.Extension}";
         var expectedBannerName = $"banner.{bannerFile.Extension}";
-        var expectedThumbHalfName = $"thumb-half.{thumbHalfFile.Extension}";
+        var expectedThumbHalfName = $"thumbhalf.{thumbHalfFile.Extension}";
+        var expectedMediaName = $"media.{mediaFile.Extension}";
+        var expectedTrailerName = $"trailer.{trailerFile.Extension}";
 
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-thumb.")),
@@ -657,11 +795,25 @@ public class CreateVideoTest
         ).ReturnsAsync(expectedBannerName);
 
         storageServiceMock.Setup(x => x.Upload(
-                It.Is<string>(s => s.Contains("-thumb-half.")),
+                It.Is<string>(s => s.Contains("-thumbhalf.")),
                 It.IsAny<Stream>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedThumbHalfName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-media.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedMediaName);
+
+        storageServiceMock.Setup(x => x.Upload(
+                It.Is<string>(s => s.Contains("-trailer.")),
+                It.IsAny<Stream>(),
+                It.IsAny<CancellationToken>()
+            )
+        ).ReturnsAsync(expectedTrailerName);
 
         uowMock.Setup(x => x.Commit(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Commit error"));
@@ -677,7 +829,9 @@ public class CreateVideoTest
         var input = _fixture.CreateVideoInput(
             thumb: thumbFile,
             banner: bannerFile,
-            thumbHalf: thumbHalfFile
+            thumbHalf: thumbHalfFile,
+            media: mediaFile,
+            trailer: trailerFile
         );
 
         var action = () => useCase.Handle(input, CancellationToken.None);
@@ -701,8 +855,18 @@ public class CreateVideoTest
         ), Times.Once);
 
         storageServiceMock.Verify(x => x.Delete(
+            It.Is<string>(name => name == expectedMediaName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
+            It.Is<string>(name => name == expectedTrailerName),
+            It.IsAny<CancellationToken>()
+        ), Times.Once);
+
+        storageServiceMock.Verify(x => x.Delete(
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()
-        ), Times.Exactly(3));
+        ), Times.Exactly(5));
     }
 }

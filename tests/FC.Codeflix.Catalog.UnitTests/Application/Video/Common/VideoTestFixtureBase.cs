@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Domain.Enum;
 using FC.Codeflix.Catalog.Domain.ValueObject;
@@ -104,4 +104,7 @@ public class VideoTestFixtureBase : BaseFixture
 
     public FileInput GetValidImageFileInput()
         => new("jpg", new MemoryStream(Encoding.ASCII.GetBytes("Test")));
+
+    public FileInput GetValidMediaFileInput()
+        => new("mp4", new MemoryStream(Encoding.ASCII.GetBytes("Test")));
 }

@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Domain.Enum;
+using FC.Codeflix.Catalog.Domain.Enum;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 
@@ -17,7 +17,9 @@ public record CreateVideoOutput(
     IReadOnlyCollection<Guid> CastMembersIds,
     string? Thumb,
     string? Banner,
-    string? ThumbHalf
+    string? ThumbHalf,
+    string? Media,
+    string? Trailer
 )
 {
     public static CreateVideoOutput FromEntity(Domain.Entity.Video entity)
@@ -36,7 +38,9 @@ public record CreateVideoOutput(
             entity.CastMembers,
             entity.Thumb?.Path,
             entity.Banner?.Path,
-            entity.ThumbHalf?.Path
+            entity.ThumbHalf?.Path,
+            entity.Media?.FilePath,
+            entity.Trailer?.FilePath
         );
 
 }

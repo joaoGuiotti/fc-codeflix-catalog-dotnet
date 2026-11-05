@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Video.CreateVideo;
@@ -38,7 +38,9 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
         List<Guid>? castMembersIds = null,
         FileInput? thumb = null,
         FileInput? banner = null,
-        FileInput? thumbHalf = null
+        FileInput? thumbHalf = null,
+        FileInput? media = null,
+        FileInput? trailer = null
     )
         => new(
             title ?? GetValidTitle(),
@@ -53,6 +55,8 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
             CastMembersIds: castMembersIds ?? [],
             Thumb: thumb,
             Banner: banner,
-            ThumbHalf: thumbHalf
+            ThumbHalf: thumbHalf,
+            Media: media,
+            Trailer: trailer
         );
 }
