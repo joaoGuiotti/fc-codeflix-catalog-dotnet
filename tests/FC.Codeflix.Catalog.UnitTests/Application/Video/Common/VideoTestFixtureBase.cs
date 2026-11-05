@@ -1,4 +1,6 @@
-﻿using FC.Codeflix.Catalog.Domain.Enum;
+﻿using System.Text;
+using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
+using FC.Codeflix.Catalog.Domain.Enum;
 using FC.Codeflix.Catalog.Domain.ValueObject;
 using FC.Codeflix.Catalog.UnitTests.Common;
 using DomainEntity = FC.Codeflix.Catalog.Domain.Entity;
@@ -99,4 +101,7 @@ public class VideoTestFixtureBase : BaseFixture
 
     public List<Guid> GetListGuids(int length = 12)
         => Enumerable.Range(1, length).Select(_ => Guid.NewGuid()).ToList();
+
+    public FileInput GetValidImageFileInput()
+        => new("jpg", new MemoryStream(Encoding.ASCII.GetBytes("Test")));
 }

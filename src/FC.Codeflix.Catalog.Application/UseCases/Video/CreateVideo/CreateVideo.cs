@@ -64,11 +64,11 @@ public class CreateVideo(
     private async Task ClearStorageMedias(CancellationToken cancellationToken, Domain.Entity.Video video)
     {
         if (video.Thumb is not null)
-            await storageService.Delete(video.Thumb, cancellationToken);
+            await storageService.Delete(video.Thumb.Path, cancellationToken);
         if (video.ThumbHalf is not null)
-            await storageService.Delete(video.ThumbHalf, cancellationToken);
+            await storageService.Delete(video.ThumbHalf.Path, cancellationToken);
         if (video.Banner is not null)
-            await storageService.Delete(video.Banner, cancellationToken);
+            await storageService.Delete(video.Banner.Path, cancellationToken);
     }
 
     private async Task UploadMedias(

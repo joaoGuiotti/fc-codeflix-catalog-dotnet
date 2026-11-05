@@ -55,7 +55,4 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
             Banner: banner,
             ThumbHalf: thumbHalf
         );
-
-    public FileInput GetValidImageFileInput()
-        => new("jpg", new MemoryStream(Encoding.ASCII.GetBytes("Test")));
 }

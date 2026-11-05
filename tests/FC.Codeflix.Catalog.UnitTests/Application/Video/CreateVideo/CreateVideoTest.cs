@@ -602,17 +602,17 @@ public class CreateVideoTest
             .WithMessage("Error uploading thumb-half");
 
         storageServiceMock.Verify(x => x.Delete(
-            It.Is<Image>(img => img.Path == expectedThumbName),
+            It.Is<string>(name => name == expectedThumbName),
             It.IsAny<CancellationToken>()
         ), Times.Once);
 
         storageServiceMock.Verify(x => x.Delete(
-            It.Is<Image>(img => img.Path == expectedBannerName),
+            It.Is<string>(name => name == expectedBannerName),
             It.IsAny<CancellationToken>()
         ), Times.Once);
 
         storageServiceMock.Verify(x => x.Delete(
-            It.IsAny<Image>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
         ), Times.Exactly(2));
 
@@ -686,22 +686,22 @@ public class CreateVideoTest
             .WithMessage("Commit error");
 
         storageServiceMock.Verify(x => x.Delete(
-            It.Is<Image>(img => img.Path == expectedThumbName),
+            It.Is<string>(name => name == expectedThumbName),
             It.IsAny<CancellationToken>()
         ), Times.Once);
 
         storageServiceMock.Verify(x => x.Delete(
-            It.Is<Image>(img => img.Path == expectedBannerName),
+            It.Is<string>(name => name == expectedBannerName),
             It.IsAny<CancellationToken>()
         ), Times.Once);
 
         storageServiceMock.Verify(x => x.Delete(
-            It.Is<Image>(img => img.Path == expectedThumbHalfName),
+            It.Is<string>(name => name == expectedThumbHalfName),
             It.IsAny<CancellationToken>()
         ), Times.Once);
 
         storageServiceMock.Verify(x => x.Delete(
-            It.IsAny<Image>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
         ), Times.Exactly(3));
     }

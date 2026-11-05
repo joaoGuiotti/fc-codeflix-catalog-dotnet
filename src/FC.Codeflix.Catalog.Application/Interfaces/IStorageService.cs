@@ -10,5 +10,5 @@ public interface IStorageService
         CancellationToken cancellationToken
     );
 
-    Task Delete(Image image, CancellationToken cancellationToken);
+    Task Delete(string filePath, CancellationToken cancellationToken);
 }
