@@ -6,8 +6,8 @@ namespace FC.Codeflix.Catalog.Domain.Entity;
 
 public class CastMember : AggregateRoot
 {
-    private CastMember(string name, ECastMemberType type)
-        : base()
+    public CastMember(string name, ECastMemberType type)
+         : base()
     {
         Name = name;
         CreatedAt = DateTime.Now;

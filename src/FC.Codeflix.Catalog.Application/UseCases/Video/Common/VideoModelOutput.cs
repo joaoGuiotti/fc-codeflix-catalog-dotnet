@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Domain.Enum;
+﻿using FC.Codeflix.Catalog.Domain.Enum;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 
@@ -33,9 +33,9 @@ public record VideoModelOutput(
             entity.Duration,
             entity.Rating,
             entity.CreatedAt,
-            entity.Categories.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList(),
-            entity.Genres.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList(),
-            entity.CastMembers.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList(),
+            entity.Categories.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList().AsReadOnly(),
+            entity.Genres.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList().AsReadOnly(),
+            entity.CastMembers.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList().AsReadOnly(),
             entity.Thumb?.Path,
             entity.Banner?.Path,
             entity.ThumbHalf?.Path,
@@ -46,7 +46,8 @@ public record VideoModelOutput(
     public static VideoModelOutput FromEntity(
         Domain.Entity.Video entity,
         IReadOnlyList<Domain.Entity.Category>? categories = null,
-        IReadOnlyList<Domain.Entity.Genre>? genres = null
+        IReadOnlyList<Domain.Entity.Genre>? genres = null,
+        IReadOnlyList<Domain.Entity.CastMember>? castMembers = null
     )
         => new(
             entity.Id,
@@ -66,7 +67,10 @@ public record VideoModelOutput(
                 id,
                 genres?.FirstOrDefault(x => x.Id == id)?.Name
             )).ToList(),
-            entity.CastMembers.Select(id => new VideoModelOutputRelatedAggregate(id)).ToList(),
+            entity.CastMembers.Select(id => new VideoModelOutputRelatedAggregate(
+                id,
+                castMembers?.FirstOrDefault(x => x.Id == id)?.Name
+            )).ToList(),
             entity.Thumb?.Path,
             entity.Banner?.Path,
             entity.ThumbHalf?.Path,
@@ -75,4 +79,11 @@ public record VideoModelOutput(
         );
 }
 
-public record VideoModelOutputRelatedAggregate(Guid Id, string? Name = null);
+public class VideoModelOutputRelatedAggregate
+{
+    public Guid Id { get; set; }
+    public string? Name { get; set; }
+
+    public VideoModelOutputRelatedAggregate(Guid id, string? name = null)
+        => (Id, Name) = (id, name);
+}

@@ -1,5 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.Interfaces;
-using FC.Codeflix.Catalog.Domain.Enum;
+﻿using FC.Codeflix.Catalog.Domain.Enum;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.UnitTests.Common;
 using Moq;
@@ -10,9 +9,6 @@ namespace FC.Codeflix.Catalog.UnitTests.Application.CastMember.Common;
 public class CastMemberUseCaseBaseFixture : BaseFixture
 {
     public Mock<ICastMemberRepository> GetRepositoryMock()
-        => new();
-
-    public Mock<IUnitOfWork> GetUnitOfWorkMock()
         => new();
 
     public string GetValidName()

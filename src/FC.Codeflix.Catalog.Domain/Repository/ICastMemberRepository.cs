@@ -8,4 +8,5 @@ public interface ICastMemberRepository
     : IGenericRepository<CastMember>, ISearchableRepository<CastMember>
 {
     Task<IEnumerable<Guid>> GetIdsListById(List<Guid> requestCastMembersIds, CancellationToken cancellationToken);
+    Task<IReadOnlyList<CastMember>> GetListByIds(List<Guid> relatedCastMembersIds, CancellationToken ct);
 }

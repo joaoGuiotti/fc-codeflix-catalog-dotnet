@@ -65,4 +65,9 @@ public class CastMemberRepository : ICastMemberRepository
             .Where(x => requestCastMembersIds.Contains(x.Id))
             .Select(x => x.Id)
             .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<CastMember>> GetListByIds(List<Guid> castMembersIds, CancellationToken ct)
+     => await _castMembers.AsNoTracking()
+            .Where(c => castMembersIds.Contains(c.Id))
+            .ToListAsync(ct);
 }

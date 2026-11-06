@@ -1,3 +1,5 @@
+﻿using FC.Codeflix.Catalog.Domain.Entity;
+
 namespace FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 
 public class SearchOutput<TAggregate>

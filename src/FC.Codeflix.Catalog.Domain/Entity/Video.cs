@@ -144,4 +144,7 @@ public class Video : AggregateRoot
 
     public void RemoveAllCastMembers()
         => _castMembers.Clear();
+
+    public void RemoveAllCategory()
+    => _categories.Clear();
 }
