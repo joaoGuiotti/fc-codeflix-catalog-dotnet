@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Domain.Enum;
 using FC.Codeflix.Catalog.Domain.ValueObject;
@@ -16,10 +16,7 @@ public class VideoTestFixtureBase : BaseFixture
         bool? published = null,
         int? yearLaunched = null,
         int? duration = null,
-        ERating? rating = null,
-        Image? thumb = null,
-        Image? thumbHalf = null,
-        Image? banner = null
+        ERating? rating = null
     ) => new(
         title ?? GetValidTitle(),
         description ?? GetValidDescription(),
@@ -27,10 +24,7 @@ public class VideoTestFixtureBase : BaseFixture
         published ?? GetRandomBoolean(),
         yearLaunched ?? GetValidYearLaunched(),
         duration ?? GetValidDuration(),
-        rating ?? GetRandomRating(),
-        thumb,
-        thumbHalf,
-        banner
+        rating ?? GetRandomRating()
     );
 
     public DomainEntity.Video GetValidVideoWithAllProperties()
@@ -107,7 +101,7 @@ public class VideoTestFixtureBase : BaseFixture
         => Faker.Lorem.Letter(2);
 
     public string GetTooLongDescription()
-        => Faker.Lorem.Letter(256);
+        => Faker.Lorem.Letter(4_001);
 
     public string GetValidMediaPath()
     {

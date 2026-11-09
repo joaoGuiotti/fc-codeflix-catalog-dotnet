@@ -19,10 +19,7 @@ public class VideoTestFixture : BaseFixture
         bool? published = null,
         int? yearLaunched = null,
         int? duration = null,
-        ERating? rating = null,
-        Image? thumb = null,
-        Image? thumbHalf = null,
-        Image? banner = null
+        ERating? rating = null
     ) => new(
         title ?? GetValidTitle(),
         description ?? GetValidDescription(),
@@ -30,10 +27,7 @@ public class VideoTestFixture : BaseFixture
         published ?? GetRandomBoolean(),
         yearLaunched ?? GetValidYearLaunched(),
         duration ?? GetValidDuration(),
-        rating ?? GetRandomRating(),
-        thumb,
-        thumbHalf,
-        banner
+        rating ?? GetRandomRating()
     );
 
     public string GetValidImagePath()
@@ -82,9 +76,8 @@ public class VideoTestFixture : BaseFixture
 
     public string GetTooShortDescription()
         => Faker.Lorem.Letter(2);
-
     public string GetTooLongDescription()
-        => Faker.Lorem.Letter(256);
+        => Faker.Lorem.Letter(4_001);
 
     public string GetValidMediaPath()
     {
@@ -101,4 +94,5 @@ public class VideoTestFixture : BaseFixture
 
     public DomainEntity.Media GetValidMedia()
         => new(GetValidMediaPath());
+
 }

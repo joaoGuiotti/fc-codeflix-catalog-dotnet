@@ -1,5 +1,4 @@
 ﻿using FC.Codeflix.Catalog.Domain.Repository;
-using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Video.ListVideo;
 
@@ -29,15 +28,11 @@ public class ListVideo : IListVideo
 
         var searchOutput = await _repo.Search(request.ToSearchInput(), ct);
 
-        var output = ListVideoOutput.FromSearchOutput(searchOutput);
-
         var categories = await GetCategoriesReleatedsAsync(searchOutput.Items, ct);
         var genres = await GetGenresReleatedsAsync(searchOutput.Items, ct);
         var castMembers = await GetCastMembersReleatedsAsync(searchOutput.Items, ct);
 
-        output.FillWithReleatedAggregates(categories, genres, castMembers);
-
-        return output;
+        return ListVideoOutput.FromSearchOutput(searchOutput, categories, genres, castMembers);
     }
 
     private async Task<IReadOnlyList<Domain.Entity.Genre>> GetGenresReleatedsAsync(

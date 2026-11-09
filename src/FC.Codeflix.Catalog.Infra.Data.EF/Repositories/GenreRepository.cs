@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
@@ -111,7 +111,7 @@ public class GenreRepository : IGenreRepository
         return output;
     }
 
-    public async Task<IEnumerable<Guid>> GetIdsListById(List<Guid> genresIds, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<Guid>> GetIdsListById(List<Guid> genresIds, CancellationToken cancellationToken)
         => await _genres.AsNoTracking()
             .Where(c => genresIds.Contains(c.Id))
             .Select(c => c.Id)

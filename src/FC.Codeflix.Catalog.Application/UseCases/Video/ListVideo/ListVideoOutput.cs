@@ -16,7 +16,10 @@ public class ListVideoOutput : PaginatedListOutput<VideoModelOutput>
         : base(page, perPage, total, items) { }
 
     public static ListVideoOutput FromSearchOutput(
-        SearchOutput<Domain.Entity.Video> searchOutput
+        SearchOutput<Domain.Entity.Video> searchOutput,
+        IReadOnlyList<Domain.Entity.Category>? categories = null,
+        IReadOnlyList<Domain.Entity.Genre>? genres = null,
+        IReadOnlyList<Domain.Entity.CastMember>? castMembers = null
     )
     {
         return new(
@@ -24,37 +27,8 @@ public class ListVideoOutput : PaginatedListOutput<VideoModelOutput>
             perPage: searchOutput.PerPage,
             total: searchOutput.Total,
             items: searchOutput
-                .Items.Select(VideoModelOutput.FromEntity)
+                .Items.Select(video => VideoModelOutput.FromEntity(video, categories, genres, castMembers))
                 .ToList()
         );
     }
-
-    internal void FillWithReleatedAggregates(
-        IReadOnlyList<Domain.Entity.Category>? categories = null,
-        IReadOnlyList<Domain.Entity.Genre>? genres = null,
-        IReadOnlyList<Domain.Entity.CastMember>? castMembers = null
-    )
-    {
-        foreach (var item in Items)
-        {
-
-            foreach (var categoryOut in item.Categories)
-                categoryOut.Name = categories?.FirstOrDefault(
-                    category => category.Id == categoryOut.Id
-                )?.Name;
-
-            foreach (var genreOut in item.Genres)
-                genreOut.Name = genres?.FirstOrDefault(
-                    genre => genre.Id == genreOut.Id
-                )?.Name;
-
-            foreach (var castMemberOut in item.CastMembers)
-                castMemberOut.Name = castMembers?.FirstOrDefault(
-                    castMember => castMember.Id == castMemberOut.Id
-                )?.Name;
-
-        }
-    }
-
-
 }

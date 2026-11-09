@@ -70,7 +70,7 @@ public class VideoTest
 
         invalidVideo.Notification.Errors.Should().HaveCount(1);
         invalidVideo.Notification.Errors.First()
-            .Should().Be(new ValidationError("Description must be between 3 and 255 characters", "Description"));
+            .Should().Be(new ValidationError("Description must be between 3 and 4.000 characters", "Description"));
     }
 
     [Fact(DisplayName = nameof(ReturnsErrorWhenTitleIsEmpty))]

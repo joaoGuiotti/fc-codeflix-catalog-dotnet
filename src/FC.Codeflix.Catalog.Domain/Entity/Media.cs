@@ -1,8 +1,9 @@
 ﻿using FC.Codeflix.Catalog.Domain.Enum;
+using FC.Codeflix.Catalog.Domain.SeedWork;
 
 namespace FC.Codeflix.Catalog.Domain.Entity;
 
-public class Media(string filePath, string? encodedPath = null)
+public class Media(string filePath, string? encodedPath = null) : AggregateRoot()
 {
     public string FilePath { get; private set; } = filePath;
     public string? EncodedPath { get; private set; } = encodedPath;

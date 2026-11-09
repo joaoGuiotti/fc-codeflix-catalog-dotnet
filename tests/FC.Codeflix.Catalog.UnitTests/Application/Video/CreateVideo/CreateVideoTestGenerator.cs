@@ -33,7 +33,7 @@ public class CreateVideoTestGenerator
                 case 3:
                     invalidInputList.Add([
                         fixture.CreateVideoInput(description: fixture.GetTooShortDescription()),
-                        "Description must be between 3 and 255 characters"
+                        "Description must be between 3 and 4.000 characters"
                     ]);
                     break;
                 case 4:
@@ -45,7 +45,7 @@ public class CreateVideoTestGenerator
                 case 5:
                     invalidInputList.Add([
                         fixture.CreateVideoInput(description: fixture.GetTooLongDescription()),
-                        "Description must be between 3 and 255 characters"
+                        "Description must be between 3 and 4.000 characters"
                     ]);
                     break;
             }

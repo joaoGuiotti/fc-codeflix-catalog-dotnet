@@ -30,16 +30,15 @@ public class Video : AggregateRoot
 
     private readonly List<Guid> _castMembers = new List<Guid>();
 
-    public Video(string title,
+    public Video(
+        string title,
         string description,
         bool opened,
         bool published,
         int yearLaunched,
         int duration,
-        ERating rating,
-        Image? thumb = null,
-        Image? thumbHalf = null,
-        Image? banner = null)
+        ERating rating
+    )
     {
         Title = title;
         Description = description;
@@ -48,9 +47,6 @@ public class Video : AggregateRoot
         YearLaunched = yearLaunched;
         Duration = duration;
         Rating = rating;
-        Thumb = thumb;
-        ThumbHalf = thumbHalf;
-        Banner = banner;
 
         Validate();
     }

@@ -59,7 +59,7 @@ public class CastMemberRepository : ICastMemberRepository
     public Task Update(CastMember aggregate, CancellationToken cancellationToken)
         => Task.FromResult(_castMembers.Update(aggregate));
 
-    public async Task<IEnumerable<Guid>> GetIdsListById(List<Guid> requestCastMembersIds,
+    public async Task<IReadOnlyList<Guid>> GetIdsListById(List<Guid> requestCastMembersIds,
         CancellationToken cancellationToken)
         => await _castMembers.AsNoTracking()
             .Where(x => requestCastMembersIds.Contains(x.Id))

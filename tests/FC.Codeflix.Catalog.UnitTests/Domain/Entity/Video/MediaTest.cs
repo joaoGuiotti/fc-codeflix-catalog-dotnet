@@ -16,11 +16,12 @@ public class MediaTest
 
     [Fact(DisplayName = nameof(Instantiate))]
     [Trait("Domain", "Media - Entities")]
-    public void Instantiate()
+    public void Instantiate()   
     {
         var expectedFileMediaPath = _fixture.GetValidMediaPath();
         var media = new Media(expectedFileMediaPath);
 
+        media.Id.Should().NotBeEmpty();
         media.FilePath.Should().Be(expectedFileMediaPath);
         media.Status.Should().Be(EMediaStatus.Pending);
     }
