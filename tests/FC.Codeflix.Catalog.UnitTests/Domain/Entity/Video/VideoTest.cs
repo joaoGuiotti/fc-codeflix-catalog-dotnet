@@ -213,6 +213,7 @@ public class VideoTest
         video.Media.Should().NotBeNull();
         video.Media.Status.Should().Be(EMediaStatus.Pending);
         video.Media.FilePath.Should().Be(mediaPath);
+        video.Events.Should().HaveCount(1);
     }
 
     [Fact(DisplayName = nameof(UpdateTrailer))]

@@ -1,4 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Domain.Enum;
+using FC.Codeflix.Catalog.Domain.Events;
 using FC.Codeflix.Catalog.Domain.SeedWork;
 using FC.Codeflix.Catalog.Domain.Validation;
 using FC.Codeflix.Catalog.Domain.Validator;
@@ -27,9 +28,7 @@ public class Video : AggregateRoot
 
     private readonly List<Guid> _genres = new List<Guid>();
     public IReadOnlyList<Guid> Genres => _genres.AsReadOnly();
-
     private readonly List<Guid> _castMembers = new List<Guid>();
-
     public Video(
         string title,
         string description,
@@ -87,7 +86,10 @@ public class Video : AggregateRoot
         => Banner = new Image(path);
 
     public void UpdateMedia(string path)
-        => Media = new Media(path);
+    {
+        Media = new Media(path);
+        RaiseEvent(new VideoUploadedEvent(Id, path));
+    }
 
     public void UpdateTrailer(string path)
         => Trailer = new Media(path);
