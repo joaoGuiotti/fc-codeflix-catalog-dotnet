@@ -123,8 +123,11 @@ public class VideoTestFixtureBase : BaseFixture
         => Enumerable.Range(1, length).Select(_ => Guid.NewGuid()).ToList();
 
     public FileInput GetValidImageFileInput()
-        => new("jpg", new MemoryStream(Encoding.ASCII.GetBytes("Test")));
+        => new("jpg", new MemoryStream(Encoding.ASCII.GetBytes("Test")), GetContenType());
 
     public FileInput GetValidMediaFileInput()
-        => new("mp4", new MemoryStream(Encoding.ASCII.GetBytes("Test")));
+        => new("mp4", new MemoryStream(Encoding.ASCII.GetBytes("Test")), GetContenType());
+
+    private string GetContenType()
+        => Faker.System.MimeType();
 }

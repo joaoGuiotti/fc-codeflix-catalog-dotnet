@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Domain.Exceptions;
@@ -401,6 +401,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.IsAny<string>(),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedThumbName);
@@ -464,6 +465,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.IsAny<string>(),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedBannerName);
@@ -527,6 +529,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.IsAny<string>(),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedThumbHalfName);
@@ -564,6 +567,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains($"-media.{mediaFile.Extension}")),
                 It.Is<Stream>(s => s == mediaFile.FileStream),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedMediaName);
@@ -587,6 +591,7 @@ public class CreateVideoTest
         storageServiceMock.Verify(x => x.Upload(
             It.Is<string>(s => s == $"{output.Id}-media.{mediaFile.Extension}"),
             It.Is<Stream>(s => s == mediaFile.FileStream),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
         ), Times.Once);
 
@@ -616,6 +621,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains($"-trailer.{trailerFile.Extension}")),
                 It.Is<Stream>(s => s == trailerFile.FileStream),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedTrailerName);
@@ -639,6 +645,7 @@ public class CreateVideoTest
         storageServiceMock.Verify(x => x.Upload(
             It.Is<string>(s => s == $"{output.Id}-trailer.{trailerFile.Extension}"),
             It.Is<Stream>(s => s == trailerFile.FileStream),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
         ), Times.Once);
 
@@ -676,6 +683,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-thumb.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedThumbName);
@@ -683,6 +691,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-banner.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedBannerName);
@@ -690,6 +699,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-thumbhalf.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedThumbHalfName);
@@ -697,6 +707,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-media.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedMediaName);
@@ -704,6 +715,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-trailer.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ThrowsAsync(new Exception("Error uploading trailer"));
@@ -787,6 +799,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-thumb.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedThumbName);
@@ -794,6 +807,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-banner.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedBannerName);
@@ -801,6 +815,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-thumbhalf.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedThumbHalfName);
@@ -808,6 +823,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-media.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedMediaName);
@@ -815,6 +831,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
                 It.Is<string>(s => s.Contains("-trailer.")),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(expectedTrailerName);

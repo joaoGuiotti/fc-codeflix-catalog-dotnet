@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Domain.Exceptions;
@@ -74,6 +74,7 @@ public class CreateVideo(
             var mediaUrl = await storageService.Upload(
                 StorageFileName.Create(video.Id, nameof(video.Media), request.Media.Extension),
                 request.Media.FileStream,
+                request.Media.ContentType,
                 cancellationToken
             );
             video.UpdateMedia(mediaUrl);
@@ -84,6 +85,7 @@ public class CreateVideo(
             var trailerUrl = await storageService.Upload(
                 StorageFileName.Create(video.Id, nameof(video.Trailer), request.Trailer.Extension),
                 request.Trailer.FileStream,
+                request.Trailer.ContentType,
                 cancellationToken
             );
             video.UpdateTrailer(trailerUrl);
@@ -115,6 +117,7 @@ public class CreateVideo(
             var thumbUrl = await storageService.Upload(
                 StorageFileName.Create(video.Id, nameof(video.Thumb), request.Thumb.Extension),
                 request.Thumb.FileStream,
+                request.Thumb.ContentType,
                 cancellationToken
             );
 
@@ -126,6 +129,7 @@ public class CreateVideo(
             var bannerUrl = await storageService.Upload(
                 StorageFileName.Create(video.Id, nameof(video.Banner), request.Banner.Extension),
                 request.Banner.FileStream,
+                request.Banner.ContentType,
                 cancellationToken
             );
 
@@ -137,6 +141,7 @@ public class CreateVideo(
             var thumbHalfUrl = await storageService.Upload(
                 StorageFileName.Create(video.Id, nameof(video.ThumbHalf), request.ThumbHalf.Extension),
                 request.ThumbHalf.FileStream,
+                request.ThumbHalf.ContentType,
                 cancellationToken
             );
 

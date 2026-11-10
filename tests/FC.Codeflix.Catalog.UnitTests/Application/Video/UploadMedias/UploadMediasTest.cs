@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Domain.Repository;
@@ -44,6 +44,7 @@ public class UploadMediasTest
         _storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(Guid.NewGuid().ToString());
 
@@ -52,6 +53,7 @@ public class UploadMediasTest
         _storageServiceMock.Verify(x => x.Upload(
                 It.IsAny<string>(),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             ),
             Times.Exactly(2)
@@ -100,12 +102,14 @@ public class UploadMediasTest
         _storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+                It.IsAny<string>(),
             It.IsAny<CancellationToken>()
         )).ReturnsAsync(videoStoragePath);
 
         _storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(fileName => fileName == trailerFileName),
             It.IsAny<Stream>(),
+                It.IsAny<string>(),
             It.IsAny<CancellationToken>()
         )).ThrowsAsync(new Exception($"Something went wrong with the upload {trailerFileName}."));
 
@@ -119,6 +123,7 @@ public class UploadMediasTest
         _storageServiceMock.Verify(x => x.Upload(
                 It.Is<string>(fileName => fileNames.Contains(fileName)),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
                 It.IsAny<CancellationToken>()
             ), Times.Exactly(2)
         );

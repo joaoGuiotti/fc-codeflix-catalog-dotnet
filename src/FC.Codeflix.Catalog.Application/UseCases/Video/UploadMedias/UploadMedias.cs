@@ -67,6 +67,7 @@ public class UploadMedias : IUploadMedias
             var uploadedFilePath = await _storageService.Upload(
                 fileName,
                 request.TrailerFile.FileStream,
+                request.TrailerFile.ContentType,
                 cancellationToken
             );
             video.UpdateTrailer(uploadedFilePath);
@@ -85,6 +86,7 @@ public class UploadMedias : IUploadMedias
             var uploadedFilePath = await _storageService.Upload(
                 fileName,
                 request.VideoFile.FileStream,
+                request.VideoFile.ContentType,
                 cancellationToken
             );
             video.UpdateMedia(uploadedFilePath);
