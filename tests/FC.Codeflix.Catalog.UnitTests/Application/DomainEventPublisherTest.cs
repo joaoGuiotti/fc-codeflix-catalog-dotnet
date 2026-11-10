@@ -27,9 +27,9 @@ public class DomainEventPublisherTest
         var @event = new DomainEventToBeHandledFake();
         await domainEventPublisher.PublishAsync(@event, CancellationToken.None);
 
-        eventHandlerMock1.Verify(x => x.Handle(@event, It.IsAny<CancellationToken>()), Times.Once);
-        eventHandlerMock2.Verify(x => x.Handle(@event, It.IsAny<CancellationToken>()), Times.Once);
-        eventHandlerMock3.Verify(x => x.Handle(It.IsAny<DomainEventToNotBeHandledFake>(), It.IsAny<CancellationToken>()), Times.Never);
+        eventHandlerMock1.Verify(x => x.HandleAsync(@event, It.IsAny<CancellationToken>()), Times.Once);
+        eventHandlerMock2.Verify(x => x.HandleAsync(@event, It.IsAny<CancellationToken>()), Times.Once);
+        eventHandlerMock3.Verify(x => x.HandleAsync(It.IsAny<DomainEventToNotBeHandledFake>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact(DisplayName = nameof(NoActionWhenThereIsNoSubscriber))]
@@ -47,11 +47,11 @@ public class DomainEventPublisherTest
 
         await domainEventPublisher.PublishAsync(@event, CancellationToken.None);
 
-        eventHandlerMock1.Verify(x => x.Handle(
+        eventHandlerMock1.Verify(x => x.HandleAsync(
             It.IsAny<DomainEventToNotBeHandledFake>(),
             It.IsAny<CancellationToken>()),
         Times.Never);
-        eventHandlerMock2.Verify(x => x.Handle(
+        eventHandlerMock2.Verify(x => x.HandleAsync(
             It.IsAny<DomainEventToNotBeHandledFake>(),
             It.IsAny<CancellationToken>()),
         Times.Never);

@@ -20,6 +20,6 @@ public class DomainEventPublisher : IDomainEventPublisher
             return;
 
         foreach (var handler in handlers)
-            await handler.Handle(@event, ct);
+            await handler.HandleAsync(@event, ct);
     }
 }

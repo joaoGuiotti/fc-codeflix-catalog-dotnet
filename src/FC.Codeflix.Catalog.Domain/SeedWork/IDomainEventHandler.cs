@@ -3,5 +3,5 @@
 public interface IDomainEventHandler<TDomainEvent>
     where TDomainEvent : DomainEvent
 {
-    Task Handle(TDomainEvent domainEvent, CancellationToken ct);
+    Task HandleAsync(TDomainEvent domainEvent, CancellationToken ct);
 }
