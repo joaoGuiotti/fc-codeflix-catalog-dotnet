@@ -2,5 +2,6 @@
 
 public interface IDomainEventPublisher
 {
-    Task PublishAsync(DomainEvent @event);
+    Task PublishAsync<TDomainEvent>(TDomainEvent @event, CancellationToken ct)
+        where TDomainEvent : DomainEvent;
 }
