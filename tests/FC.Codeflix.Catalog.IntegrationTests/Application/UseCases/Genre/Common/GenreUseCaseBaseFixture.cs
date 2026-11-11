@@ -15,7 +15,7 @@ public class GenreUseCaseBaseFixture : BaseFixture
             dbContext = CreateDbContext();
         var genreRepo = new GenreRepository(dbContext);
         var categoryRepo = new CategoryRepository(dbContext);
-        var uow = new UnitOfWork(dbContext);
+        var uow = GetUnitOfWork(dbContext);
         return new(genreRepo, uow, categoryRepo);
     }
 

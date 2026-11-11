@@ -15,5 +15,7 @@ public class CastMemberConfiguration : IEntityTypeConfiguration<CastMember>
         builder.Property(c => c.Name)
             .HasMaxLength(255).IsRequired();
         builder.Property(c => c.Type).IsRequired();
+
+        builder.Ignore(x => x.Events);
     }
 }

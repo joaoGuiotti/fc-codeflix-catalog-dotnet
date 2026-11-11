@@ -26,7 +26,7 @@ public class DeleteCategoryTest
 
         var dbContext = _fixture.CreateDbContext();
         var repo = new CategoryRepository(dbContext);
-        var uow = new UnitOfWork(dbContext);
+        var uow = _fixture.GetUnitOfWork(dbContext);
 
         await dbContext.AddAsync(exampleCategory);
         dbContext.SaveChanges();
@@ -49,7 +49,7 @@ public class DeleteCategoryTest
 
         var dbContext = _fixture.CreateDbContext();
         var repo = new CategoryRepository(dbContext);
-        var uow = new UnitOfWork(dbContext);
+        var uow = _fixture.GetUnitOfWork(dbContext);
 
         var useCase = new UseCase.DeleteCategory(repo, uow);
         var task = async () => await useCase.Handle(input, CancellationToken.None);

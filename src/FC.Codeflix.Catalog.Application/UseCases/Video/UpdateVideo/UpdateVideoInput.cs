@@ -4,7 +4,7 @@ using MediatR;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Video.UploadVideo;
 
-public record UpdateVideoInput(
+public sealed record UpdateVideoInput(
     Guid Id,
     string Title,
     string Description,

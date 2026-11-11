@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
+﻿using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Domain.Exceptions;
 using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 using FC.Codeflix.Catalog.Infra.Data.EF.UnitOfWork;
@@ -24,7 +24,7 @@ public class CreateCategoryTest
     {
         var dbContext = _fixture.CreateDbContext();
         var repository = new CategoryRepository(dbContext);
-        var unitOfWork = new UnitOfWork(dbContext);
+        var unitOfWork = _fixture.GetUnitOfWork(dbContext);
         var useCase = new UseCase.CreateCategory(repository, unitOfWork);
 
         var input = _fixture.GetInput();
@@ -53,7 +53,7 @@ public class CreateCategoryTest
     {
         var dbContext = _fixture.CreateDbContext();
         var repository = new CategoryRepository(dbContext);
-        var unitOfWork = new UnitOfWork(dbContext);
+        var unitOfWork = _fixture.GetUnitOfWork(dbContext);
         var useCase = new UseCase.CreateCategory(repository, unitOfWork);
 
         var input = new CreateCategoryInput(_fixture.GetInput().Name);
@@ -82,7 +82,7 @@ public class CreateCategoryTest
     {
         var dbContext = _fixture.CreateDbContext();
         var repository = new CategoryRepository(dbContext);
-        var unitOfWork = new UnitOfWork(dbContext);
+        var unitOfWork = _fixture.GetUnitOfWork(dbContext);
         var useCase = new UseCase.CreateCategory(repository, unitOfWork);
 
         var exampleInput = _fixture.GetInput();
@@ -123,7 +123,7 @@ public class CreateCategoryTest
     {
         var dbContext = _fixture.CreateDbContext();
         var repository = new CategoryRepository(dbContext);
-        var unitOfWork = new UnitOfWork(dbContext);
+        var unitOfWork = _fixture.GetUnitOfWork(dbContext);
         var useCase = new UseCase.CreateCategory(repository, unitOfWork);
 
         var task = async () => await useCase.Handle(input, CancellationToken.None);

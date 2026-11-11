@@ -1,6 +1,5 @@
 ﻿using FC.Codeflix.Catalog.Api.Filters;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using FC.Codeflix.Catalog.Infra.Messaging.Configuration;
 
 namespace FC.Codeflix.Catalog.Api.Configurations;
 
@@ -10,9 +9,9 @@ public static class ControllersConfiguration
     {
         services
             .AddControllers(opt => opt.Filters.Add(typeof(ApiGlobalExceptionFilter)))
-            .AddJsonOptions(opt => ConfigureJson(opt.JsonSerializerOptions));
+            .AddJsonOptions(opt => opt.JsonSerializerOptions.ConfigureJson());
 
-        services.ConfigureHttpJsonOptions(opt => ConfigureJson(opt.SerializerOptions));
+        services.ConfigureHttpJsonOptions(opt => opt.SerializerOptions.ConfigureJson());
 
         services.AddDocumentation();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -36,13 +35,5 @@ public static class ControllersConfiguration
                 => options.SwaggerEndpoint("/openapi/v1.json", "Codeflix Catalog API"));
         }
         return app;
-    }
-
-
-    private static void ConfigureJson(JsonSerializerOptions options)
-    {
-        options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
-        options.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;
-        options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     }
 }

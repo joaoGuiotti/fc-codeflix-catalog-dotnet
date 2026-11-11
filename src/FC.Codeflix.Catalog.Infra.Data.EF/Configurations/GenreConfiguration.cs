@@ -11,5 +11,7 @@ internal class GenreConfiguration : IEntityTypeConfiguration<Genre>
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Name).HasMaxLength(255).IsRequired();
         builder.Ignore(c => c.Categories);
+
+        builder.Ignore(c => c.Events);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 
-public record VideoModelOutput(
+public sealed record VideoModelOutput(
     Guid Id,
     string Title,
     string Description,

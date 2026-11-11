@@ -3,5 +3,5 @@ using MediatR;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Video.UploadVideo;
 
-internal interface IUpdateVideo
+public interface IUpdateVideo
     : IRequestHandler<UpdateVideoInput, VideoModelOutput>;

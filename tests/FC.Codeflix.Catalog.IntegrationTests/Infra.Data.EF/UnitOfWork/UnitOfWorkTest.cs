@@ -1,5 +1,8 @@
+﻿using FC.Codeflix.Catalog.Domain.SeedWork;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using UnitOfWorkInfra = FC.Codeflix.Catalog.Infra.Data.EF.UnitOfWork;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.UnitOfWork;
@@ -17,9 +20,18 @@ public class UnitOfWorkTest
     {
         var dbContext = _fixture.CreateDbContext();
         var exampleCategoryList = _fixture.GetExampleCategoryList();
+        var categoryWithEvents = exampleCategoryList[0];
+
+        var @event = new DomainEventFake();
+        categoryWithEvents.RaiseEvent(@event);
+
+        var eventHandlerMock = new Mock<IDomainEventHandler<DomainEventFake>>();
+
+        _fixture.serviceCollection.AddSingleton(eventHandlerMock.Object);
+
         await dbContext.AddRangeAsync(exampleCategoryList);
 
-        var unitOfWork = new UnitOfWorkInfra.UnitOfWork(dbContext);
+        var unitOfWork =_fixture.GetUnitOfWork(dbContext);
         await unitOfWork.Commit(CancellationToken.None);
 
         // Usar o mesmo contexto para verificar os dados salvos
@@ -39,6 +51,12 @@ public class UnitOfWorkTest
             savedCategory.IsActive.Should().Be(exampleCategory.IsActive);
             savedCategory.CreatedAt.Should().Be(exampleCategory.CreatedAt);
         }
+
+        eventHandlerMock.Verify(
+            x => x.HandleAsync(It.IsAny<DomainEventFake>(), It.IsAny<CancellationToken>()),
+            Times.Once
+        );
+        categoryWithEvents.Events.Should().BeEmpty();
     }
 
     [Fact(DisplayName = nameof(Rollback))]
@@ -49,7 +67,7 @@ public class UnitOfWorkTest
         var exampleCategoryList = _fixture.GetExampleCategoryList();
         await dbContext.AddRangeAsync(exampleCategoryList);
 
-        var unitOfWork = new UnitOfWorkInfra.UnitOfWork(dbContext);
+        var unitOfWork = _fixture.GetUnitOfWork();
         await unitOfWork.Rollback(CancellationToken.None);
 
         // Usar o mesmo contexto para verificar os dados salvos

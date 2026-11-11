@@ -46,7 +46,7 @@ public class UpdateCategoryTest
         trackingInfo.State = EntityState.Detached;
 
         var repositoryMock = new CategoryRepository(dbContext);
-        var unitOfWork = new UnitOfWork(dbContext);
+        var unitOfWork = _fixture.GetUnitOfWork(dbContext);
 
         var useCase = new UseCase.UpdateCategory(repositoryMock, unitOfWork);
 
@@ -78,7 +78,7 @@ public class UpdateCategoryTest
         context.SaveChanges();
 
         var repo = new CategoryRepository(context);
-        var uow = new UnitOfWork(context);
+        var uow = _fixture.GetUnitOfWork(context);
 
         var useCase = new UseCase.UpdateCategory(repo, uow);
 
@@ -103,7 +103,7 @@ public class UpdateCategoryTest
     {
         var context = _fixture.CreateDbContext();
         var repo = new CategoryRepository(context);
-        var uow = new UnitOfWork(context);
+        var uow = _fixture.GetUnitOfWork(context);
         var examples = _fixture.GetExampleCategoryList();
         await context.AddRangeAsync(examples);
         context.SaveChanges();

@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Domain.Entity;
+﻿using FC.Codeflix.Catalog.Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,5 +14,6 @@ internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
             .Property(c => c.Description)
             .HasMaxLength(10_000)
             .IsRequired(false);
+        builder.Ignore(c => c.Events);
     }
 }
