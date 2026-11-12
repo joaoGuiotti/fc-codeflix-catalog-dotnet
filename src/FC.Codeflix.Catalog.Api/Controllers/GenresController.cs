@@ -31,7 +31,7 @@ public class GenresController : ControllerBase
             request.PerPage,
             request.Search,
             request.Sort,
-            request.sortDir
+            request.SortDir
         );
         var output = await _mediatR.Send(input, cancellationToken);
         return Ok(ApiResponse.OfList(output));

@@ -92,6 +92,84 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Migrations
                     b.ToTable("Genres");
                 });
 
+            modelBuilder.Entity("FC.Codeflix.Catalog.Domain.Entity.Media", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("EncodedPath")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Media");
+                });
+
+            modelBuilder.Entity("FC.Codeflix.Catalog.Domain.Entity.Video", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("varchar(4000)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastUpdated")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime(6)");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<DateTime>("LastUpdated"));
+
+                    b.Property<Guid?>("MediaId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Opened")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Published")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<Guid?>("TrailerId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("YearLaunched")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MediaId")
+                        .IsUnique();
+
+                    b.HasIndex("TrailerId")
+                        .IsUnique();
+
+                    b.ToTable("Videos");
+                });
+
             modelBuilder.Entity("FC.Codeflix.Catalog.Infra.Data.EF.Models.GenresCategories", b =>
                 {
                     b.Property<Guid>("CategoryId")
@@ -105,6 +183,120 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("GenresCategories");
+                });
+
+            modelBuilder.Entity("FC.Codeflix.Catalog.Infra.Data.EF.Models.VideosCastMembers", b =>
+                {
+                    b.Property<Guid>("VideoId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CastMemberId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("VideoId", "CastMemberId");
+
+                    b.ToTable("VideosCastMembers");
+                });
+
+            modelBuilder.Entity("FC.Codeflix.Catalog.Infra.Data.EF.Models.VideosCategories", b =>
+                {
+                    b.Property<Guid>("VideoId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("VideoId", "CategoryId");
+
+                    b.ToTable("VideosCategories");
+                });
+
+            modelBuilder.Entity("FC.Codeflix.Catalog.Infra.Data.EF.Models.VideosGenres", b =>
+                {
+                    b.Property<Guid>("VideoId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("GenreId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("VideoId", "GenreId");
+
+                    b.ToTable("VideosGenres");
+                });
+
+            modelBuilder.Entity("FC.Codeflix.Catalog.Domain.Entity.Video", b =>
+                {
+                    b.HasOne("FC.Codeflix.Catalog.Domain.Entity.Media", "Media")
+                        .WithOne()
+                        .HasForeignKey("FC.Codeflix.Catalog.Domain.Entity.Video", "MediaId");
+
+                    b.HasOne("FC.Codeflix.Catalog.Domain.Entity.Media", "Trailer")
+                        .WithOne()
+                        .HasForeignKey("FC.Codeflix.Catalog.Domain.Entity.Video", "TrailerId");
+
+                    b.OwnsOne("FC.Codeflix.Catalog.Domain.ValueObject.Image", "Banner", b1 =>
+                        {
+                            b1.Property<Guid>("VideoId")
+                                .HasColumnType("char(36)");
+
+                            b1.Property<string>("Path")
+                                .IsRequired()
+                                .HasColumnType("longtext")
+                                .HasColumnName("BannerPath");
+
+                            b1.HasKey("VideoId");
+
+                            b1.ToTable("Videos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VideoId");
+                        });
+
+                    b.OwnsOne("FC.Codeflix.Catalog.Domain.ValueObject.Image", "Thumb", b1 =>
+                        {
+                            b1.Property<Guid>("VideoId")
+                                .HasColumnType("char(36)");
+
+                            b1.Property<string>("Path")
+                                .IsRequired()
+                                .HasColumnType("longtext")
+                                .HasColumnName("ThumbPath");
+
+                            b1.HasKey("VideoId");
+
+                            b1.ToTable("Videos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VideoId");
+                        });
+
+                    b.OwnsOne("FC.Codeflix.Catalog.Domain.ValueObject.Image", "ThumbHalf", b1 =>
+                        {
+                            b1.Property<Guid>("VideoId")
+                                .HasColumnType("char(36)");
+
+                            b1.Property<string>("Path")
+                                .IsRequired()
+                                .HasColumnType("longtext")
+                                .HasColumnName("ThumbHalfPath");
+
+                            b1.HasKey("VideoId");
+
+                            b1.ToTable("Videos");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VideoId");
+                        });
+
+                    b.Navigation("Banner");
+
+                    b.Navigation("Media");
+
+                    b.Navigation("Thumb");
+
+                    b.Navigation("ThumbHalf");
+
+                    b.Navigation("Trailer");
                 });
 
             modelBuilder.Entity("FC.Codeflix.Catalog.Infra.Data.EF.Models.GenresCategories", b =>

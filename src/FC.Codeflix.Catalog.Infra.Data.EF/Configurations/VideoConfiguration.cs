@@ -9,6 +9,10 @@ public class VideoConfiguration : IEntityTypeConfiguration<Video>
     public void Configure(EntityTypeBuilder<Video> builder)
     {
         builder.HasKey(x => x.Id);
+
+        builder.Navigation(x => x.Media).AutoInclude();
+        builder.Navigation(x => x.Trailer).AutoInclude();
+
         builder.Property(x => x.Title)
             .HasMaxLength(255).IsRequired();
         builder.Property(x => x.Description)
@@ -24,14 +28,15 @@ public class VideoConfiguration : IEntityTypeConfiguration<Video>
             => banner.Property(x => x.Path).HasColumnName("BannerPath")
         );
 
-        builder.HasOne(video => video.Media);
-        builder.Navigation(x => x.Media).AutoInclude();
-
-        builder.HasOne(video => video.Trailer);
-        builder.Navigation(x => x.Trailer).AutoInclude();
+        builder.HasOne(video => video.Media)
+            .WithOne()
+            .HasForeignKey<Video>("MediaId");
+        builder.HasOne(video => video.Trailer)
+            .WithOne()
+            .HasForeignKey<Video>("TrailerId");
 
         builder.Property<DateTime>("LastUpdated")
-           .ValueGeneratedOnAdd();
+            .ValueGeneratedOnAdd();
 
         builder.Ignore(video => video.Events);
     }

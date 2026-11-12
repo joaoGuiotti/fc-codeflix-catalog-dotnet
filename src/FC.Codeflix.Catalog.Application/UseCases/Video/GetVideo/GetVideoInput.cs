@@ -3,4 +3,4 @@ using MediatR;
 
 namespace FC.Codeflix.Catalog.Application.UseCases.Video.GetVideo;
 
-public record GetVideoInput(Guid Id) : IRequest, IRequest<VideoModelOutput>;
+public record GetVideoInput(Guid Id) : IRequest<VideoModelOutput>;

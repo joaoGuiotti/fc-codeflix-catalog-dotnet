@@ -9,5 +9,5 @@ public sealed record ListRequest
     [FromQuery(Name = "per_page")] public int PerPage { get; init; } = 15;
     [FromQuery(Name = "search")] public string? Search { get; init; } = "";
     [FromQuery(Name = "sort")] public string? Sort { get; init; } = "";
-    [FromQuery(Name = "sort_dir")] public ESearchOrder sortDir { get; init; } = ESearchOrder.Asc;
+    [FromQuery(Name = "sort_dir")] public ESearchOrder SortDir { get; init; } = ESearchOrder.Asc;
 }

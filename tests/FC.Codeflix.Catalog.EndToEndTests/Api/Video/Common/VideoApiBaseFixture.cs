@@ -1,6 +1,9 @@
-﻿using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
+﻿using System.Text;
+using FC.Codeflix.Catalog.Api.Models.Video;
+using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Video.CreateVideo;
 using FC.Codeflix.Catalog.Domain.Enum;
+using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.EndToEndTests.Api.CastMember.Common;
 using FC.Codeflix.Catalog.EndToEndTests.Api.Genre.Common;
 using FluentAssertions;
@@ -53,6 +56,43 @@ public class VideoApiBaseFixture : GenreApiBaseFixture
                 CastMembersIds: castMembers.Select(x => x.Id).ToList()
             );
 
+    public UpdateVideoApiInput GetBasicUpdateVideoInput()
+        => new()
+        {
+            Title = GetValidTitle(),
+            Description = GetValidDescription(),
+            Opened = GetRandomBoolean(),
+            Published = GetRandomBoolean(),
+            YearLaunched = GetValidYearLaunched(),
+            Duration = GetValidDuration(),
+            Rating = GetRandomRating()
+        };
+
+    public UpdateVideoApiInput GetUpdateVideoInputWithRelations(
+        List<Domain.Entity.Category> categories,
+        List<Domain.Entity.Genre> genres,
+        List<Domain.Entity.CastMember> castMembers
+    )
+        => new()
+        {
+            Title = GetValidTitle(),
+            Description = GetValidDescription(),
+            Opened = GetRandomBoolean(),
+            Published = GetRandomBoolean(),
+            YearLaunched = GetValidYearLaunched(),
+            Duration = GetValidDuration(),
+            Rating = GetRandomRating(),
+            CategoriesId = categories.Select(x => x.Id).ToList(),
+            GenresId = genres.Select(x => x.Id).ToList(),
+            CastMembersId = castMembers.Select(x => x.Id).ToList()
+        };
+
+    public FileInput GetValidImageFileInput()
+        => new("jpg", new MemoryStream(Encoding.ASCII.GetBytes("Fake image")), "image/jpeg");
+
+    public FileInput GetValidMediaFileInput()
+        => new("mp4", new MemoryStream(Encoding.ASCII.GetBytes("Fake video")), "video/mp4");
+
     public string GetValidImagePath()
         => Faker.Image.PlaceImgUrl();
 
@@ -75,9 +115,6 @@ public class VideoApiBaseFixture : GenreApiBaseFixture
             description = description[..255];
         return description;
     }
-
-    public bool GetRandomBoolean()
-        => Faker.Random.Bool();
 
     public int GetValidYearLaunched()
         => Faker.Date.BetweenDateOnly(
@@ -138,6 +175,68 @@ public class VideoApiBaseFixture : GenreApiBaseFixture
 
     public ECastMemberType GetRandomType()
        => Faker.Random.Enum<ECastMemberType>();
+
     #endregion
 
+
+    public Domain.Entity.Video GetExampleVideoWithAllProperties(string? title = null)
+    {
+        var video = new Domain.Entity.Video(
+            title ?? GetValidTitle(),
+            GetValidDescription(),
+            GetRandomBoolean(),
+            GetRandomBoolean(),
+            GetValidYearLaunched(),
+            GetValidDuration(),
+            GetRandomRating()
+        );
+
+        video.UpdateBanner(GetValidImagePath());
+        video.UpdateThumb(GetValidImagePath());
+        video.UpdateThumbHalf(GetValidImagePath());
+
+        video.UpdateMedia(GetValidMediaPath());
+        video.UpdateTrailer(GetValidMediaPath());
+
+        return video;
+    }
+
+    public List<Domain.Entity.Video> GetVideoColletion(int length = 10)
+        => Enumerable.Range(0, length)
+            .Select(_ =>
+            {
+                Thread.Sleep(1);
+                return GetExampleVideoWithAllProperties();
+            })
+            .ToList();
+
+    public List<Domain.Entity.Video> GetVideoColletion(IReadOnlyList<string> titles)
+        => titles
+            .Select(title =>
+            {
+                Thread.Sleep(1);
+                return GetExampleVideoWithAllProperties(title);
+            })
+            .ToList();
+
+    public List<Domain.Entity.Video> CloneVideosListOrdered(
+        List<Domain.Entity.Video> videos,
+        string orderBy,
+        ESearchOrder order
+    )
+    {
+        var listClone = new List<Domain.Entity.Video>(videos);
+        var orderedEnumerable = (orderBy.ToLower(), order) switch
+        {
+            ("title", ESearchOrder.Asc) => listClone.OrderBy(x => x.Title).ThenBy(x => x.Id),
+            ("title", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.Title).ThenBy(x => x.Id),
+            ("id", ESearchOrder.Asc) => listClone.OrderBy(x => x.Id),
+            ("id", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.Id),
+            ("createdat", ESearchOrder.Asc) => listClone.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id),
+            ("createdat", ESearchOrder.Desc) => listClone.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id),
+            (_, ESearchOrder.Asc) => listClone.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id),
+            _ => listClone.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id),
+        };
+        return orderedEnumerable.ToList();
+    }
 }

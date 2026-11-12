@@ -30,8 +30,4 @@
     <ProjectReference Include="..\FC.Codeflix.Catalog.Infra.Storage\FC.Codeflix.Catalog.Infra.Storage.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\Video\" />
-  </ItemGroup>
-
 </Project>
