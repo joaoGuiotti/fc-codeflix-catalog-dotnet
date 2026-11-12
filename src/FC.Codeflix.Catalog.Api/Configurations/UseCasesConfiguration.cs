@@ -1,7 +1,9 @@
 ﻿
 using FC.Codeflix.Catalog.Application;
+using FC.Codeflix.Catalog.Application.EventHandlers;
 using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
+using FC.Codeflix.Catalog.Domain.Events;
 using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.Domain.SeedWork;
 using FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
@@ -11,13 +13,14 @@ namespace FC.Codeflix.Catalog.Api.Configurations;
 
 public static class UseCasesConfiguration
 {
-    public static IServiceCollection AddUseCases(this IServiceCollection services)
+    public static IServiceCollection AddUseCases(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
-        services.AddMediatR(cfg =>
-            cfg.RegisterServicesFromAssembly(typeof(CreateCategory).Assembly)
-        );
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCategory).Assembly));
         services.AddRepositories();
-        services.AddDomainEvents();
+        services.AddDomainEvents(configuration);
         return services;
     }
 
@@ -31,9 +34,13 @@ public static class UseCasesConfiguration
         return services;
     }
 
-    private static IServiceCollection AddDomainEvents(this IServiceCollection services)
+    private static IServiceCollection AddDomainEvents(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
     {
         services.AddTransient<IDomainEventPublisher, DomainEventPublisher>();
+        services.AddTransient<IDomainEventHandler<VideoUploadedEvent>, SendToEncoderEventHandler>();
         return services;
     }
 }

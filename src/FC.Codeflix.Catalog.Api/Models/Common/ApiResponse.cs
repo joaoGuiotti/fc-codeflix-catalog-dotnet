@@ -1,6 +1,6 @@
 ﻿using FC.Codeflix.Catalog.Application.Common;
 
-namespace FC.Codeflix.Catalog.Api.Contracts.Common;
+namespace FC.Codeflix.Catalog.Api.Models.Common;
 
 public sealed record ApiResponse<TData>(TData Data)
     where TData : class;

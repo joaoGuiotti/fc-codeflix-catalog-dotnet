@@ -1,5 +1,5 @@
-using System.Net;
-using FC.Codeflix.Catalog.Api.Contracts.Common;
+﻿using System.Net;
+using FC.Codeflix.Catalog.Api.Models.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.ListGenre;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
@@ -25,7 +25,7 @@ public class ListGenreApiTest : IDisposable
     {
         var defaultPerPage = 15;
         var exampleGenres = _fixture.GetExampleGenreList(20);
-        await _fixture.Persistence.BulkInsert(exampleGenres);
+        await _fixture.GenrePersistence.BulkInsert(exampleGenres);
 
         var (response, output) = await _fixture.ApiClient
             .Get<ApiResponseList<GenreModelOutput>>("/genres");
@@ -44,7 +44,7 @@ public class ListGenreApiTest : IDisposable
         {
             var exampleItem = exampleGenres.Find(x => x.Id == outputItem.Id);
             exampleItem.Should().NotBeNull();
-            _fixture.CompareEntityOutput(exampleItem!, outputItem);
+            _fixture.CompareGenreOutput(exampleItem!, outputItem);
         }
     }
 
@@ -71,7 +71,7 @@ public class ListGenreApiTest : IDisposable
     public async Task ListGenresAndTotal()
     {
         var exampleGenres = _fixture.GetExampleGenreList(20);
-        await _fixture.Persistence.BulkInsert(exampleGenres);
+        await _fixture.GenrePersistence.BulkInsert(exampleGenres);
         var input = new ListGenreInput(page: 1, perPage: 5);
 
         var (response, output) = await _fixture.ApiClient
@@ -91,7 +91,7 @@ public class ListGenreApiTest : IDisposable
         {
             var exampleItem = exampleGenres.Find(x => x.Id == outputItem.Id);
             exampleItem.Should().NotBeNull();
-            _fixture.CompareEntityOutput(exampleItem!, outputItem);
+            _fixture.CompareGenreOutput(exampleItem!, outputItem);
         }
     }
 
@@ -120,9 +120,9 @@ public class ListGenreApiTest : IDisposable
             )
         );
 
-        await _fixture.Persistence.BulkInsert(exampleGenres);
-        await _fixture.Persistence.BulkInsertCategories(exampleCategories);
-        await _fixture.Persistence.BulkInserGenreCategories(genresCategories);
+        await _fixture.GenrePersistence.BulkInsert(exampleGenres);
+        await _fixture.GenrePersistence.BulkInsertCategories(exampleCategories);
+        await _fixture.GenrePersistence.BulkInserGenreCategories(genresCategories);
 
         var (response, output) = await _fixture.ApiClient
             .Get<ApiResponseList<GenreModelOutput>>("/genres");
@@ -141,7 +141,7 @@ public class ListGenreApiTest : IDisposable
         {
             var exampleItem = exampleGenres.Find(x => x.Id == outputItem.Id);
             exampleItem.Should().NotBeNull();
-            _fixture.CompareEntityOutput(exampleItem!, outputItem);
+            _fixture.CompareGenreOutput(exampleItem!, outputItem);
             var relatedCategories = exampleCategories
                 .Where(x => exampleItem!.Categories.Contains(x.Id))
                 .ToList();
@@ -183,9 +183,9 @@ public class ListGenreApiTest : IDisposable
             )
         );
 
-        await _fixture.Persistence.BulkInsert(exampleGenres);
-        await _fixture.Persistence.BulkInsertCategories(exampleCategories);
-        await _fixture.Persistence.BulkInserGenreCategories(genresCategories);
+        await _fixture.GenrePersistence.BulkInsert(exampleGenres);
+        await _fixture.GenrePersistence.BulkInsertCategories(exampleCategories);
+        await _fixture.GenrePersistence.BulkInserGenreCategories(genresCategories);
 
         var input = new ListGenreInput(page, perPage);
 
@@ -206,7 +206,7 @@ public class ListGenreApiTest : IDisposable
         {
             var exampleItem = exampleGenres.Find(x => x.Id == outputItem.Id);
             exampleItem.Should().NotBeNull();
-            _fixture.CompareEntityOutput(exampleItem!, outputItem);
+            _fixture.CompareGenreOutput(exampleItem!, outputItem);
             var relatedCategories = exampleCategories
                 .Where(x => exampleItem!.Categories.Contains(x.Id))
                 .ToList();
@@ -265,9 +265,9 @@ public class ListGenreApiTest : IDisposable
             )
         );
 
-        await _fixture.Persistence.BulkInsert(exampleGenres);
-        await _fixture.Persistence.BulkInsertCategories(exampleCategories);
-        await _fixture.Persistence.BulkInserGenreCategories(genresCategories);
+        await _fixture.GenrePersistence.BulkInsert(exampleGenres);
+        await _fixture.GenrePersistence.BulkInsertCategories(exampleCategories);
+        await _fixture.GenrePersistence.BulkInserGenreCategories(genresCategories);
 
         var input = new ListGenreInput(page, perPage, search);
 
@@ -288,7 +288,7 @@ public class ListGenreApiTest : IDisposable
         {
             var exampleItem = exampleGenres.Find(x => x.Id == outputItem.Id);
             exampleItem.Should().NotBeNull();
-            _fixture.CompareEntityOutput(exampleItem!, outputItem);
+            _fixture.CompareGenreOutput(exampleItem!, outputItem);
             var relatedCategories = exampleCategories
                 .Where(x => exampleItem!.Categories.Contains(x.Id))
                 .ToList();
@@ -343,9 +343,9 @@ public class ListGenreApiTest : IDisposable
             )
         );
 
-        await _fixture.Persistence.BulkInsert(exampleGenres);
-        await _fixture.Persistence.BulkInsertCategories(exampleCategories);
-        await _fixture.Persistence.BulkInserGenreCategories(genresCategories);
+        await _fixture.GenrePersistence.BulkInsert(exampleGenres);
+        await _fixture.GenrePersistence.BulkInsertCategories(exampleCategories);
+        await _fixture.GenrePersistence.BulkInserGenreCategories(genresCategories);
 
         var inputOrder = order == "asc" ? ESearchOrder.Asc : ESearchOrder.Desc;
         var input = new ListGenreInput(
@@ -378,7 +378,7 @@ public class ListGenreApiTest : IDisposable
         {
             var outputItem = output.Data[indice];
             var exampleItem = expectedOrderedList[indice];
-            _fixture.CompareEntityOutput(exampleItem, outputItem);
+            _fixture.CompareGenreOutput(exampleItem, outputItem);
             var relatedCategories = exampleCategories
                 .Where(x => exampleItem.Categories.Contains(x.Id))
                 .ToList();

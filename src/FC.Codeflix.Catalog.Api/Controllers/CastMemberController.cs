@@ -1,5 +1,5 @@
-﻿using FC.Codeflix.Catalog.Api.Contracts.CastMembers;
-using FC.Codeflix.Catalog.Api.Contracts.Common;
+﻿using FC.Codeflix.Catalog.Api.Models.CastMembers;
+using FC.Codeflix.Catalog.Api.Models.Common;
 using FC.Codeflix.Catalog.Application.UseCases.CastMember.CreateCastMember;
 using FC.Codeflix.Catalog.Application.UseCases.CastMember.DeleteCastMember;
 using FC.Codeflix.Catalog.Application.UseCases.CastMember.GetCastMember;

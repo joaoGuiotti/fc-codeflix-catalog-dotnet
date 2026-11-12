@@ -1,5 +1,5 @@
-using FC.Codeflix.Catalog.Api.Contracts.Categories;
-using FC.Codeflix.Catalog.Api.Contracts.Common;
+﻿using FC.Codeflix.Catalog.Api.Models.Categories;
+using FC.Codeflix.Catalog.Api.Models.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.Codeflix.Catalog.Application.UseCases.Category.DeleteCategory;

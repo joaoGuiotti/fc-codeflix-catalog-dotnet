@@ -1,7 +1,7 @@
 ﻿using FC.Codeflix.Catalog.Application.UseCases.Category.ListCategories;
 using FC.Codeflix.Catalog.Application.UseCases.Category.UpdateCategory;
 
-namespace FC.Codeflix.Catalog.Api.Contracts.Categories;
+namespace FC.Codeflix.Catalog.Api.Models.Categories;
 
 public static class CategoryMappings
 {

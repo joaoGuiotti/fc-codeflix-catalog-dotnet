@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Api.Contracts.Common;
+﻿using FC.Codeflix.Catalog.Api.Models.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
 using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using FluentAssertions;
@@ -31,9 +31,9 @@ public class GetGenreApiTest : IDisposable
             .Select(categoryId => new GenresCategories(categoryId, genre.Id))
             .ToList();
 
-        await _fixture.Persistence.Insert(genre);
-        await _fixture.Persistence.BulkInsertCategories(categories);
-        await _fixture.Persistence.BulkInserGenreCategories(genreCategories);
+        await _fixture.GenrePersistence.Insert(genre);
+        await _fixture.GenrePersistence.BulkInsertCategories(categories);
+        await _fixture.GenrePersistence.BulkInserGenreCategories(genreCategories);
 
         // act
         var (response, output) = await _fixture.ApiClient
@@ -44,7 +44,7 @@ public class GetGenreApiTest : IDisposable
         response.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
         output.Should().NotBeNull();
         output.Data.Should().NotBeNull();
-        _fixture.CompareEntityOutput(genre, output.Data);
+        _fixture.CompareGenreOutput(genre, output.Data);
         _fixture.CompareOutputGenreCategories(output.Data.Categories, categories);
     }
 

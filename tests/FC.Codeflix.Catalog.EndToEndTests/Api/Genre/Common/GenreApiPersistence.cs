@@ -1,4 +1,4 @@
-using FC.Codeflix.Catalog.Infra.Data.EF;
+﻿using FC.Codeflix.Catalog.Infra.Data.EF;
 using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using Microsoft.EntityFrameworkCore;
 

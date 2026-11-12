@@ -1,6 +1,7 @@
 ﻿using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Infra.Storage.Configuration;
 using FC.Codeflix.Catalog.Infra.Storage.Service;
+//using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Storage.V1;
 
 namespace FC.Codeflix.Catalog.Api.Configurations;
@@ -9,12 +10,13 @@ public static class StorageConfiguration
 {
     public static IServiceCollection AddStorage(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration
+    )
     {
+        services.AddScoped(_ => StorageClient.Create());
         services.Configure<StorageServiceOptions>(
-            configuration.GetSection(nameof(StorageServiceOptions))
+            configuration.GetSection(StorageServiceOptions.ConfigurationSection)
         );
-        services.AddSingleton(_ => StorageClient.Create());
         services.AddTransient<IStorageService, StorageService>();
         return services;
     }

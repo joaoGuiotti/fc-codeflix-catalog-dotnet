@@ -1,5 +1,5 @@
-using System.Net;
-using FC.Codeflix.Catalog.Api.Contracts.Common;
+﻿using System.Net;
+using FC.Codeflix.Catalog.Api.Models.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Genre.CreateGenre;
 using FluentAssertions;
@@ -37,7 +37,7 @@ public class CreateGenreApiTest : IDisposable
         output.Data.CreatedAt.Should().NotBeSameDateAs(default);
         output.Data.Categories.Should().HaveCount(0);
 
-        var genreFromDb = await _fixture.Persistence.GetById(output.Data.Id);
+        var genreFromDb = await _fixture.GenrePersistence.GetById(output.Data.Id);
         genreFromDb.Should().NotBeNull();
         genreFromDb!.Name.Should().Be(output.Data.Name);
         genreFromDb.IsActive.Should().Be(output.Data.IsActive);
@@ -49,7 +49,7 @@ public class CreateGenreApiTest : IDisposable
     public async Task CreateGenreWithRelations()
     {
         var exampleCategories = _fixture.GetExampleCategoriesList(5);
-        await _fixture.Persistence.BulkInsertCategories(exampleCategories);
+        await _fixture.GenrePersistence.BulkInsertCategories(exampleCategories);
         var relatedCategories = exampleCategories.Select(x => x.Id).ToList();
         var input = _fixture.GetExampleInput(relatedCategories);
 
@@ -68,13 +68,13 @@ public class CreateGenreApiTest : IDisposable
         var outputRelatedCategoryIds = output.Data.Categories.Select(x => x.Id).ToList();
         outputRelatedCategoryIds.Should().BeEquivalentTo(relatedCategories);
 
-        var genreFromDb = await _fixture.Persistence.GetById(output.Data.Id);
+        var genreFromDb = await _fixture.GenrePersistence.GetById(output.Data.Id);
         genreFromDb.Should().NotBeNull();
         genreFromDb!.Name.Should().Be(output.Data.Name);
         genreFromDb.IsActive.Should().Be(output.Data.IsActive);
         genreFromDb.CreatedAt.Should().BeSameDateAs(output.Data.CreatedAt);
 
-        var relationsFromDb = await _fixture.Persistence
+        var relationsFromDb = await _fixture.GenrePersistence
             .GetGenresCategoriesRelationsByGenreId(output.Data.Id);
         relationsFromDb.Should().NotBeNull();
         relationsFromDb.Should().HaveCount(relatedCategories.Count);
@@ -89,7 +89,7 @@ public class CreateGenreApiTest : IDisposable
     public async Task ErrorWithInvalidRelations()
     {
         var exampleCategories = _fixture.GetExampleCategoriesList(5);
-        await _fixture.Persistence.BulkInsertCategories(exampleCategories);
+        await _fixture.GenrePersistence.BulkInsertCategories(exampleCategories);
         var relatedCategories = exampleCategories.Select(x => x.Id).ToList();
         var invalidCategoryId = Guid.NewGuid();
         relatedCategories.Add(invalidCategoryId);

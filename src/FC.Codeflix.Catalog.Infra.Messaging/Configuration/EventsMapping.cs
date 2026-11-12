@@ -6,7 +6,7 @@ public static class EventsMapping
 {
     private readonly static Dictionary<string, string> _mapping = new()
     {
-        { typeof(VideoUploadedEvent).Name, "videos.create" },
+        { typeof(VideoUploadedEvent).Name, "video.created" },
     };
 
     public static string GetRoutingKey<T>()

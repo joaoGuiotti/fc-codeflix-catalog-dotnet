@@ -1,16 +1,21 @@
-using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
+﻿using FC.Codeflix.Catalog.Application.UseCases.Genre.Common;
+using FC.Codeflix.Catalog.EndToEndTests.Api.Category.Common;
 using FC.Codeflix.Catalog.EndToEndTests.Common;
+using FC.Codeflix.Catalog.Infra.Data.EF;
 using FluentAssertions;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Genre.Common;
 
 public class GenreApiBaseFixture : BaseFixture
 {
-    public GenreApiPersistence Persistence;
+    public GenreApiPersistence GenrePersistence;
+
+    public CategoryPersistence CategoryPersistence;
 
     public GenreApiBaseFixture()
     {
-        Persistence = new GenreApiPersistence(CreateDbContext());
+        GenrePersistence = new GenreApiPersistence(DbContext);
+        CategoryPersistence = new CategoryPersistence(DbContext);
     }
 
     public string GetValidName()
@@ -73,7 +78,7 @@ public class GenreApiBaseFixture : BaseFixture
             ))
             .ToList();
 
-    public void CompareEntityOutput(Domain.Entity.Genre genre, GenreModelOutput data)
+    public void CompareGenreOutput(Domain.Entity.Genre genre, GenreModelOutput data)
     {
         genre.Should().NotBeNull();
         data.Should().NotBeNull();

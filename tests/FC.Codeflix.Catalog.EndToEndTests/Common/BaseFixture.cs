@@ -8,7 +8,7 @@ namespace FC.Codeflix.Catalog.EndToEndTests.Common;
 public class BaseFixture
 {
     protected Faker Faker { get; set; }
-
+    protected CodeflixCatalogDbContext DbContext => CreateDbContext();
     public CustomWebApplicationFactory<Program> webAppFactory { get; set; }
     public HttpClient httpClient { get; set; }
     public ApiClient ApiClient { get; set; }
@@ -38,9 +38,8 @@ public class BaseFixture
 
     public void DisposePersistence()
     {
-        var context = CreateDbContext();
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
+        DbContext.Database.EnsureDeleted();
+        DbContext.Database.EnsureCreated();
     }
 }
 

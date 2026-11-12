@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using FC.Codeflix.Catalog.Api.Contracts.Common;
+using FC.Codeflix.Catalog.Api.Models.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Category.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;

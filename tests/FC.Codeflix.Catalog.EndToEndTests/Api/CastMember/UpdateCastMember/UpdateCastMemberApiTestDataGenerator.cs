@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Api.Contracts.CastMembers;
+﻿using FC.Codeflix.Catalog.Api.Models.CastMembers;
 using FC.Codeflix.Catalog.Domain.Enum;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.CastMember.UpdateCastMember;

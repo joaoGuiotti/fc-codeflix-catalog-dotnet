@@ -4,7 +4,7 @@ using FC.Codeflix.Catalog.Domain.Enum;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FC.Codeflix.Catalog.Api.Contracts.CastMembers;
+namespace FC.Codeflix.Catalog.Api.Models.CastMembers;
 
 public sealed record UpdateCastMemberRequest(
     string Name,
