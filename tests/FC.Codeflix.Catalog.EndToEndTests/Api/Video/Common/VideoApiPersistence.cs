@@ -62,7 +62,6 @@ public class VideoApiPersistence
         }
 
         await _context.SaveChangesAsync();
-        _context.ChangeTracker.Clear();
     }
 
 }

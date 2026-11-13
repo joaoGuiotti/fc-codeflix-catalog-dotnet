@@ -11,7 +11,10 @@ public class RabbitMQProducer : IMessageProducer
     private readonly IChannel _channel;
     private readonly string _exchangeName;
 
-    public RabbitMQProducer(IChannel channel, IOptions<RabbitMQConfiguration> options)
+    public RabbitMQProducer(
+        IChannel channel,
+        IOptions<RabbitMQConfiguration> options
+    )
     {
         _channel = channel;
         _exchangeName = options.Value.ExchangeName!;
@@ -24,15 +27,15 @@ public class RabbitMQProducer : IMessageProducer
     {
         var routingKey = EventsMapping.GetRoutingKey<T>();
         var jsonOptions = JsonSerializerConfiguration
-            .ConfigureJson(new JsonSerializerOptions());
+            .ConfigureSnakeCaseJson(new JsonSerializerOptions());
 
         var @event = JsonSerializer
             .SerializeToUtf8Bytes(message, jsonOptions);
 
-       await _channel.BasicPublishAsync(
-            exchange: _exchangeName,
-            routingKey: routingKey,
-            body: @event
-        );
+        await _channel.BasicPublishAsync(
+             exchange: _exchangeName,
+             routingKey: routingKey,
+             body: @event
+         );
     }
 }

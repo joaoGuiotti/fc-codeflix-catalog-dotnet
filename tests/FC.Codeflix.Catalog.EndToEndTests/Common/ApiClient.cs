@@ -22,7 +22,7 @@ public class ApiClient
         _jsonSerializerOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
-        }.ConfigureJson();
+        }.ConfigureSnakeCaseJson();
     }
 
     public async Task<(HttpResponseMessage?, TOutput?)> Post<TOutput>(string uri, object payload)

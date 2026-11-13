@@ -4,11 +4,8 @@ using FC.Codeflix.Catalog.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FC.Codeflix.Catalog.Api.Models.Video;
-
-
 public class UploadMediaApiInput
 {
-
     private static class MediaType
     {
         public const string Banner = "banner";
@@ -17,7 +14,6 @@ public class UploadMediaApiInput
         public const string Media = "video";
         public const string Trailer = "trailer";
     }
-
 
     [FromForm(Name = "media_file")]
     public IFormFile Media { get; set; }
@@ -33,7 +29,6 @@ public class UploadMediaApiInput
             _ => throw new EntityValidationException(
                 $"'{type}' is not a valid media type.")
         };
-
 }
 
 public static class IFormFileExtensions

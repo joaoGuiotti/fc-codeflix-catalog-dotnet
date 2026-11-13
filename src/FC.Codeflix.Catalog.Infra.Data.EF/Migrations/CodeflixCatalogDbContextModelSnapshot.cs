@@ -95,7 +95,6 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Migrations
             modelBuilder.Entity("FC.Codeflix.Catalog.Domain.Entity.Media", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
                     b.Property<string>("EncodedPath")

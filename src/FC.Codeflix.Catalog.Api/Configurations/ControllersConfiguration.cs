@@ -9,9 +9,9 @@ public static class ControllersConfiguration
     {
         services
             .AddControllers(opt => opt.Filters.Add(typeof(ApiGlobalExceptionFilter)))
-            .AddJsonOptions(opt => opt.JsonSerializerOptions.ConfigureJson());
+            .AddJsonOptions(opt => opt.JsonSerializerOptions.ConfigureSnakeCaseJson());
 
-        services.ConfigureHttpJsonOptions(opt => opt.SerializerOptions.ConfigureJson());
+        services.ConfigureHttpJsonOptions(opt => opt.SerializerOptions.ConfigureSnakeCaseJson());
 
         services.AddDocumentation();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

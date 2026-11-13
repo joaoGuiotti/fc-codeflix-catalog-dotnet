@@ -11,6 +11,7 @@ namespace FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 
 public class VideoRepository(CodeflixCatalogDbContext context) : IVideoRepository
 {
+    private CodeflixCatalogDbContext _context => context;
     private DbSet<Video> _videos => context.Set<Video>();
     private DbSet<Media> _medias => context.Set<Media>();
     private DbSet<VideosCategories> _videosCategories => context.Set<VideosCategories>();
@@ -34,22 +35,13 @@ public class VideoRepository(CodeflixCatalogDbContext context) : IVideoRepositor
 
     public async Task Update(Video video, CancellationToken cancellationToken)
     {
-        var currentVideo = await _videos
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == video.Id, cancellationToken);
-
         _videos.Update(video);
-
-        SyncOwnedImage(currentVideo?.Thumb, video.Thumb);
-        SyncOwnedImage(currentVideo?.ThumbHalf, video.ThumbHalf);
-        SyncOwnedImage(currentVideo?.Banner, video.Banner);
-
-        await SyncMediaAsync(currentVideo?.Media, video.Media, cancellationToken);
-        await SyncMediaAsync(currentVideo?.Trailer, video.Trailer, cancellationToken);
 
         RemoveRelations(video.Id);
 
         await AddRelationsAsync(video, cancellationToken);
+
+        DeleteOrphanMedias(video);
     }
 
     public Task Delete(Video video, CancellationToken cancellationToken)
@@ -120,9 +112,9 @@ public class VideoRepository(CodeflixCatalogDbContext context) : IVideoRepositor
 
     private void RemoveRelations(Guid videoId)
     {
-        _videosCategories.RemoveRange(_videosCategories.Where(x => x.VideoId == videoId));
-        _videosGenres.RemoveRange(_videosGenres.Where(x => x.VideoId == videoId));
-        _videosCastMembers.RemoveRange(_videosCastMembers.Where(x => x.VideoId == videoId));
+        _videosCategories.RemoveRange(_videosCategories.AsNoTracking().Where(x => x.VideoId == videoId));
+        _videosGenres.RemoveRange(_videosGenres.AsNoTracking().Where(x => x.VideoId == videoId));
+        _videosCastMembers.RemoveRange(_videosCastMembers.AsNoTracking().Where(x => x.VideoId == videoId));
     }
 
     private async Task LoadRelationsAsync(
@@ -155,27 +147,28 @@ public class VideoRepository(CodeflixCatalogDbContext context) : IVideoRepositor
             videosById[relation.VideoId].AddCastMember(relation.CastMemberId);
     }
 
-    private void SyncOwnedImage(Image? currentImage, Image? newImage)
+    private void DeleteOrphanMedias(Video video)
     {
-        if (currentImage is null && newImage is not null)
-            context.Entry(newImage).State = EntityState.Added;
-    }
-
-    private async Task SyncMediaAsync(
-        Media? currentMedia,
-        Media? newMedia,
-        CancellationToken cancellationToken
-    )
-    {
-        if (newMedia is not null && currentMedia?.Id != newMedia.Id)
-            context.Entry(newMedia).State = EntityState.Added;
-
-        if (currentMedia is not null && currentMedia.Id != newMedia?.Id)
+        if (_context.Entry(video).Reference(v => v.Trailer).IsModified)
         {
-            var trackedOrphan = _medias.Local.FirstOrDefault(x => x.Id == currentMedia.Id)
-                ?? await _medias.FirstOrDefaultAsync(x => x.Id == currentMedia.Id, cancellationToken);
-            if (trackedOrphan is not null)
-                _medias.Remove(trackedOrphan);
+            var oldTrailerId = _context.Entry(video)
+                .OriginalValues.GetValue<Guid?>($"{nameof(Video.Trailer)}Id");
+            if (oldTrailerId != null && oldTrailerId != video.Trailer?.Id)
+            {
+                var oldTrailer = _medias.Find(oldTrailerId);
+                _medias.Remove(oldTrailer!);
+            }
+        }
+
+        if (_context.Entry(video).Reference(v => v.Media).IsModified)
+        {
+            var oldMediaId = _context.Entry(video)
+                .OriginalValues.GetValue<Guid?>($"{nameof(Video.Media)}Id");
+            if (oldMediaId != null && oldMediaId != video.Media?.Id)
+            {
+                var oldMedia = _medias.Find(oldMediaId);
+                _medias.Remove(oldMedia!);
+            }
         }
     }
 }

@@ -20,26 +20,39 @@ public class DeleteVideo : IDeleteVideo
     {
         var video = await _repository.Get(request.Id, cancellationToken);
 
+        var mediaPath = video.Media?.FilePath;
+        var trailerPath = video.Trailer?.FilePath;
+        var bannerPath = video.Banner?.Path;
+        var thumbPath = video.Thumb?.Path;
+        var thumbHalfPath = video.ThumbHalf?.Path;
+
         await _repository.Delete(video, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
-        await ClearStorage(video, cancellationToken);
+        await ClearStorage(
+            mediaPath, trailerPath, bannerPath,
+            thumbPath, thumbHalfPath, cancellationToken
+        );
     }
 
     private async Task ClearStorage(
-        Domain.Entity.Video video,
+        string? mediaPath,
+        string? trailerPath,
+        string? bannerPath,
+        string? thumbFilePath,
+        string? thumbHalfPath,
         CancellationToken cancellationToken
     )
     {
-        if (video.Media is not null)
-            await _storageService.Delete(video.Media.FilePath, cancellationToken);
-        if (video.Trailer is not null)
-            await _storageService.Delete(video.Trailer.FilePath, cancellationToken);
-        if (video.Thumb is not null)
-            await _storageService.Delete(video.Thumb.Path, cancellationToken);
-        if (video.ThumbHalf is not null)
-            await _storageService.Delete(video.ThumbHalf.Path, cancellationToken);
-        if (video.Banner is not null)
-            await _storageService.Delete(video.Banner.Path, cancellationToken);
+        if (mediaPath is not null)
+            await _storageService.Delete(mediaPath, cancellationToken);
+        if (trailerPath is not null)
+            await _storageService.Delete(trailerPath, cancellationToken);
+        if (thumbFilePath is not null)
+            await _storageService.Delete(thumbFilePath, cancellationToken);
+        if (thumbHalfPath is not null)
+            await _storageService.Delete(thumbHalfPath, cancellationToken);
+        if (bannerPath is not null)
+            await _storageService.Delete(bannerPath, cancellationToken);
     }
 }

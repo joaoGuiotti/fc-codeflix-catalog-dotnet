@@ -90,10 +90,14 @@ public class VideosController : ControllerBase
             apiInput.ToInput(id),
             cancellationToken
         );
-        return Ok(new ApiResponse<VideoModelOutput>(output));
+        return Ok(ApiResponse.Of(output));
     }
 
     [HttpPost("{id:guid}/medias/{type}")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> UploadMedia(
         [FromRoute] Guid id,
         [FromRoute] string type,

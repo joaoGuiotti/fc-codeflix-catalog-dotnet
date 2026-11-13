@@ -5,10 +5,7 @@ namespace FC.Codeflix.Catalog.Infra.Messaging.Configuration;
 
 public static class JsonSerializerConfiguration
 {
-    private static readonly JsonSerializerOptions _defaultOptions =
-        new JsonSerializerOptions().ConfigureJson();
-
-    public static JsonSerializerOptions ConfigureJson(this JsonSerializerOptions options)
+    public static JsonSerializerOptions ConfigureSnakeCaseJson(this JsonSerializerOptions options)
     {
         options.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
         options.DictionaryKeyPolicy = JsonNamingPolicy.SnakeCaseLower;

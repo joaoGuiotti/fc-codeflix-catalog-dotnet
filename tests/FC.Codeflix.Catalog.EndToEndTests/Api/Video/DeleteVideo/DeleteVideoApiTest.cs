@@ -1,8 +1,10 @@
-using System.Net;
-using FC.Codeflix.Catalog.EndToEndTests.Api.Video.Common;
+﻿using FC.Codeflix.Catalog.EndToEndTests.Api.Video.Common;
 using FluentAssertions;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using System.Net;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Video.DeleteVideo;
 
@@ -22,7 +24,6 @@ public class DeleteVideoApiTest : IDisposable
         var exampleGenres = _fixture.GetExampleGenreList(4);
         var exampleCastMembers = _fixture.GetExampleCastMembersList(5);
         var exampleVideos = _fixture.GetVideoColletion(10);
-
         exampleVideos.ForEach(video =>
         {
             exampleCategories.ForEach(category => video.AddCategory(category.Id));
@@ -36,8 +37,18 @@ public class DeleteVideoApiTest : IDisposable
         await _fixture.VideoPersistence.BulkInsert(exampleVideos);
 
         var mediaCountBefore = await _fixture.VideoPersistence.GetMediaCountAsync();
+
         var expectedMediaCount = mediaCountBefore - 2;
         var targetVideo = exampleVideos.ElementAt(5);
+
+        var allTargetVideoMedias = new[]
+        {
+            targetVideo.Trailer!.FilePath,
+            targetVideo.Media!.FilePath,
+            targetVideo.Banner!.Path,
+            targetVideo.Thumb!.Path,
+            targetVideo.ThumbHalf!.Path,
+        };
 
         var (response, output) = await _fixture.ApiClient
             .Delete<object>($"/videos/{targetVideo.Id}");
@@ -63,6 +74,21 @@ public class DeleteVideoApiTest : IDisposable
 
         var actualMediaCount = await _fixture.VideoPersistence.GetMediaCountAsync();
         actualMediaCount.Should().Be(expectedMediaCount);
+
+        _fixture.WebAppFactory.StorageClient!.Verify(
+           x => x.DeleteObjectAsync(
+               It.IsAny<string>(),
+               It.Is<string>(fileName => allTargetVideoMedias.Contains(fileName)),
+               It.IsAny<DeleteObjectOptions>(),
+               It.IsAny<CancellationToken>()),
+           Times.Exactly(5));
+        _fixture.WebAppFactory.StorageClient!.Verify(
+            x => x.DeleteObjectAsync(
+                It.IsAny<string>(),
+                It.IsAny<string>(),
+                It.IsAny<DeleteObjectOptions>(),
+                It.IsAny<CancellationToken>()),
+            Times.Exactly(5));
     }
 
     [Fact(DisplayName = nameof(Error404WhenVideoIdNotFound))]
