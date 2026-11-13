@@ -1,18 +1,17 @@
 {
   "profiles": {
-    "Container (Dockerfile)": {
+    "Container (Docker)": {
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "applicationUrl": "https://localhost:7097;http://localhost:5097",
+      "applicationUrl": "http://localhost:5097",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ASPNETCORE_HTTPS_PORTS": "8081",
+        "ASPNETCORE_ENVIRONMENT": "Docker",
         "ASPNETCORE_HTTP_PORTS": "8080",
         "GOOGLE_APPLICATION_CREDENTIALS": "gcp-credentials.json"
       },
       "publishAllPorts": false,
-      "useSSL": true,
+      "useSSL": false,
       "DockerfileRunArguments": "--network service_catalog"
     },
     "FC.Codeflix.Catalog.Api": {
@@ -25,24 +24,6 @@
       },
       "applicationUrl": "https://localhost:7097;http://localhost:5097",
       "dotnetRunMessages": true
-    },
-    "http": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "DevLocal",
-        "GOOGLE_APPLICATION_CREDENTIALS": "gcp-credentials.json"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5195"
-    },
-    "https": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "GOOGLE_APPLICATION_CREDENTIALS": "gcp-credentials.json"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7141;http://localhost:5195"
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"
