@@ -268,7 +268,7 @@ public class ListCategoryApiTest : IDisposable
         }
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
        => _fixture.DisposePersistence();
 }
 

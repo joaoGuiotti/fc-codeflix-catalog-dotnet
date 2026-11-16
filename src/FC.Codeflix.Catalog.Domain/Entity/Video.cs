@@ -116,6 +116,16 @@ public class Video : AggregateRoot
         Media.UpdateAsEnconded(encodedPath);
     }
 
+    public void UpdateAsEncodingError()
+    {
+        if (Media is null)
+        {
+            Notification.AddError($"{nameof(Video)} there is no Media!");
+            return;
+        }
+        Media.UpdateAsEncondingError();
+    }
+
     public void AddCategory(Guid categoryId)
         => _categories.Add(categoryId);
 

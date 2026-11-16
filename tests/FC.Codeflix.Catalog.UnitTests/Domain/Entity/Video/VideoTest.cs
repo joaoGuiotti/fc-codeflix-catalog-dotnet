@@ -261,6 +261,22 @@ public class VideoTest
         video.Media.Status.Should().Be(EMediaStatus.Completed);
     }
 
+    [Fact(DisplayName = nameof(UpdateAsEncodingError))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateAsEncodingError()
+    {
+        var video = _fixture.GetValidVideo();
+        var mediaPath = _fixture.GetValidMediaPath();
+
+        video.UpdateMedia(mediaPath);
+        video.UpdateAsEncodingError();
+
+        video.Media.Should().NotBeNull();
+        video.Media.FilePath.Should().Be(mediaPath);
+        video.Media.EncodedPath.Should().BeNull();
+        video.Media.Status.Should().Be(EMediaStatus.Error);
+    }
+
     [Fact(DisplayName = nameof(UpdateAsEncodedThrowsWhenThereIsNoMedia))]
     [Trait("Domain", "Video - Aggregate")]
     public void UpdateAsEncodedThrowsWhenThereIsNoMedia()

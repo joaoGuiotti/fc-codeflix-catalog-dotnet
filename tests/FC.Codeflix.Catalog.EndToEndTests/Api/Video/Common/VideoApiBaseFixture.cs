@@ -1,12 +1,15 @@
-﻿using System.Text;
-using FC.Codeflix.Catalog.Api.Models.Video;
+﻿using FC.Codeflix.Catalog.Api.Models.Video;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Video.CreateVideo;
 using FC.Codeflix.Catalog.Domain.Enum;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.EndToEndTests.Api.CastMember.Common;
 using FC.Codeflix.Catalog.EndToEndTests.Api.Genre.Common;
+using FC.Codeflix.Catalog.Infra.Messaging.Configuration;
 using FluentAssertions;
+using RabbitMQ.Client;
+using System.Text;
+using System.Text.Json;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Video.Common;
 
@@ -238,5 +241,27 @@ public class VideoApiBaseFixture : GenreApiBaseFixture
             _ => listClone.OrderByDescending(x => x.CreatedAt).ThenBy(x => x.Id),
         };
         return orderedEnumerable.ToList();
+    }
+
+    public async Task<(T?, uint)> ReadMessageFromRabbitMQ<T>()
+        where T : class
+    {
+        var consumingResult = await WebAppFactory.RabbitMQChannel!
+            .BasicGetAsync(WebAppFactory.VideoCreatedQueue, true);
+        if (consumingResult == null) return (null, 0);
+        var rawMessage = consumingResult.Body.ToArray();
+        var stringMessage = Encoding.UTF8.GetString(rawMessage);
+        var jsonOptions = new JsonSerializerOptions()
+            .ConfigureSnakeCaseJson();
+        var @event = JsonSerializer.Deserialize<T>(
+            stringMessage, jsonOptions);
+        return (@event, consumingResult.MessageCount);
+    }
+
+    public async Task PurgeRabbitMQQueuesAsync()
+    {
+        IChannel channel = WebAppFactory.RabbitMQChannel!;
+        await channel.QueuePurgeAsync(WebAppFactory.VideoCreatedQueue);
+        await channel.QueuePurgeAsync(WebAppFactory.RabbitMQConfiguration!.VideoEncodedQueue);
     }
 }

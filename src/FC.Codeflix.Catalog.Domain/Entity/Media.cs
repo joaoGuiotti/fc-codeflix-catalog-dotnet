@@ -20,4 +20,9 @@ public class Media(string filePath, string? encodedPath = null)
         EncodedPath = encodedExamplePath;
     }
 
+    public void UpdateAsEncondingError()
+    {
+        Status = EMediaStatus.Error;
+        EncodedPath = null;
+    }
 }

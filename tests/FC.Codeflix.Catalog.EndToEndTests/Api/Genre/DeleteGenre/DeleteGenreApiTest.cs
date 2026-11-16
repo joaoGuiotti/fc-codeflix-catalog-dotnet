@@ -85,7 +85,7 @@ public class DeleteGenreApiTest : IDisposable
         output.Detail.Should().Be($"Genre with ID {randomGuid} not found.");
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
         => _fixture.DisposePersistence();
 }
 

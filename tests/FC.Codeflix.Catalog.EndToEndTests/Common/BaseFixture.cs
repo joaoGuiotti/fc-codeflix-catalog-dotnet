@@ -2,10 +2,11 @@
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Common;
 
-public class BaseFixture
+public class BaseFixture : IDisposable
 {
     protected Faker Faker { get; set; }
     protected CodeflixCatalogDbContext DbContext => CreateDbContext();
@@ -40,6 +41,10 @@ public class BaseFixture
     {
         DbContext.Database.EnsureDeleted();
         DbContext.Database.EnsureCreated();
+    }
+    public void Dispose()
+    {
+        WebAppFactory.DisposeAsync().GetAwaiter().GetResult();
     }
 }
 

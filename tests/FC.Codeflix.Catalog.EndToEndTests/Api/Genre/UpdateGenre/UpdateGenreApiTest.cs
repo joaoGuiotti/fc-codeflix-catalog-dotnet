@@ -277,7 +277,7 @@ public class UpdateGenreApiTest : IDisposable
         output.Detail.Should().Be(expectedMessage);
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
         => _fixture.DisposePersistence();
 }
 

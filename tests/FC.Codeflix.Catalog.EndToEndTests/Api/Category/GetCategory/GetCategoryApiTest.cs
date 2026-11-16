@@ -64,7 +64,7 @@ public class GetCategoryApiTest : IDisposable
         output.Type.Should().Be("NotFound");
         output.Detail.Should().Be($"Category with ID {newGuid} not found.");
     }
-    void IDisposable.Dispose()
+    public void Dispose()
        => _fixture.DisposePersistence();
 }
 

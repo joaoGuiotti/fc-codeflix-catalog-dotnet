@@ -43,6 +43,8 @@ public class CreateCastMemberApiTest : IDisposable
         _fixture.CompareEntityOutput(castMemberFromDb!, output.Data);
     }
 
+
+
     [Theory(DisplayName = nameof(ThrowWhenCantCreateCastMember))]
     [Trait("EndToEnd/API", "CastMember/CreateCastMember - Endpoints")]
     [MemberData(
@@ -66,6 +68,6 @@ public class CreateCastMemberApiTest : IDisposable
         output.Detail.Should().Be(expectedMessage);
     }
 
-    void IDisposable.Dispose()
-        => _fixture.DisposePersistence();
+    public void Dispose()
+    => _fixture.DisposePersistence();
 }

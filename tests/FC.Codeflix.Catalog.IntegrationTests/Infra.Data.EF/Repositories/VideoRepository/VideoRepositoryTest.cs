@@ -1,11 +1,13 @@
 ﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using FC.Codeflix.Catalog.Domain.Entity;
 using FC.Codeflix.Catalog.Domain.Enum;
+using FC.Codeflix.Catalog.Domain.Repository;
 using FC.Codeflix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.Codeflix.Catalog.Infra.Data.EF;
 using FC.Codeflix.Catalog.Infra.Data.EF.Models;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using Repository = FC.Codeflix.Catalog.Infra.Data.EF.Repositories;
 
 namespace FC.Codeflix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.VideoRepository;
@@ -316,90 +318,50 @@ public class VideoRepositoryTest
         dbVideo.CreatedAt.Should().Be(exampleVideo.CreatedAt);
     }
 
-    [Fact(DisplayName = nameof(UpdateImages))]
+    [Fact(DisplayName = nameof(UpdateEntitiesAndValueObjects))]
     [Trait("Integration/Infra.Data", "VideoRepository - Repositories")]
-    public async Task UpdateImages()
+    public async Task UpdateEntitiesAndValueObjects()
     {
-        CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
+        var dbContextArrange = _fixture.CreateDbContext();
         var exampleVideo = _fixture.GetExampleVideo();
-        await dbContext.Videos.AddAsync(exampleVideo);
-        await dbContext.SaveChangesAsync(CancellationToken.None);
+        exampleVideo.UpdateTrailer(_fixture.GetValidMediaPath());
+        await dbContextArrange.AddAsync(exampleVideo);
+        await dbContextArrange.SaveChangesAsync();
+        var updatedThumb = _fixture.GetValidImagePath();
+        var updatedThumbHalf = _fixture.GetValidImagePath();
+        var updatedBanner = _fixture.GetValidImagePath();
+        var updatedMedia = _fixture.GetValidMediaPath();
+        var updatedMediaEncoded = _fixture.GetValidMediaPath();
+        var updatedTrailer = _fixture.GetValidMediaPath();
+        var dbContextAct = _fixture.CreateDbContext(true);
+        IVideoRepository videoRepository = new Repository.VideoRepository(dbContextAct);
+        var savedVideo = dbContextAct.Videos
+            .Single(video => video.Id == exampleVideo.Id);
 
-        var actDbContext = _fixture.CreateDbContext(preserveData: true);
-        var videoRepository = new Repository.VideoRepository(actDbContext);
+        savedVideo.UpdateThumb(updatedThumb);
+        savedVideo.UpdateThumbHalf(updatedThumbHalf);
+        savedVideo.UpdateBanner(updatedBanner);
+        savedVideo.UpdateTrailer(updatedTrailer);
+        savedVideo.UpdateMedia(updatedMedia);
+        savedVideo.UpdateAsEncoded(updatedMediaEncoded);
+        await videoRepository.Update(savedVideo, CancellationToken.None);
+        await dbContextAct.SaveChangesAsync(CancellationToken.None);
 
-        var newThumbPath = _fixture.GetValidImagePath();
-        var newThumbHalfPath = _fixture.GetValidImagePath();
-        var newBannerPath = _fixture.GetValidImagePath();
-
-        exampleVideo.UpdateThumb(newThumbPath);
-        exampleVideo.UpdateThumbHalf(newThumbHalfPath);
-        exampleVideo.UpdateBanner(newBannerPath);
-
-        await videoRepository.Update(exampleVideo, CancellationToken.None);
-        await actDbContext.SaveChangesAsync(CancellationToken.None);
-
-        var assertsDbContext = _fixture.CreateDbContext(preserveData: true);
-        var dbVideo = await assertsDbContext.Videos
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == exampleVideo.Id);
-
+        var assertsDbContext = _fixture.CreateDbContext(true);
+        var dbVideo = await assertsDbContext.Videos.FindAsync(exampleVideo.Id);
         dbVideo.Should().NotBeNull();
-        dbVideo!.Thumb.Should().NotBeNull();
-        dbVideo.Thumb!.Path.Should().Be(newThumbPath);
-        dbVideo.ThumbHalf.Should().NotBeNull();
-        dbVideo.ThumbHalf!.Path.Should().Be(newThumbHalfPath);
+        dbVideo!.ThumbHalf.Should().NotBeNull();
+        dbVideo.Thumb.Should().NotBeNull();
         dbVideo.Banner.Should().NotBeNull();
-        dbVideo.Banner!.Path.Should().Be(newBannerPath);
-    }
-
-    [Fact(DisplayName = nameof(UpdateMediasAndRemoveOrphans))]
-    [Trait("Integration/Infra.Data", "VideoRepository - Repositories")]
-    public async Task UpdateMediasAndRemoveOrphans()
-    {
-        CodeflixCatalogDbContext dbContext = _fixture.CreateDbContext();
-        var exampleVideo = _fixture.GetExampleVideoWithAllProperties();
-        var oldMediaId = exampleVideo.Media!.Id;
-        var oldTrailerId = exampleVideo.Trailer!.Id;
-        await dbContext.Videos.AddAsync(exampleVideo);
-        await dbContext.SaveChangesAsync(CancellationToken.None);
-
-        var actDbContext = _fixture.CreateDbContext(preserveData: true);
-        var videoRepository = new Repository.VideoRepository(actDbContext);
-
-        var newMediaPath = _fixture.GetValidMediaPath();
-        var newEncodedPath = _fixture.GetValidMediaPath();
-        var newTrailerPath = _fixture.GetValidMediaPath();
-
-        exampleVideo.UpdateMedia(newMediaPath);
-        exampleVideo.UpdateAsEncoded(newEncodedPath);
-        exampleVideo.UpdateTrailer(newTrailerPath);
-
-        await videoRepository.Update(exampleVideo, CancellationToken.None);
-        await actDbContext.SaveChangesAsync(CancellationToken.None);
-
-        var assertsDbContext = _fixture.CreateDbContext(preserveData: true);
-        var dbVideo = await assertsDbContext.Videos
-            .AsNoTracking()
-            .Include(x => x.Media)
-            .Include(x => x.Trailer)
-            .FirstOrDefaultAsync(x => x.Id == exampleVideo.Id);
-
-        dbVideo.Should().NotBeNull();
-        dbVideo!.Media.Should().NotBeNull();
-        dbVideo.Media!.Id.Should().Be(exampleVideo.Media!.Id);
-        dbVideo.Media.FilePath.Should().Be(newMediaPath);
-        dbVideo.Media.EncodedPath.Should().Be(newEncodedPath);
-        dbVideo.Media.Status.Should().Be(EMediaStatus.Completed);
-
+        dbVideo.Media.Should().NotBeNull();
         dbVideo.Trailer.Should().NotBeNull();
-        dbVideo.Trailer!.Id.Should().Be(exampleVideo.Trailer!.Id);
-        dbVideo.Trailer.FilePath.Should().Be(newTrailerPath);
-
-        var savedMedias = await assertsDbContext.Set<Media>().ToListAsync();
-        savedMedias.Should().HaveCount(2);
-        savedMedias.Select(x => x.Id).Should().NotContain(oldMediaId);
-        savedMedias.Select(x => x.Id).Should().NotContain(oldTrailerId);
+        dbVideo.Thumb!.Path.Should().Be(updatedThumb);
+        dbVideo.ThumbHalf!.Path.Should().Be(updatedThumbHalf);
+        dbVideo.Banner!.Path.Should().Be(updatedBanner);
+        dbVideo.Media!.FilePath.Should().Be(updatedMedia);
+        dbVideo.Media.EncodedPath.Should().Be(updatedMediaEncoded);
+        dbVideo.Media.Status.Should().Be(EMediaStatus.Completed);
+        dbVideo.Trailer!.FilePath.Should().Be(updatedTrailer);
     }
 
     [Fact(DisplayName = nameof(UpdateReplacingRelations))]

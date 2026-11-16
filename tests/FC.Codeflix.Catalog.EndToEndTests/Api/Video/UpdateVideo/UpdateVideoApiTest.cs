@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using FC.Codeflix.Catalog.Api.Models.Common;
 using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
 using FC.Codeflix.Catalog.EndToEndTests.Api.Video.Common;

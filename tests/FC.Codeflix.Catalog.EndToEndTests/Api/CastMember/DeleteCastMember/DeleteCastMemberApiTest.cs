@@ -57,6 +57,6 @@ public class DeleteCastMemberApiTest : IDisposable
         output.Detail.Should().Be($"CastMember with ID {randomGuid} not found.");
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
         => _fixture.DisposePersistence();
 }

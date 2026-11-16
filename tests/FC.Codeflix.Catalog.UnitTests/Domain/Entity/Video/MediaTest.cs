@@ -48,4 +48,17 @@ public class MediaTest
         media.Status.Should().Be(EMediaStatus.Completed);
         media.EncodedPath.Should().Be(encodedExamplePath);
     }
+
+    [Fact(DisplayName = nameof(UpdateAsEncodingError))]
+    [Trait("Domain", "Media - Entities")]
+    public void UpdateAsEncodingError()
+    {
+        var media = _fixture.GetValidMedia();
+        media.UpdateAsSentToEncode();
+
+        media.UpdateAsEncondingError();
+
+        media.Status.Should().Be(EMediaStatus.Error);
+        media.EncodedPath.Should().BeNull();
+    }
 }

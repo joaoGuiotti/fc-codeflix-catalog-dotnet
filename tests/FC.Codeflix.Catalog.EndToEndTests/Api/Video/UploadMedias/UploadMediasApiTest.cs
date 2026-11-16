@@ -1,9 +1,13 @@
-using System.Net;
-using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
+﻿using FC.Codeflix.Catalog.Application.UseCases.Video.Common;
+using FC.Codeflix.Catalog.Domain.Events;
 using FC.Codeflix.Catalog.EndToEndTests.Api.Video.Common;
 using FluentAssertions;
+using Google.Apis.Upload;
+using Google.Cloud.Storage.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using System.Net;
 
 namespace FC.Codeflix.Catalog.EndToEndTests.Api.Video.UploadMedias;
 
@@ -158,6 +162,25 @@ public class UploadMediasApiTest : IDisposable
         videoFromDb.Should().NotBeNull();
         videoFromDb!.Media.Should().NotBeNull();
         videoFromDb.Media!.FilePath.Should().Be(expectedFileName);
+
+        _fixture.WebAppFactory.StorageClient!.Verify(
+            x => x.UploadObjectAsync(
+                It.IsAny<string>(), expectedFileName,
+                file.ContentType,
+                It.IsAny<Stream>(),
+                It.IsAny<UploadObjectOptions>(),
+                It.IsAny<CancellationToken>(),
+                It.IsAny<IProgress<IUploadProgress>>()),
+            Times.Once);
+
+        var (@event, remainingMessages) = await _fixture
+            .ReadMessageFromRabbitMQ<VideoUploadedEvent>();
+        remainingMessages.Should().Be(0);
+        @event.Should().NotBeNull();
+        @event!.FilePath.Should().Be(expectedFileName);
+        @event.ResourceId.Should().Be(videoId);
+        @event.OccuredOn.Should().NotBe(default);
+        await _fixture.PurgeRabbitMQQueuesAsync();
     }
 
     [Fact(DisplayName = nameof(Error422WhenMediaTypeIsInvalid))]
@@ -204,7 +227,6 @@ public class UploadMediasApiTest : IDisposable
         output.Detail.Should().Be($"Video with ID {videoId} not found.");
     }
 
-    public void Dispose()
-        => _fixture.DisposePersistence();
+    public void Dispose() => _fixture.DisposePersistence();
 }
 

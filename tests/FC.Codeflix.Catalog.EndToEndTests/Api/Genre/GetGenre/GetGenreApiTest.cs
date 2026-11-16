@@ -67,6 +67,6 @@ public class GetGenreApiTest : IDisposable
         output.Detail.Should().Be($"Genre with ID {genreId} not found.");
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
         => _fixture.DisposePersistence();
 }

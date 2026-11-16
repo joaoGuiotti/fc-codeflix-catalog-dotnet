@@ -240,6 +240,6 @@ public class ListCastMemberApiTest : IDisposable
         }
     }
 
-    void IDisposable.Dispose()
+    public void Dispose()
         => _fixture.DisposePersistence();
 }
