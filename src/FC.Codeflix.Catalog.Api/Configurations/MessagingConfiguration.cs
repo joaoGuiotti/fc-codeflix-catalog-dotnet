@@ -4,7 +4,6 @@ using FC.Codeflix.Catalog.Infra.Messaging.Consumer;
 using FC.Codeflix.Catalog.Infra.Messaging.Producer;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace FC.Codeflix.Catalog.Api.Configurations;
 
