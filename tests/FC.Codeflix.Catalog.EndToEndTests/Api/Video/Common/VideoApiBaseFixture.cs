@@ -243,11 +243,30 @@ public class VideoApiBaseFixture : GenreApiBaseFixture
         return orderedEnumerable.ToList();
     }
 
-    public async Task<(T?, uint)> ReadMessageFromRabbitMQ<T>()
+    public async 
+    Task
+PublishMessageToRabbitMQ(object exampleEvent)
+    {
+        var exchange = WebAppFactory.RabbitMQConfiguration!.ExchangeName;
+        var jsonOptions = new JsonSerializerOptions()
+            .ConfigureSnakeCaseJson();
+
+        var message = JsonSerializer
+            .SerializeToUtf8Bytes(exampleEvent, jsonOptions);
+
+        await WebAppFactory.RabbitMQChannel!.BasicPublishAsync(
+            exchange: exchange,
+            routingKey: WebAppFactory.VideoEncodedRoutingKey,
+            body: message
+        );
+    }
+
+    public async Task<(T?, uint)> ReadMessageFromRabbitMQ<T>(string? queueName = null)
         where T : class
     {
+        var queue = queueName ?? WebAppFactory.VideoCreatedQueue;
         var consumingResult = await WebAppFactory.RabbitMQChannel!
-            .BasicGetAsync(WebAppFactory.VideoCreatedQueue, true);
+            .BasicGetAsync(queue, true);
         if (consumingResult == null) return (null, 0);
         var rawMessage = consumingResult.Body.ToArray();
         var stringMessage = Encoding.UTF8.GetString(rawMessage);

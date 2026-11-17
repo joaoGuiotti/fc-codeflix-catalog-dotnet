@@ -13,14 +13,11 @@ namespace FC.Codeflix.Catalog.Api.Configurations;
 
 public static class UseCasesConfiguration
 {
-    public static IServiceCollection AddUseCases(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CreateCategory).Assembly));
         services.AddRepositories();
-        services.AddDomainEvents(configuration);
+        services.AddDomainEvents();
         return services;
     }
 
@@ -34,10 +31,7 @@ public static class UseCasesConfiguration
         return services;
     }
 
-    private static IServiceCollection AddDomainEvents(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    private static IServiceCollection AddDomainEvents(this IServiceCollection services)
     {
         services.AddTransient<IDomainEventPublisher, DomainEventPublisher>();
         services.AddTransient<IDomainEventHandler<VideoUploadedEvent>, SendToEncoderEventHandler>();

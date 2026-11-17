@@ -1,8 +1,10 @@
 ﻿using FC.Codeflix.Catalog.Application.Interfaces;
 using FC.Codeflix.Catalog.Infra.Messaging.Configuration;
+using FC.Codeflix.Catalog.Infra.Messaging.Consumer;
 using FC.Codeflix.Catalog.Infra.Messaging.Producer;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace FC.Codeflix.Catalog.Api.Configurations;
 
@@ -44,6 +46,21 @@ public static class MessagingConfiguration
             var channel = channelManager.GetChannel().GetAwaiter().GetResult();
             return new RabbitMQProducer(channel, config);
         });
+        return services;
+    }
+
+    public static IServiceCollection AddMessageConsumer(this IServiceCollection services)
+    {
+        services.AddHostedService(sp =>
+        {
+            var config = sp.GetRequiredService<IOptions<RabbitMQConfiguration>>();
+            var connection = sp.GetRequiredService<IConnection>();
+            var logger = sp.GetRequiredService<ILogger<VideoEncodedEventConsumer>>();
+            var channel = connection.CreateChannelAsync().GetAwaiter().GetResult();
+
+            return new VideoEncodedEventConsumer(sp, logger, config, channel);
+        });
+
         return services;
     }
 }
